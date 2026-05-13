@@ -4,6 +4,20 @@ Office Preview JS 是一个多格式 Office 文档在线预览 Demo，当前仓�
 
 [https://demo.flyfish.group](https://demo.flyfish.group)
 
+![Flyfish Office Preview 产品展示](docs/images/flyfish-office-hero.png)
+
+## 官方入口
+
+| 入口 | 链接 |
+| --- | --- |
+| 在线演示 | [https://demo.flyfish.group](https://demo.flyfish.group) |
+| 产品介绍 | [https://product.flyfish.group](https://product.flyfish.group) |
+| 飞鱼低代码平台 | [https://dev.flyfish.group](https://dev.flyfish.group) |
+| 飞鱼小铺 / 购买 | [https://dev.flyfish.group/shop](https://dev.flyfish.group/shop) |
+| 博客 | [https://blog.flyfish.dev](https://blog.flyfish.dev) |
+| 文件预览产品线 | [https://viewer.flyfish.dev](https://viewer.flyfish.dev) |
+| 代码仓库 | [https://git.flyfish.dev](https://git.flyfish.dev) |
+
 ## 支持格式
 
 - Word: `.doc`, `.docx`
@@ -22,6 +36,14 @@ Office Preview JS 是一个多格式 Office 文档在线预览 Demo，当前仓�
 - 本地上传后自动识别格式并渲染，内置 Word、Excel、PowerPoint 原生风格加载动画。
 - 调试信息通过浮动按钮按需展示，不干扰主体预览。
 - 默认示例文件覆盖六类格式，可用于快速验收渲染效果。
+
+## 运行截图
+
+以下截图复用自 Flyfish Office Preview 产品页，用于快速了解实际预览效果。
+
+| Word 文档预览 | PowerPoint 演示预览 | Excel 表格预览 |
+| --- | --- | --- |
+| ![Word 文档预览截图](docs/images/preview-word.png) | ![PowerPoint 演示预览截图](docs/images/preview-slides.png) | ![Excel 表格预览截图](docs/images/preview-spreadsheet.png) |
 
 ## 使用方式
 
@@ -56,11 +78,25 @@ https://demo.flyfish.group
 
 本仓库不包含解析器源码，仅用于公开 Demo 展示和接入评估。仓库公开不代表授予开源许可或商业私有化部署授权，所有商业使用、私有部署、二次分发、解除域名限制、源码交付、格式兼容性定制均需单独授权。
 
+## 关于飞鱼
+
+飞鱼低代码平台是轻量级、高性能、便捷的开源低代码集成平台。Office Preview JS 属于飞鱼文档预览产品线，面向 OA、公文流转、档案管理、合同标书、CRM、工单系统、知识库和企业内网系统，提供可私有化交付的 Office 在线预览能力。
+
+如果你希望先了解完整产品方案，请访问 [产品介绍页](https://product.flyfish.group)。如果你希望直接体验多格式文件预览，请访问 [在线 Demo](https://demo.flyfish.group)。
+
 ## 商业购买与联系
 
 如需购买授权或企业集成，请联系：
 
-- 邮箱：727842003@qq.com
+- 飞鱼小铺：[https://dev.flyfish.group/shop](https://dev.flyfish.group/shop)
+- 微信客服：`Yous_Gift`
+- 售后邮箱：wybaby168@gmail.com
+- 商务邮箱：727842003@qq.com
 - Demo：[https://demo.flyfish.group](https://demo.flyfish.group)
+- 产品介绍：[https://product.flyfish.group](https://product.flyfish.group)
 
 建议在沟通时提供部署域名、需要支持的格式、是否离线部署、预估文件大小和日访问量，便于评估交付方案。
+
+| 客服微信 | 公众号 |
+| --- | --- |
+| <img src="docs/images/customer-wechat.jpg" width="260" alt="客服微信二维码"> | <img src="docs/images/wechat-mp.jpg" width="220" alt="公众号二维码"> |

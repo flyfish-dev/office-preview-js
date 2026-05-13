@@ -1,0 +1,14 @@
+.DS_Store
+Thumbs.db
+
+node_modules/
+.vercel/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+*.local
+*.tmp
+*.bak

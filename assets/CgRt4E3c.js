@@ -2,7 +2,6 @@ import { parseExcelWorkbook } from './data.js';
 import { clamp, shouldVirtualizeSheetModel } from './shared.js';
 
 let loadedWorkbook = null;
-const sheetIndexes = new Map();
 
 self.onmessage = async (event) => {
   const message = event.data || {};
@@ -18,7 +17,6 @@ self.onmessage = async (event) => {
     }
     if (type === 'dispose') {
       loadedWorkbook = null;
-      sheetIndexes.clear();
       post(id, 'disposed', {});
       return;
     }
@@ -39,7 +37,6 @@ async function loadWorkbook(id, input, options) {
   postProgress(id, 'normalizing', 0.82, '正在整理工作表结构');
   const shell = createWorkbookShell(workbook, options);
   loadedWorkbook = { workbook, shell, options };
-  sheetIndexes.clear();
 
   postProgress(id, 'ready', 1, '工作簿已准备完成', {
     sheets: shell.sheets.length,
@@ -144,20 +141,17 @@ function buildSheetWindow(sheet, requestedRange) {
   const range = normalizeRange(sheet, requestedRange);
   const readRange = expandRange(sheet, range, 1, 1);
   const cells = new Map();
-  const index = ensureSheetIndex(sheet);
 
   for (let row = readRange.rowStart; row <= readRange.rowEnd; row += 1) {
-    const rowMap = index.get(row);
-    if (!rowMap) continue;
     for (let col = readRange.colStart; col <= readRange.colEnd; col += 1) {
-      const cell = rowMap.get(col);
+      const cell = getSourceCell(sheet, row, col);
       if (cell !== undefined) cells.set(`${row},${col}`, cell);
     }
   }
 
   for (const merge of sheet.source.merges || []) {
     if (!mergeIntersectsRange(merge, readRange)) continue;
-    addMergeStartCell(sheet, index, cells, merge.startRow, merge.startCol);
+    addMergeStartCell(sheet, cells, merge.startRow, merge.startCol);
   }
 
   return {
@@ -193,19 +187,6 @@ function expandRange(sheet, range, rowPad, colPad) {
   };
 }
 
-function ensureSheetIndex(sheet) {
-  if (sheetIndexes.has(sheet.id)) return sheetIndexes.get(sheet.id);
-  const rows = new Map();
-  for (const [key, cell] of mapEntries(sheet.source.cells)) {
-    const [row, col] = parseCellKey(key);
-    if (row < 0 || col < 0) continue;
-    if (!rows.has(row)) rows.set(row, new Map());
-    rows.get(row).set(col, cell);
-  }
-  sheetIndexes.set(sheet.id, rows);
-  return rows;
-}
-
 function extractRows(sheet, range) {
   const rows = [];
   for (let row = range.rowStart; row <= range.rowEnd; row += 1) {
@@ -221,10 +202,10 @@ function extractRows(sheet, range) {
   };
 }
 
-function addMergeStartCell(sheet, index, cells, row, col) {
+function addMergeStartCell(sheet, cells, row, col) {
   const key = `${row},${col}`;
   if (cells.has(key)) return;
-  const cell = index.get(row)?.get(col);
+  const cell = getSourceCell(sheet, row, col);
   if (cell !== undefined) {
     cells.set(key, cell);
     return;
@@ -247,6 +228,16 @@ function readWorkbookRange(model, ref, currentSheetName) {
     }
   }
   return values;
+}
+
+function getSourceCell(sheet, row, col) {
+  return getMapValue(sheet.source?.cells, `${row},${col}`);
+}
+
+function getMapValue(mapLike, key) {
+  if (!mapLike) return undefined;
+  if (typeof mapLike.get === 'function') return mapLike.get(key);
+  return mapLike[key];
 }
 
 function parseA1Range(ref, currentSheetName) {
@@ -272,17 +263,6 @@ function decodeColumn(value) {
   let index = 0;
   for (const char of String(value).toUpperCase()) index = index * 26 + char.charCodeAt(0) - 64;
   return index - 1;
-}
-
-function mapEntries(mapLike) {
-  if (!mapLike) return [];
-  if (typeof mapLike.entries === 'function') return mapLike.entries();
-  return Object.entries(mapLike);
-}
-
-function parseCellKey(key) {
-  const [row, col] = String(key).split(',').map((part) => Number(part));
-  return [Number.isFinite(row) ? row : -1, Number.isFinite(col) ? col : -1];
 }
 
 function mergeIntersectsRange(merge, range) {

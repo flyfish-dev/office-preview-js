@@ -1,1 +1,0 @@
-function e(e){return new Worker(``+new URL(`worker-BA4w5kVt.js`,import.meta.url).href,{name:e?.name})}export{e as default};

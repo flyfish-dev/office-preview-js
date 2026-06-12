@@ -1,0 +1,33 @@
+{
+  "payload": {
+    "version": 1,
+    "product": "office-preview",
+    "licenseId": "op-demo-flyfish-2026-06",
+    "holder": "Flyfish Public Demo",
+    "edition": "enterprise",
+    "commercialUse": true,
+    "maxDeployments": 2,
+    "allowedOrigins": [
+      "https://demo.flyfish.group",
+      "http://127.0.0.1:*"
+    ],
+    "features": [
+      "doc",
+      "docx",
+      "ppt",
+      "pptx",
+      "xls",
+      "xlsx",
+      "xlsb",
+      "virtual-excel"
+    ],
+    "issuedAt": "2026-06-12T00:00:00.000Z",
+    "notBefore": "2026-06-12T00:00:00.000Z",
+    "expiresAt": "2027-06-12T23:59:59.000Z"
+  },
+  "signature": {
+    "alg": "ES256",
+    "kid": "office-preview-prod-2026-06",
+    "value": "L8JCgStxXUR0m2mex5wjdIAe-BoCQ0NxGPWs_v_cx2xkDIgiB3TefWZPEARi1Ne7SBZE1ESUc5ho4Q-Bzm2sVw"
+  }
+}

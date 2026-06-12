@@ -1,5 +1,5 @@
 import { parseExcelWorkbook } from './data.js';
-import { clamp, shouldVirtualizeSheetModel } from './shared.js';
+import { DEFAULT_VIRTUAL_WINDOW_BLOCK_COLS, DEFAULT_VIRTUAL_WINDOW_BLOCK_ROWS, clamp, shouldVirtualizeSheetModel } from './shared.js';
 let loadedWorkbook = null;
 self.onmessage = async (event) => {
     const message = (event.data || {});
@@ -131,7 +131,7 @@ function chartRangeValuesOrCache(model, ref, currentSheetName, cachedValues) {
 }
 function buildSheetWindow(sheet, requestedRange) {
     const range = normalizeRange(sheet, requestedRange);
-    const readRange = expandRange(sheet, range, 1, 1);
+    const readRange = snapRange(sheet, expandRange(sheet, range, 1, 1), loadedWorkbook?.options || {});
     const cells = new Map();
     for (let row = readRange.rowStart; row <= readRange.rowEnd; row += 1) {
         for (let col = readRange.colStart; col <= readRange.colEnd; col += 1) {
@@ -173,6 +173,20 @@ function expandRange(sheet, range, rowPad, colPad) {
         rowEnd: clamp(range.rowEnd + rowPad, 0, Math.max(0, sheet.rowCount - 1)),
         colStart: clamp(range.colStart - colPad, 0, Math.max(0, sheet.colCount - 1)),
         colEnd: clamp(range.colEnd + colPad, 0, Math.max(0, sheet.colCount - 1))
+    };
+}
+function snapRange(sheet, range, options = {}) {
+    const rowBlock = Math.max(1, options.virtualWindowBlockRows ?? DEFAULT_VIRTUAL_WINDOW_BLOCK_ROWS);
+    const colBlock = Math.max(1, options.virtualWindowBlockCols ?? DEFAULT_VIRTUAL_WINDOW_BLOCK_COLS);
+    const maxRow = Math.max(0, sheet.rowCount - 1);
+    const maxCol = Math.max(0, sheet.colCount - 1);
+    const rowStart = Math.floor(range.rowStart / rowBlock) * rowBlock;
+    const colStart = Math.floor(range.colStart / colBlock) * colBlock;
+    return {
+        rowStart: clamp(rowStart, 0, maxRow),
+        rowEnd: clamp(Math.ceil((range.rowEnd + 1) / rowBlock) * rowBlock - 1, 0, maxRow),
+        colStart: clamp(colStart, 0, maxCol),
+        colEnd: clamp(Math.ceil((range.colEnd + 1) / colBlock) * colBlock - 1, 0, maxCol)
     };
 }
 function extractRows(sheet, range) {

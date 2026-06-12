@@ -1,0 +1,1 @@
+function e(e){return new Worker(``+new URL(`worker-Du1mrna9.js`,import.meta.url).href,{name:e?.name})}export{e as default};

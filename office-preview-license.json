@@ -1,33 +1,9 @@
 {
-  "payload": {
-    "version": 1,
-    "product": "office-preview",
-    "licenseId": "op-demo-flyfish-2026-06",
-    "holder": "Flyfish Public Demo",
-    "edition": "enterprise",
-    "commercialUse": true,
-    "maxDeployments": 2,
-    "allowedOrigins": [
-      "https://demo.flyfish.group",
-      "http://127.0.0.1:*"
-    ],
-    "features": [
-      "doc",
-      "docx",
-      "ppt",
-      "pptx",
-      "xls",
-      "xlsx",
-      "xlsb",
-      "virtual-excel"
-    ],
-    "issuedAt": "2026-06-12T00:00:00.000Z",
-    "notBefore": "2026-06-12T00:00:00.000Z",
-    "expiresAt": "2027-06-12T23:59:59.000Z"
-  },
-  "signature": {
-    "alg": "ES256",
-    "kid": "office-preview-prod-2026-06",
-    "value": "L8JCgStxXUR0m2mex5wjdIAe-BoCQ0NxGPWs_v_cx2xkDIgiB3TefWZPEARi1Ne7SBZE1ESUc5ho4Q-Bzm2sVw"
+  "format": "office-preview-license-v2",
+  "license": "eyJhbGxvd2VkT3JpZ2lucyI6WyJodHRwczovL2RlbW8uZmx5ZmlzaC5ncm91cCIsImh0dHA6Ly8xMjcuMC4wLjE6KiJdLCJjb21tZXJjaWFsVXNlIjp0cnVlLCJlZGl0aW9uIjoiZW50ZXJwcmlzZSIsImV4cGlyZXNBdCI6IjIwMjctMDYtMTJUMjM6NTk6NTkuMDAwWiIsImZlYXR1cmVzIjpbImRvYyIsImRvY3giLCJwcHQiLCJwcHR4IiwieGxzIiwieGxzeCIsInhsc2IiLCJ2aXJ0dWFsLWV4Y2VsIl0sImhvbGRlciI6IkZseWZpc2ggUHVibGljIERlbW8iLCJpc3N1ZWRBdCI6IjIwMjYtMDYtMTJUMDA6MDA6MDAuMDAwWiIsImxpY2Vuc2VJZCI6Im9wLWRlbW8tZmx5ZmlzaC0yMDI2LTA2IiwibWF4RGVwbG95bWVudHMiOjIsIm5vdEJlZm9yZSI6IjIwMjYtMDYtMTJUMDA6MDA6MDAuMDAwWiIsInByb2R1Y3QiOiJvZmZpY2UtcHJldmlldyIsInZlcnNpb24iOjJ9",
+  "seal": {
+    "alg": "WASM-HS256-v1",
+    "kid": "office-preview-wasm-seal-2026-06",
+    "value": "_VQ0duK0Ufz73kKoLkSAYoJBs2dEb4tqo1NenrMGCyU"
   }
 }

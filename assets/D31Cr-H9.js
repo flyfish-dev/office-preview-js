@@ -36,9 +36,9 @@
     mod
   ));
 
-  // node_modules/pako/lib/utils/common.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/utils/common.js
   var require_common = __commonJS({
-    "node_modules/pako/lib/utils/common.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/utils/common.js"(exports) {
       "use strict";
       var TYPED_OK = typeof Uint8Array !== "undefined" && typeof Uint16Array !== "undefined" && typeof Int32Array !== "undefined";
       function _has(obj, key) {
@@ -127,9 +127,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/trees.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/trees.js
   var require_trees = __commonJS({
-    "node_modules/pako/lib/zlib/trees.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/trees.js"(exports) {
       "use strict";
       var utils = require_common();
       var Z_FIXED = 4;
@@ -769,9 +769,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/adler32.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/adler32.js
   var require_adler32 = __commonJS({
-    "node_modules/pako/lib/zlib/adler32.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/adler32.js"(exports, module) {
       "use strict";
       function adler32(adler, buf, len, pos) {
         var s1 = adler & 65535 | 0, s2 = adler >>> 16 & 65535 | 0, n = 0;
@@ -791,9 +791,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/crc32.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/crc32.js
   var require_crc32 = __commonJS({
-    "node_modules/pako/lib/zlib/crc32.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/crc32.js"(exports, module) {
       "use strict";
       function makeTable() {
         var c, table = [];
@@ -819,9 +819,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/messages.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/messages.js
   var require_messages = __commonJS({
-    "node_modules/pako/lib/zlib/messages.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/messages.js"(exports, module) {
       "use strict";
       module.exports = {
         2: "need dictionary",
@@ -846,9 +846,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/deflate.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/deflate.js
   var require_deflate = __commonJS({
-    "node_modules/pako/lib/zlib/deflate.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/deflate.js"(exports) {
       "use strict";
       var utils = require_common();
       var trees = require_trees();
@@ -1895,9 +1895,9 @@
     }
   });
 
-  // node_modules/pako/lib/utils/strings.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/utils/strings.js
   var require_strings = __commonJS({
-    "node_modules/pako/lib/utils/strings.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/utils/strings.js"(exports) {
       "use strict";
       var utils = require_common();
       var STR_APPLY_OK = true;
@@ -2037,9 +2037,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/zstream.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/zstream.js
   var require_zstream = __commonJS({
-    "node_modules/pako/lib/zlib/zstream.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/zstream.js"(exports, module) {
       "use strict";
       function ZStream() {
         this.input = null;
@@ -2059,9 +2059,9 @@
     }
   });
 
-  // node_modules/pako/lib/deflate.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/deflate.js
   var require_deflate2 = __commonJS({
-    "node_modules/pako/lib/deflate.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/deflate.js"(exports) {
       "use strict";
       var zlib_deflate = require_deflate();
       var utils = require_common();
@@ -2220,9 +2220,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/inffast.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inffast.js
   var require_inffast = __commonJS({
-    "node_modules/pako/lib/zlib/inffast.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inffast.js"(exports, module) {
       "use strict";
       var BAD = 30;
       var TYPE = 12;
@@ -2449,9 +2449,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/inftrees.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inftrees.js
   var require_inftrees = __commonJS({
-    "node_modules/pako/lib/zlib/inftrees.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inftrees.js"(exports, module) {
       "use strict";
       var utils = require_common();
       var MAXBITS = 15;
@@ -2765,9 +2765,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/inflate.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inflate.js
   var require_inflate = __commonJS({
-    "node_modules/pako/lib/zlib/inflate.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/inflate.js"(exports) {
       "use strict";
       var utils = require_common();
       var adler32 = require_adler32();
@@ -4004,9 +4004,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/constants.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/constants.js
   var require_constants = __commonJS({
-    "node_modules/pako/lib/zlib/constants.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/constants.js"(exports, module) {
       "use strict";
       module.exports = {
         /* Allowed flush values; see deflate() and inflate() below for details */
@@ -4051,9 +4051,9 @@
     }
   });
 
-  // node_modules/pako/lib/zlib/gzheader.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/gzheader.js
   var require_gzheader = __commonJS({
-    "node_modules/pako/lib/zlib/gzheader.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/zlib/gzheader.js"(exports, module) {
       "use strict";
       function GZheader() {
         this.text = 0;
@@ -4071,9 +4071,9 @@
     }
   });
 
-  // node_modules/pako/lib/inflate.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/inflate.js
   var require_inflate2 = __commonJS({
-    "node_modules/pako/lib/inflate.js"(exports) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/lib/inflate.js"(exports) {
       "use strict";
       var zlib_inflate = require_inflate();
       var utils = require_common();
@@ -4245,9 +4245,9 @@
     }
   });
 
-  // node_modules/pako/index.js
+  // node_modules/.pnpm/pako@1.0.11/node_modules/pako/index.js
   var require_pako = __commonJS({
-    "node_modules/pako/index.js"(exports, module) {
+    "node_modules/.pnpm/pako@1.0.11/node_modules/pako/index.js"(exports, module) {
       "use strict";
       var assign = require_common().assign;
       var deflate = require_deflate2();
@@ -4259,9 +4259,1018 @@
     }
   });
 
-  // node_modules/utif/UTIF.js
+  // node_modules/.pnpm/upng-js@2.1.0/node_modules/upng-js/UPNG.js
+  var require_UPNG = __commonJS({
+    "node_modules/.pnpm/upng-js@2.1.0/node_modules/upng-js/UPNG.js"(exports, module) {
+      (function() {
+        var UPNG3 = {};
+        var pako;
+        if (typeof module == "object") {
+          module.exports = UPNG3;
+        } else {
+          window.UPNG = UPNG3;
+        }
+        if (typeof __require == "function") {
+          pako = require_pako();
+        } else {
+          pako = window.pako;
+        }
+        function log() {
+          if (typeof process == "undefined" || true) console.log.apply(console, arguments);
+        }
+        (function(UPNG4, pako2) {
+          UPNG4.toRGBA8 = function(out) {
+            var w = out.width, h = out.height;
+            if (out.tabs.acTL == null) return [UPNG4.toRGBA8.decodeImage(out.data, w, h, out).buffer];
+            var frms = [];
+            if (out.frames[0].data == null) out.frames[0].data = out.data;
+            var img, empty = new Uint8Array(w * h * 4);
+            for (var i = 0; i < out.frames.length; i++) {
+              var frm = out.frames[i];
+              var fx = frm.rect.x, fy = frm.rect.y, fw = frm.rect.width, fh = frm.rect.height;
+              var fdata = UPNG4.toRGBA8.decodeImage(frm.data, fw, fh, out);
+              if (i == 0) img = fdata;
+              else if (frm.blend == 0) UPNG4._copyTile(fdata, fw, fh, img, w, h, fx, fy, 0);
+              else if (frm.blend == 1) UPNG4._copyTile(fdata, fw, fh, img, w, h, fx, fy, 1);
+              frms.push(img.buffer);
+              img = img.slice(0);
+              if (frm.dispose == 0) {
+              } else if (frm.dispose == 1) UPNG4._copyTile(empty, fw, fh, img, w, h, fx, fy, 0);
+              else if (frm.dispose == 2) {
+                var pi = i - 1;
+                while (out.frames[pi].dispose == 2) pi--;
+                img = new Uint8Array(frms[pi]).slice(0);
+              }
+            }
+            return frms;
+          };
+          UPNG4.toRGBA8.decodeImage = function(data, w, h, out) {
+            var area = w * h, bpp = UPNG4.decode._getBPP(out);
+            var bpl = Math.ceil(w * bpp / 8);
+            var bf = new Uint8Array(area * 4), bf32 = new Uint32Array(bf.buffer);
+            var ctype = out.ctype, depth = out.depth;
+            var rs = UPNG4._bin.readUshort;
+            if (ctype == 6) {
+              var qarea = area << 2;
+              if (depth == 8) for (var i = 0; i < qarea; i++) {
+                bf[i] = data[i];
+              }
+              if (depth == 16) for (var i = 0; i < qarea; i++) {
+                bf[i] = data[i << 1];
+              }
+            } else if (ctype == 2) {
+              var ts = out.tabs["tRNS"], tr = -1, tg = -1, tb = -1;
+              if (ts) {
+                tr = ts[0];
+                tg = ts[1];
+                tb = ts[2];
+              }
+              if (depth == 8) for (var i = 0; i < area; i++) {
+                var qi = i << 2, ti = i * 3;
+                bf[qi] = data[ti];
+                bf[qi + 1] = data[ti + 1];
+                bf[qi + 2] = data[ti + 2];
+                bf[qi + 3] = 255;
+                if (tr != -1 && data[ti] == tr && data[ti + 1] == tg && data[ti + 2] == tb) bf[qi + 3] = 0;
+              }
+              if (depth == 16) for (var i = 0; i < area; i++) {
+                var qi = i << 2, ti = i * 6;
+                bf[qi] = data[ti];
+                bf[qi + 1] = data[ti + 2];
+                bf[qi + 2] = data[ti + 4];
+                bf[qi + 3] = 255;
+                if (tr != -1 && rs(data, ti) == tr && rs(data, ti + 2) == tg && rs(data, ti + 4) == tb) bf[qi + 3] = 0;
+              }
+            } else if (ctype == 3) {
+              var p = out.tabs["PLTE"], ap = out.tabs["tRNS"], tl = ap ? ap.length : 0;
+              if (depth == 1) for (var y = 0; y < h; y++) {
+                var s0 = y * bpl, t0 = y * w;
+                for (var i = 0; i < w; i++) {
+                  var qi = t0 + i << 2, j = data[s0 + (i >> 3)] >> 7 - ((i & 7) << 0) & 1, cj = 3 * j;
+                  bf[qi] = p[cj];
+                  bf[qi + 1] = p[cj + 1];
+                  bf[qi + 2] = p[cj + 2];
+                  bf[qi + 3] = j < tl ? ap[j] : 255;
+                }
+              }
+              if (depth == 2) for (var y = 0; y < h; y++) {
+                var s0 = y * bpl, t0 = y * w;
+                for (var i = 0; i < w; i++) {
+                  var qi = t0 + i << 2, j = data[s0 + (i >> 2)] >> 6 - ((i & 3) << 1) & 3, cj = 3 * j;
+                  bf[qi] = p[cj];
+                  bf[qi + 1] = p[cj + 1];
+                  bf[qi + 2] = p[cj + 2];
+                  bf[qi + 3] = j < tl ? ap[j] : 255;
+                }
+              }
+              if (depth == 4) for (var y = 0; y < h; y++) {
+                var s0 = y * bpl, t0 = y * w;
+                for (var i = 0; i < w; i++) {
+                  var qi = t0 + i << 2, j = data[s0 + (i >> 1)] >> 4 - ((i & 1) << 2) & 15, cj = 3 * j;
+                  bf[qi] = p[cj];
+                  bf[qi + 1] = p[cj + 1];
+                  bf[qi + 2] = p[cj + 2];
+                  bf[qi + 3] = j < tl ? ap[j] : 255;
+                }
+              }
+              if (depth == 8) for (var i = 0; i < area; i++) {
+                var qi = i << 2, j = data[i], cj = 3 * j;
+                bf[qi] = p[cj];
+                bf[qi + 1] = p[cj + 1];
+                bf[qi + 2] = p[cj + 2];
+                bf[qi + 3] = j < tl ? ap[j] : 255;
+              }
+            } else if (ctype == 4) {
+              if (depth == 8) for (var i = 0; i < area; i++) {
+                var qi = i << 2, di = i << 1, gr = data[di];
+                bf[qi] = gr;
+                bf[qi + 1] = gr;
+                bf[qi + 2] = gr;
+                bf[qi + 3] = data[di + 1];
+              }
+              if (depth == 16) for (var i = 0; i < area; i++) {
+                var qi = i << 2, di = i << 2, gr = data[di];
+                bf[qi] = gr;
+                bf[qi + 1] = gr;
+                bf[qi + 2] = gr;
+                bf[qi + 3] = data[di + 2];
+              }
+            } else if (ctype == 0) {
+              var tr = out.tabs["tRNS"] ? out.tabs["tRNS"] : -1;
+              if (depth == 1) for (var i = 0; i < area; i++) {
+                var gr = 255 * (data[i >> 3] >> 7 - (i & 7) & 1), al = gr == tr * 255 ? 0 : 255;
+                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
+              }
+              if (depth == 2) for (var i = 0; i < area; i++) {
+                var gr = 85 * (data[i >> 2] >> 6 - ((i & 3) << 1) & 3), al = gr == tr * 85 ? 0 : 255;
+                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
+              }
+              if (depth == 4) for (var i = 0; i < area; i++) {
+                var gr = 17 * (data[i >> 1] >> 4 - ((i & 1) << 2) & 15), al = gr == tr * 17 ? 0 : 255;
+                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
+              }
+              if (depth == 8) for (var i = 0; i < area; i++) {
+                var gr = data[i], al = gr == tr ? 0 : 255;
+                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
+              }
+              if (depth == 16) for (var i = 0; i < area; i++) {
+                var gr = data[i << 1], al = rs(data, i << 1) == tr ? 0 : 255;
+                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
+              }
+            }
+            return bf;
+          };
+          UPNG4.decode = function(buff) {
+            var data = new Uint8Array(buff), offset = 8, bin = UPNG4._bin, rUs = bin.readUshort, rUi = bin.readUint;
+            var out = { tabs: {}, frames: [] };
+            var dd = new Uint8Array(data.length), doff = 0;
+            var fd, foff = 0;
+            var mgck = [137, 80, 78, 71, 13, 10, 26, 10];
+            for (var i = 0; i < 8; i++) if (data[i] != mgck[i]) throw "The input is not a PNG file!";
+            while (offset < data.length) {
+              var len = bin.readUint(data, offset);
+              offset += 4;
+              var type = bin.readASCII(data, offset, 4);
+              offset += 4;
+              if (type == "IHDR") {
+                UPNG4.decode._IHDR(data, offset, out);
+              } else if (type == "IDAT") {
+                for (var i = 0; i < len; i++) dd[doff + i] = data[offset + i];
+                doff += len;
+              } else if (type == "acTL") {
+                out.tabs[type] = { num_frames: rUi(data, offset), num_plays: rUi(data, offset + 4) };
+                fd = new Uint8Array(data.length);
+              } else if (type == "fcTL") {
+                if (foff != 0) {
+                  var fr = out.frames[out.frames.length - 1];
+                  fr.data = UPNG4.decode._decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
+                  foff = 0;
+                }
+                var rct = { x: rUi(data, offset + 12), y: rUi(data, offset + 16), width: rUi(data, offset + 4), height: rUi(data, offset + 8) };
+                var del = rUs(data, offset + 22);
+                del = rUs(data, offset + 20) / (del == 0 ? 100 : del);
+                var frm = { rect: rct, delay: Math.round(del * 1e3), dispose: data[offset + 24], blend: data[offset + 25] };
+                out.frames.push(frm);
+              } else if (type == "fdAT") {
+                for (var i = 0; i < len - 4; i++) fd[foff + i] = data[offset + i + 4];
+                foff += len - 4;
+              } else if (type == "pHYs") {
+                out.tabs[type] = [bin.readUint(data, offset), bin.readUint(data, offset + 4), data[offset + 8]];
+              } else if (type == "cHRM") {
+                out.tabs[type] = [];
+                for (var i = 0; i < 8; i++) out.tabs[type].push(bin.readUint(data, offset + i * 4));
+              } else if (type == "tEXt") {
+                if (out.tabs[type] == null) out.tabs[type] = {};
+                var nz = bin.nextZero(data, offset);
+                var keyw = bin.readASCII(data, offset, nz - offset);
+                var text = bin.readASCII(data, nz + 1, offset + len - nz - 1);
+                out.tabs[type][keyw] = text;
+              } else if (type == "iTXt") {
+                if (out.tabs[type] == null) out.tabs[type] = {};
+                var nz = 0, off = offset;
+                nz = bin.nextZero(data, off);
+                var keyw = bin.readASCII(data, off, nz - off);
+                off = nz + 1;
+                var cflag = data[off], cmeth = data[off + 1];
+                off += 2;
+                nz = bin.nextZero(data, off);
+                var ltag = bin.readASCII(data, off, nz - off);
+                off = nz + 1;
+                nz = bin.nextZero(data, off);
+                var tkeyw = bin.readUTF8(data, off, nz - off);
+                off = nz + 1;
+                var text = bin.readUTF8(data, off, len - (off - offset));
+                out.tabs[type][keyw] = text;
+              } else if (type == "PLTE") {
+                out.tabs[type] = bin.readBytes(data, offset, len);
+              } else if (type == "hIST") {
+                var pl = out.tabs["PLTE"].length / 3;
+                out.tabs[type] = [];
+                for (var i = 0; i < pl; i++) out.tabs[type].push(rUs(data, offset + i * 2));
+              } else if (type == "tRNS") {
+                if (out.ctype == 3) out.tabs[type] = bin.readBytes(data, offset, len);
+                else if (out.ctype == 0) out.tabs[type] = rUs(data, offset);
+                else if (out.ctype == 2) out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
+              } else if (type == "gAMA") out.tabs[type] = bin.readUint(data, offset) / 1e5;
+              else if (type == "sRGB") out.tabs[type] = data[offset];
+              else if (type == "bKGD") {
+                if (out.ctype == 0 || out.ctype == 4) out.tabs[type] = [rUs(data, offset)];
+                else if (out.ctype == 2 || out.ctype == 6) out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
+                else if (out.ctype == 3) out.tabs[type] = data[offset];
+              } else if (type == "IEND") {
+                if (foff != 0) {
+                  var fr = out.frames[out.frames.length - 1];
+                  fr.data = UPNG4.decode._decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
+                  foff = 0;
+                }
+                out.data = UPNG4.decode._decompress(out, dd, out.width, out.height);
+                break;
+              }
+              offset += len;
+              var crc = bin.readUint(data, offset);
+              offset += 4;
+            }
+            delete out.compress;
+            delete out.interlace;
+            delete out.filter;
+            return out;
+          };
+          UPNG4.decode._decompress = function(out, dd, w, h) {
+            if (out.compress == 0) dd = UPNG4.decode._inflate(dd);
+            if (out.interlace == 0) dd = UPNG4.decode._filterZero(dd, out, 0, w, h);
+            else if (out.interlace == 1) dd = UPNG4.decode._readInterlace(dd, out);
+            return dd;
+          };
+          UPNG4.decode._inflate = function(data) {
+            return pako2["inflate"](data);
+          };
+          UPNG4.decode._readInterlace = function(data, out) {
+            var w = out.width, h = out.height;
+            var bpp = UPNG4.decode._getBPP(out), cbpp = bpp >> 3, bpl = Math.ceil(w * bpp / 8);
+            var img = new Uint8Array(h * bpl);
+            var di = 0;
+            var starting_row = [0, 0, 4, 0, 2, 0, 1];
+            var starting_col = [0, 4, 0, 2, 0, 1, 0];
+            var row_increment = [8, 8, 8, 4, 4, 2, 2];
+            var col_increment = [8, 8, 4, 4, 2, 2, 1];
+            var pass = 0;
+            while (pass < 7) {
+              var ri = row_increment[pass], ci = col_increment[pass];
+              var sw = 0, sh = 0;
+              var cr = starting_row[pass];
+              while (cr < h) {
+                cr += ri;
+                sh++;
+              }
+              var cc = starting_col[pass];
+              while (cc < w) {
+                cc += ci;
+                sw++;
+              }
+              var bpll = Math.ceil(sw * bpp / 8);
+              UPNG4.decode._filterZero(data, out, di, sw, sh);
+              var y = 0, row = starting_row[pass];
+              while (row < h) {
+                var col = starting_col[pass];
+                var cdi = di + y * bpll << 3;
+                while (col < w) {
+                  if (bpp == 1) {
+                    var val = data[cdi >> 3];
+                    val = val >> 7 - (cdi & 7) & 1;
+                    img[row * bpl + (col >> 3)] |= val << 7 - ((col & 3) << 0);
+                  }
+                  if (bpp == 2) {
+                    var val = data[cdi >> 3];
+                    val = val >> 6 - (cdi & 7) & 3;
+                    img[row * bpl + (col >> 2)] |= val << 6 - ((col & 3) << 1);
+                  }
+                  if (bpp == 4) {
+                    var val = data[cdi >> 3];
+                    val = val >> 4 - (cdi & 7) & 15;
+                    img[row * bpl + (col >> 1)] |= val << 4 - ((col & 1) << 2);
+                  }
+                  if (bpp >= 8) {
+                    var ii = row * bpl + col * cbpp;
+                    for (var j = 0; j < cbpp; j++) img[ii + j] = data[(cdi >> 3) + j];
+                  }
+                  cdi += bpp;
+                  col += ci;
+                }
+                y++;
+                row += ri;
+              }
+              if (sw * sh != 0) di += sh * (1 + bpll);
+              pass = pass + 1;
+            }
+            return img;
+          };
+          UPNG4.decode._getBPP = function(out) {
+            var noc = [1, null, 3, 1, 2, null, 4][out.ctype];
+            return noc * out.depth;
+          };
+          UPNG4.decode._filterZero = function(data, out, off, w, h) {
+            var bpp = UPNG4.decode._getBPP(out), bpl = Math.ceil(w * bpp / 8), paeth = UPNG4.decode._paeth;
+            bpp = Math.ceil(bpp / 8);
+            for (var y = 0; y < h; y++) {
+              var i = off + y * bpl, di = i + y + 1;
+              var type = data[di - 1];
+              if (type == 0) for (var x = 0; x < bpl; x++) data[i + x] = data[di + x];
+              else if (type == 1) {
+                for (var x = 0; x < bpp; x++) data[i + x] = data[di + x];
+                for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + data[i + x - bpp] & 255;
+              } else if (y == 0) {
+                for (var x = 0; x < bpp; x++) data[i + x] = data[di + x];
+                if (type == 2) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] & 255;
+                if (type == 3) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + (data[i + x - bpp] >> 1) & 255;
+                if (type == 4) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + paeth(data[i + x - bpp], 0, 0) & 255;
+              } else {
+                if (type == 2) {
+                  for (var x = 0; x < bpl; x++) data[i + x] = data[di + x] + data[i + x - bpl] & 255;
+                }
+                if (type == 3) {
+                  for (var x = 0; x < bpp; x++) data[i + x] = data[di + x] + (data[i + x - bpl] >> 1) & 255;
+                  for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + (data[i + x - bpl] + data[i + x - bpp] >> 1) & 255;
+                }
+                if (type == 4) {
+                  for (var x = 0; x < bpp; x++) data[i + x] = data[di + x] + paeth(0, data[i + x - bpl], 0) & 255;
+                  for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + paeth(data[i + x - bpp], data[i + x - bpl], data[i + x - bpp - bpl]) & 255;
+                }
+              }
+            }
+            return data;
+          };
+          UPNG4.decode._paeth = function(a, b, c) {
+            var p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
+            if (pa <= pb && pa <= pc) return a;
+            else if (pb <= pc) return b;
+            return c;
+          };
+          UPNG4.decode._IHDR = function(data, offset, out) {
+            var bin = UPNG4._bin;
+            out.width = bin.readUint(data, offset);
+            offset += 4;
+            out.height = bin.readUint(data, offset);
+            offset += 4;
+            out.depth = data[offset];
+            offset++;
+            out.ctype = data[offset];
+            offset++;
+            out.compress = data[offset];
+            offset++;
+            out.filter = data[offset];
+            offset++;
+            out.interlace = data[offset];
+            offset++;
+          };
+          UPNG4._bin = {
+            nextZero: function(data, p) {
+              while (data[p] != 0) p++;
+              return p;
+            },
+            readUshort: function(buff, p) {
+              return buff[p] << 8 | buff[p + 1];
+            },
+            writeUshort: function(buff, p, n) {
+              buff[p] = n >> 8 & 255;
+              buff[p + 1] = n & 255;
+            },
+            readUint: function(buff, p) {
+              return buff[p] * (256 * 256 * 256) + (buff[p + 1] << 16 | buff[p + 2] << 8 | buff[p + 3]);
+            },
+            writeUint: function(buff, p, n) {
+              buff[p] = n >> 24 & 255;
+              buff[p + 1] = n >> 16 & 255;
+              buff[p + 2] = n >> 8 & 255;
+              buff[p + 3] = n & 255;
+            },
+            readASCII: function(buff, p, l) {
+              var s = "";
+              for (var i = 0; i < l; i++) s += String.fromCharCode(buff[p + i]);
+              return s;
+            },
+            writeASCII: function(data, p, s) {
+              for (var i = 0; i < s.length; i++) data[p + i] = s.charCodeAt(i);
+            },
+            readBytes: function(buff, p, l) {
+              var arr = [];
+              for (var i = 0; i < l; i++) arr.push(buff[p + i]);
+              return arr;
+            },
+            pad: function(n) {
+              return n.length < 2 ? "0" + n : n;
+            },
+            readUTF8: function(buff, p, l) {
+              var s = "", ns2;
+              for (var i = 0; i < l; i++) s += "%" + UPNG4._bin.pad(buff[p + i].toString(16));
+              try {
+                ns2 = decodeURIComponent(s);
+              } catch (e) {
+                return UPNG4._bin.readASCII(buff, p, l);
+              }
+              return ns2;
+            }
+          };
+          UPNG4._copyTile = function(sb, sw, sh, tb, tw, th, xoff, yoff, mode) {
+            var w = Math.min(sw, tw), h = Math.min(sh, th);
+            var si = 0, ti = 0;
+            for (var y = 0; y < h; y++)
+              for (var x = 0; x < w; x++) {
+                if (xoff >= 0 && yoff >= 0) {
+                  si = y * sw + x << 2;
+                  ti = (yoff + y) * tw + xoff + x << 2;
+                } else {
+                  si = (-yoff + y) * sw - xoff + x << 2;
+                  ti = y * tw + x << 2;
+                }
+                if (mode == 0) {
+                  tb[ti] = sb[si];
+                  tb[ti + 1] = sb[si + 1];
+                  tb[ti + 2] = sb[si + 2];
+                  tb[ti + 3] = sb[si + 3];
+                } else if (mode == 1) {
+                  var fa = sb[si + 3] * (1 / 255), fr = sb[si] * fa, fg = sb[si + 1] * fa, fb = sb[si + 2] * fa;
+                  var ba = tb[ti + 3] * (1 / 255), br = tb[ti] * ba, bg = tb[ti + 1] * ba, bb = tb[ti + 2] * ba;
+                  var ifa = 1 - fa, oa = fa + ba * ifa, ioa = oa == 0 ? 0 : 1 / oa;
+                  tb[ti + 3] = 255 * oa;
+                  tb[ti + 0] = (fr + br * ifa) * ioa;
+                  tb[ti + 1] = (fg + bg * ifa) * ioa;
+                  tb[ti + 2] = (fb + bb * ifa) * ioa;
+                } else if (mode == 2) {
+                  var fa = sb[si + 3], fr = sb[si], fg = sb[si + 1], fb = sb[si + 2];
+                  var ba = tb[ti + 3], br = tb[ti], bg = tb[ti + 1], bb = tb[ti + 2];
+                  if (fa == ba && fr == br && fg == bg && fb == bb) {
+                    tb[ti] = 0;
+                    tb[ti + 1] = 0;
+                    tb[ti + 2] = 0;
+                    tb[ti + 3] = 0;
+                  } else {
+                    tb[ti] = fr;
+                    tb[ti + 1] = fg;
+                    tb[ti + 2] = fb;
+                    tb[ti + 3] = fa;
+                  }
+                } else if (mode == 3) {
+                  var fa = sb[si + 3], fr = sb[si], fg = sb[si + 1], fb = sb[si + 2];
+                  var ba = tb[ti + 3], br = tb[ti], bg = tb[ti + 1], bb = tb[ti + 2];
+                  if (fa == ba && fr == br && fg == bg && fb == bb) continue;
+                  if (fa < 220 && ba > 20) return false;
+                }
+              }
+            return true;
+          };
+          UPNG4.encode = function(bufs, w, h, ps, dels, forbidPlte) {
+            if (ps == null) ps = 0;
+            if (forbidPlte == null) forbidPlte = false;
+            var data = new Uint8Array(bufs[0].byteLength * bufs.length + 100);
+            var wr = [137, 80, 78, 71, 13, 10, 26, 10];
+            for (var i = 0; i < 8; i++) data[i] = wr[i];
+            var offset = 8, bin = UPNG4._bin, crc = UPNG4.crc.crc, wUi = bin.writeUint, wUs = bin.writeUshort, wAs = bin.writeASCII;
+            var nimg = UPNG4.encode.compressPNG(bufs, w, h, ps, forbidPlte);
+            wUi(data, offset, 13);
+            offset += 4;
+            wAs(data, offset, "IHDR");
+            offset += 4;
+            wUi(data, offset, w);
+            offset += 4;
+            wUi(data, offset, h);
+            offset += 4;
+            data[offset] = nimg.depth;
+            offset++;
+            data[offset] = nimg.ctype;
+            offset++;
+            data[offset] = 0;
+            offset++;
+            data[offset] = 0;
+            offset++;
+            data[offset] = 0;
+            offset++;
+            wUi(data, offset, crc(data, offset - 17, 17));
+            offset += 4;
+            wUi(data, offset, 1);
+            offset += 4;
+            wAs(data, offset, "sRGB");
+            offset += 4;
+            data[offset] = 1;
+            offset++;
+            wUi(data, offset, crc(data, offset - 5, 5));
+            offset += 4;
+            var anim = bufs.length > 1;
+            if (anim) {
+              wUi(data, offset, 8);
+              offset += 4;
+              wAs(data, offset, "acTL");
+              offset += 4;
+              wUi(data, offset, bufs.length);
+              offset += 4;
+              wUi(data, offset, 0);
+              offset += 4;
+              wUi(data, offset, crc(data, offset - 12, 12));
+              offset += 4;
+            }
+            if (nimg.ctype == 3) {
+              var dl = nimg.plte.length;
+              wUi(data, offset, dl * 3);
+              offset += 4;
+              wAs(data, offset, "PLTE");
+              offset += 4;
+              for (var i = 0; i < dl; i++) {
+                var ti = i * 3, c = nimg.plte[i], r = c & 255, g = c >> 8 & 255, b = c >> 16 & 255;
+                data[offset + ti + 0] = r;
+                data[offset + ti + 1] = g;
+                data[offset + ti + 2] = b;
+              }
+              offset += dl * 3;
+              wUi(data, offset, crc(data, offset - dl * 3 - 4, dl * 3 + 4));
+              offset += 4;
+              if (nimg.gotAlpha) {
+                wUi(data, offset, dl);
+                offset += 4;
+                wAs(data, offset, "tRNS");
+                offset += 4;
+                for (var i = 0; i < dl; i++) data[offset + i] = nimg.plte[i] >> 24 & 255;
+                offset += dl;
+                wUi(data, offset, crc(data, offset - dl - 4, dl + 4));
+                offset += 4;
+              }
+            }
+            var fi = 0;
+            for (var j = 0; j < nimg.frames.length; j++) {
+              var fr = nimg.frames[j];
+              if (anim) {
+                wUi(data, offset, 26);
+                offset += 4;
+                wAs(data, offset, "fcTL");
+                offset += 4;
+                wUi(data, offset, fi++);
+                offset += 4;
+                wUi(data, offset, fr.rect.width);
+                offset += 4;
+                wUi(data, offset, fr.rect.height);
+                offset += 4;
+                wUi(data, offset, fr.rect.x);
+                offset += 4;
+                wUi(data, offset, fr.rect.y);
+                offset += 4;
+                wUs(data, offset, dels[j]);
+                offset += 2;
+                wUs(data, offset, 1e3);
+                offset += 2;
+                data[offset] = fr.dispose;
+                offset++;
+                data[offset] = fr.blend;
+                offset++;
+                wUi(data, offset, crc(data, offset - 30, 30));
+                offset += 4;
+              }
+              var imgd = fr.cimg, dl = imgd.length;
+              wUi(data, offset, dl + (j == 0 ? 0 : 4));
+              offset += 4;
+              var ioff = offset;
+              wAs(data, offset, j == 0 ? "IDAT" : "fdAT");
+              offset += 4;
+              if (j != 0) {
+                wUi(data, offset, fi++);
+                offset += 4;
+              }
+              for (var i = 0; i < dl; i++) data[offset + i] = imgd[i];
+              offset += dl;
+              wUi(data, offset, crc(data, ioff, offset - ioff));
+              offset += 4;
+            }
+            wUi(data, offset, 0);
+            offset += 4;
+            wAs(data, offset, "IEND");
+            offset += 4;
+            wUi(data, offset, crc(data, offset - 4, 4));
+            offset += 4;
+            return data.buffer.slice(0, offset);
+          };
+          UPNG4.encode.compressPNG = function(bufs, w, h, ps, forbidPlte) {
+            var out = UPNG4.encode.compress(bufs, w, h, ps, false, forbidPlte);
+            for (var i = 0; i < bufs.length; i++) {
+              var frm = out.frames[i], nw = frm.rect.width, nh = frm.rect.height, bpl = frm.bpl, bpp = frm.bpp;
+              var fdata = new Uint8Array(nh * bpl + nh);
+              frm.cimg = UPNG4.encode._filterZero(frm.img, nh, bpp, bpl, fdata);
+            }
+            return out;
+          };
+          UPNG4.encode.compress = function(bufs, w, h, ps, forGIF, forbidPlte) {
+            if (forbidPlte == null) forbidPlte = false;
+            var ctype = 6, depth = 8, bpp = 4, alphaAnd = 255;
+            for (var j = 0; j < bufs.length; j++) {
+              var img = new Uint8Array(bufs[j]), ilen = img.length;
+              for (var i = 0; i < ilen; i += 4) alphaAnd &= img[i + 3];
+            }
+            var gotAlpha = alphaAnd != 255;
+            var cmap = {}, plte = [];
+            if (bufs.length != 0) {
+              cmap[0] = 0;
+              plte.push(0);
+              if (ps != 0) ps--;
+            }
+            if (ps != 0) {
+              var qres = UPNG4.quantize(bufs, ps, forGIF);
+              bufs = qres.bufs;
+              for (var i = 0; i < qres.plte.length; i++) {
+                var c = qres.plte[i].est.rgba;
+                if (cmap[c] == null) {
+                  cmap[c] = plte.length;
+                  plte.push(c);
+                }
+              }
+            } else {
+              for (var j = 0; j < bufs.length; j++) {
+                var img32 = new Uint32Array(bufs[j]), ilen = img32.length;
+                for (var i = 0; i < ilen; i++) {
+                  var c = img32[i];
+                  if ((i < w || c != img32[i - 1] && c != img32[i - w]) && cmap[c] == null) {
+                    cmap[c] = plte.length;
+                    plte.push(c);
+                    if (plte.length >= 300) break;
+                  }
+                }
+              }
+            }
+            var brute = gotAlpha ? forGIF : false;
+            var cc = plte.length;
+            if (cc <= 256 && forbidPlte == false) {
+              if (cc <= 2) depth = 1;
+              else if (cc <= 4) depth = 2;
+              else if (cc <= 16) depth = 4;
+              else depth = 8;
+              if (forGIF) depth = 8;
+              gotAlpha = true;
+            }
+            var frms = [];
+            for (var j = 0; j < bufs.length; j++) {
+              var cimg = new Uint8Array(bufs[j]), cimg32 = new Uint32Array(cimg.buffer);
+              var nx = 0, ny = 0, nw = w, nh = h, blend = 0;
+              if (j != 0 && !brute) {
+                var tlim = forGIF || j == 1 || frms[frms.length - 2].dispose == 2 ? 1 : 2, tstp = 0, tarea = 1e9;
+                for (var it = 0; it < tlim; it++) {
+                  var pimg = new Uint8Array(bufs[j - 1 - it]), p32 = new Uint32Array(bufs[j - 1 - it]);
+                  var mix = w, miy = h, max = -1, may = -1;
+                  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+                    var i = y * w + x;
+                    if (cimg32[i] != p32[i]) {
+                      if (x < mix) mix = x;
+                      if (x > max) max = x;
+                      if (y < miy) miy = y;
+                      if (y > may) may = y;
+                    }
+                  }
+                  var sarea = max == -1 ? 1 : (max - mix + 1) * (may - miy + 1);
+                  if (sarea < tarea) {
+                    tarea = sarea;
+                    tstp = it;
+                    if (max == -1) {
+                      nx = ny = 0;
+                      nw = nh = 1;
+                    } else {
+                      nx = mix;
+                      ny = miy;
+                      nw = max - mix + 1;
+                      nh = may - miy + 1;
+                    }
+                  }
+                }
+                var pimg = new Uint8Array(bufs[j - 1 - tstp]);
+                if (tstp == 1) frms[frms.length - 1].dispose = 2;
+                var nimg = new Uint8Array(nw * nh * 4), nimg32 = new Uint32Array(nimg.buffer);
+                UPNG4._copyTile(pimg, w, h, nimg, nw, nh, -nx, -ny, 0);
+                if (UPNG4._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 3)) {
+                  UPNG4._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 2);
+                  blend = 1;
+                } else {
+                  UPNG4._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 0);
+                  blend = 0;
+                }
+                cimg = nimg;
+                cimg32 = new Uint32Array(cimg.buffer);
+              }
+              var bpl = 4 * nw;
+              if (cc <= 256 && forbidPlte == false) {
+                bpl = Math.ceil(depth * nw / 8);
+                var nimg = new Uint8Array(bpl * nh);
+                for (var y = 0; y < nh; y++) {
+                  var i = y * bpl, ii = y * nw;
+                  if (depth == 8) for (var x = 0; x < nw; x++) nimg[i + x] = cmap[cimg32[ii + x]];
+                  else if (depth == 4) for (var x = 0; x < nw; x++) nimg[i + (x >> 1)] |= cmap[cimg32[ii + x]] << 4 - (x & 1) * 4;
+                  else if (depth == 2) for (var x = 0; x < nw; x++) nimg[i + (x >> 2)] |= cmap[cimg32[ii + x]] << 6 - (x & 3) * 2;
+                  else if (depth == 1) for (var x = 0; x < nw; x++) nimg[i + (x >> 3)] |= cmap[cimg32[ii + x]] << 7 - (x & 7) * 1;
+                }
+                cimg = nimg;
+                ctype = 3;
+                bpp = 1;
+              } else if (gotAlpha == false && bufs.length == 1) {
+                var nimg = new Uint8Array(nw * nh * 3), area = nw * nh;
+                for (var i = 0; i < area; i++) {
+                  var ti = i * 3, qi = i * 4;
+                  nimg[ti] = cimg[qi];
+                  nimg[ti + 1] = cimg[qi + 1];
+                  nimg[ti + 2] = cimg[qi + 2];
+                }
+                cimg = nimg;
+                ctype = 2;
+                bpp = 3;
+                bpl = 3 * nw;
+              }
+              frms.push({ rect: { x: nx, y: ny, width: nw, height: nh }, img: cimg, bpl, bpp, blend, dispose: brute ? 1 : 0 });
+            }
+            return { ctype, depth, plte, gotAlpha, frames: frms };
+          };
+          UPNG4.encode._filterZero = function(img, h, bpp, bpl, data) {
+            var fls = [];
+            for (var t = 0; t < 5; t++) {
+              if (h * bpl > 5e5 && (t == 2 || t == 3 || t == 4)) continue;
+              for (var y = 0; y < h; y++) UPNG4.encode._filterLine(data, img, y, bpl, bpp, t);
+              fls.push(pako2["deflate"](data));
+              if (bpp == 1) break;
+            }
+            var ti, tsize = 1e9;
+            for (var i = 0; i < fls.length; i++) if (fls[i].length < tsize) {
+              ti = i;
+              tsize = fls[i].length;
+            }
+            return fls[ti];
+          };
+          UPNG4.encode._filterLine = function(data, img, y, bpl, bpp, type) {
+            var i = y * bpl, di = i + y, paeth = UPNG4.decode._paeth;
+            data[di] = type;
+            di++;
+            if (type == 0) for (var x = 0; x < bpl; x++) data[di + x] = img[i + x];
+            else if (type == 1) {
+              for (var x = 0; x < bpp; x++) data[di + x] = img[i + x];
+              for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - img[i + x - bpp] + 256 & 255;
+            } else if (y == 0) {
+              for (var x = 0; x < bpp; x++) data[di + x] = img[i + x];
+              if (type == 2) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x];
+              if (type == 3) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - (img[i + x - bpp] >> 1) + 256 & 255;
+              if (type == 4) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - paeth(img[i + x - bpp], 0, 0) + 256 & 255;
+            } else {
+              if (type == 2) {
+                for (var x = 0; x < bpl; x++) data[di + x] = img[i + x] + 256 - img[i + x - bpl] & 255;
+              }
+              if (type == 3) {
+                for (var x = 0; x < bpp; x++) data[di + x] = img[i + x] + 256 - (img[i + x - bpl] >> 1) & 255;
+                for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] + 256 - (img[i + x - bpl] + img[i + x - bpp] >> 1) & 255;
+              }
+              if (type == 4) {
+                for (var x = 0; x < bpp; x++) data[di + x] = img[i + x] + 256 - paeth(0, img[i + x - bpl], 0) & 255;
+                for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] + 256 - paeth(img[i + x - bpp], img[i + x - bpl], img[i + x - bpp - bpl]) & 255;
+              }
+            }
+          };
+          UPNG4.crc = {
+            table: (function() {
+              var tab = new Uint32Array(256);
+              for (var n = 0; n < 256; n++) {
+                var c = n;
+                for (var k = 0; k < 8; k++) {
+                  if (c & 1) c = 3988292384 ^ c >>> 1;
+                  else c = c >>> 1;
+                }
+                tab[n] = c;
+              }
+              return tab;
+            })(),
+            update: function(c, buf, off, len) {
+              for (var i = 0; i < len; i++) c = UPNG4.crc.table[(c ^ buf[off + i]) & 255] ^ c >>> 8;
+              return c;
+            },
+            crc: function(b, o, l) {
+              return UPNG4.crc.update(4294967295, b, o, l) ^ 4294967295;
+            }
+          };
+          UPNG4.quantize = function(bufs, ps, roundAlpha) {
+            var imgs = [], totl = 0;
+            for (var i = 0; i < bufs.length; i++) {
+              imgs.push(UPNG4.encode.alphaMul(new Uint8Array(bufs[i]), roundAlpha));
+              totl += bufs[i].byteLength;
+            }
+            var nimg = new Uint8Array(totl), nimg32 = new Uint32Array(nimg.buffer), noff = 0;
+            for (var i = 0; i < imgs.length; i++) {
+              var img = imgs[i], il = img.length;
+              for (var j = 0; j < il; j++) nimg[noff + j] = img[j];
+              noff += il;
+            }
+            var root = { i0: 0, i1: nimg.length, bst: null, est: null, tdst: 0, left: null, right: null };
+            root.bst = UPNG4.quantize.stats(nimg, root.i0, root.i1);
+            root.est = UPNG4.quantize.estats(root.bst);
+            var leafs = [root];
+            while (leafs.length < ps) {
+              var maxL = 0, mi = 0;
+              for (var i = 0; i < leafs.length; i++) if (leafs[i].est.L > maxL) {
+                maxL = leafs[i].est.L;
+                mi = i;
+              }
+              if (maxL < 1e-3) break;
+              var node = leafs[mi];
+              var s0 = UPNG4.quantize.splitPixels(nimg, nimg32, node.i0, node.i1, node.est.e, node.est.eMq255);
+              var ln = { i0: node.i0, i1: s0, bst: null, est: null, tdst: 0, left: null, right: null };
+              ln.bst = UPNG4.quantize.stats(nimg, ln.i0, ln.i1);
+              ln.est = UPNG4.quantize.estats(ln.bst);
+              var rn = { i0: s0, i1: node.i1, bst: null, est: null, tdst: 0, left: null, right: null };
+              rn.bst = { R: [], m: [], N: node.bst.N - ln.bst.N };
+              for (var i = 0; i < 16; i++) rn.bst.R[i] = node.bst.R[i] - ln.bst.R[i];
+              for (var i = 0; i < 4; i++) rn.bst.m[i] = node.bst.m[i] - ln.bst.m[i];
+              rn.est = UPNG4.quantize.estats(rn.bst);
+              node.left = ln;
+              node.right = rn;
+              leafs[mi] = ln;
+              leafs.push(rn);
+            }
+            leafs.sort(function(a2, b2) {
+              return b2.bst.N - a2.bst.N;
+            });
+            for (var ii = 0; ii < imgs.length; ii++) {
+              var planeDst = UPNG4.quantize.planeDst;
+              var sb = new Uint8Array(imgs[ii].buffer), tb = new Uint32Array(imgs[ii].buffer), len = sb.length;
+              var stack = [], si = 0;
+              for (var i = 0; i < len; i += 4) {
+                var r = sb[i] * (1 / 255), g = sb[i + 1] * (1 / 255), b = sb[i + 2] * (1 / 255), a = sb[i + 3] * (1 / 255);
+                var nd = root;
+                while (nd.left) nd = planeDst(nd.est, r, g, b, a) <= 0 ? nd.left : nd.right;
+                tb[i >> 2] = nd.est.rgba;
+              }
+              imgs[ii] = tb.buffer;
+            }
+            return { bufs: imgs, plte: leafs };
+          };
+          UPNG4.quantize.getNearest = function(nd, r, g, b, a) {
+            if (nd.left == null) {
+              nd.tdst = UPNG4.quantize.dist(nd.est.q, r, g, b, a);
+              return nd;
+            }
+            var planeDst = UPNG4.quantize.planeDst(nd.est, r, g, b, a);
+            var node0 = nd.left, node1 = nd.right;
+            if (planeDst > 0) {
+              node0 = nd.right;
+              node1 = nd.left;
+            }
+            var ln = UPNG4.quantize.getNearest(node0, r, g, b, a);
+            if (ln.tdst <= planeDst * planeDst) return ln;
+            var rn = UPNG4.quantize.getNearest(node1, r, g, b, a);
+            return rn.tdst < ln.tdst ? rn : ln;
+          };
+          UPNG4.quantize.planeDst = function(est, r, g, b, a) {
+            var e = est.e;
+            return e[0] * r + e[1] * g + e[2] * b + e[3] * a - est.eMq;
+          };
+          UPNG4.quantize.dist = function(q, r, g, b, a) {
+            var d0 = r - q[0], d1 = g - q[1], d2 = b - q[2], d3 = a - q[3];
+            return d0 * d0 + d1 * d1 + d2 * d2 + d3 * d3;
+          };
+          UPNG4.quantize.splitPixels = function(nimg, nimg32, i0, i1, e, eMq) {
+            var vecDot = UPNG4.quantize.vecDot;
+            i1 -= 4;
+            var shfs = 0;
+            while (i0 < i1) {
+              while (vecDot(nimg, i0, e) <= eMq) i0 += 4;
+              while (vecDot(nimg, i1, e) > eMq) i1 -= 4;
+              if (i0 >= i1) break;
+              var t = nimg32[i0 >> 2];
+              nimg32[i0 >> 2] = nimg32[i1 >> 2];
+              nimg32[i1 >> 2] = t;
+              i0 += 4;
+              i1 -= 4;
+            }
+            while (vecDot(nimg, i0, e) > eMq) i0 -= 4;
+            return i0 + 4;
+          };
+          UPNG4.quantize.vecDot = function(nimg, i, e) {
+            return nimg[i] * e[0] + nimg[i + 1] * e[1] + nimg[i + 2] * e[2] + nimg[i + 3] * e[3];
+          };
+          UPNG4.quantize.stats = function(nimg, i0, i1) {
+            var R = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var m = [0, 0, 0, 0];
+            var N = i1 - i0 >> 2;
+            for (var i = i0; i < i1; i += 4) {
+              var r = nimg[i] * (1 / 255), g = nimg[i + 1] * (1 / 255), b = nimg[i + 2] * (1 / 255), a = nimg[i + 3] * (1 / 255);
+              m[0] += r;
+              m[1] += g;
+              m[2] += b;
+              m[3] += a;
+              R[0] += r * r;
+              R[1] += r * g;
+              R[2] += r * b;
+              R[3] += r * a;
+              R[5] += g * g;
+              R[6] += g * b;
+              R[7] += g * a;
+              R[10] += b * b;
+              R[11] += b * a;
+              R[15] += a * a;
+            }
+            R[4] = R[1];
+            R[8] = R[2];
+            R[12] = R[3];
+            R[9] = R[6];
+            R[13] = R[7];
+            R[14] = R[11];
+            return { R, m, N };
+          };
+          UPNG4.quantize.estats = function(stats) {
+            var R = stats.R, m = stats.m, N = stats.N;
+            var m0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], iN = N == 0 ? 0 : 1 / N;
+            var Rj = [
+              R[0] - m0 * m0 * iN,
+              R[1] - m0 * m1 * iN,
+              R[2] - m0 * m2 * iN,
+              R[3] - m0 * m3 * iN,
+              R[4] - m1 * m0 * iN,
+              R[5] - m1 * m1 * iN,
+              R[6] - m1 * m2 * iN,
+              R[7] - m1 * m3 * iN,
+              R[8] - m2 * m0 * iN,
+              R[9] - m2 * m1 * iN,
+              R[10] - m2 * m2 * iN,
+              R[11] - m2 * m3 * iN,
+              R[12] - m3 * m0 * iN,
+              R[13] - m3 * m1 * iN,
+              R[14] - m3 * m2 * iN,
+              R[15] - m3 * m3 * iN
+            ];
+            var A = Rj, M = UPNG4.M4;
+            var b = [0.5, 0.5, 0.5, 0.5], mi = 0, tmi = 0;
+            if (N != 0)
+              for (var i = 0; i < 10; i++) {
+                b = M.multVec(A, b);
+                tmi = Math.sqrt(M.dot(b, b));
+                b = M.sml(1 / tmi, b);
+                if (Math.abs(tmi - mi) < 1e-9) break;
+                mi = tmi;
+              }
+            var q = [m0 * iN, m1 * iN, m2 * iN, m3 * iN];
+            var eMq255 = M.dot(M.sml(255, q), b);
+            var ia = q[3] < 1e-3 ? 0 : 1 / q[3];
+            return {
+              Cov: Rj,
+              q,
+              e: b,
+              L: mi,
+              eMq255,
+              eMq: M.dot(b, q),
+              rgba: (Math.round(255 * q[3]) << 24 | Math.round(255 * q[2] * ia) << 16 | Math.round(255 * q[1] * ia) << 8 | Math.round(255 * q[0] * ia) << 0) >>> 0
+            };
+          };
+          UPNG4.M4 = {
+            multVec: function(m, v) {
+              return [
+                m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3] * v[3],
+                m[4] * v[0] + m[5] * v[1] + m[6] * v[2] + m[7] * v[3],
+                m[8] * v[0] + m[9] * v[1] + m[10] * v[2] + m[11] * v[3],
+                m[12] * v[0] + m[13] * v[1] + m[14] * v[2] + m[15] * v[3]
+              ];
+            },
+            dot: function(x, y) {
+              return x[0] * y[0] + x[1] * y[1] + x[2] * y[2] + x[3] * y[3];
+            },
+            sml: function(a, y) {
+              return [a * y[0], a * y[1], a * y[2], a * y[3]];
+            }
+          };
+          UPNG4.encode.alphaMul = function(img, roundA) {
+            var nimg = new Uint8Array(img.length), area = img.length >> 2;
+            for (var i = 0; i < area; i++) {
+              var qi = i << 2, ia = img[qi + 3];
+              if (roundA) ia = ia < 128 ? 0 : 255;
+              var a = ia * (1 / 255);
+              nimg[qi + 0] = img[qi + 0] * a;
+              nimg[qi + 1] = img[qi + 1] * a;
+              nimg[qi + 2] = img[qi + 2] * a;
+              nimg[qi + 3] = ia;
+            }
+            return nimg;
+          };
+        })(UPNG3, pako);
+      })();
+    }
+  });
+
+  // node_modules/.pnpm/utif@3.1.0/node_modules/utif/UTIF.js
   var require_UTIF = __commonJS({
-    "node_modules/utif/UTIF.js"(exports, module) {
+    "node_modules/.pnpm/utif@3.1.0/node_modules/utif/UTIF.js"(exports, module) {
       (function() {
         var UTIF2 = {};
         if (typeof module == "object") {
@@ -6456,1018 +7465,9 @@
     }
   });
 
-  // node_modules/upng-js/UPNG.js
-  var require_UPNG = __commonJS({
-    "node_modules/upng-js/UPNG.js"(exports, module) {
-      (function() {
-        var UPNG2 = {};
-        var pako;
-        if (typeof module == "object") {
-          module.exports = UPNG2;
-        } else {
-          window.UPNG = UPNG2;
-        }
-        if (typeof __require == "function") {
-          pako = require_pako();
-        } else {
-          pako = window.pako;
-        }
-        function log() {
-          if (typeof process == "undefined" || true) console.log.apply(console, arguments);
-        }
-        (function(UPNG3, pako2) {
-          UPNG3.toRGBA8 = function(out) {
-            var w = out.width, h = out.height;
-            if (out.tabs.acTL == null) return [UPNG3.toRGBA8.decodeImage(out.data, w, h, out).buffer];
-            var frms = [];
-            if (out.frames[0].data == null) out.frames[0].data = out.data;
-            var img, empty = new Uint8Array(w * h * 4);
-            for (var i = 0; i < out.frames.length; i++) {
-              var frm = out.frames[i];
-              var fx = frm.rect.x, fy = frm.rect.y, fw = frm.rect.width, fh = frm.rect.height;
-              var fdata = UPNG3.toRGBA8.decodeImage(frm.data, fw, fh, out);
-              if (i == 0) img = fdata;
-              else if (frm.blend == 0) UPNG3._copyTile(fdata, fw, fh, img, w, h, fx, fy, 0);
-              else if (frm.blend == 1) UPNG3._copyTile(fdata, fw, fh, img, w, h, fx, fy, 1);
-              frms.push(img.buffer);
-              img = img.slice(0);
-              if (frm.dispose == 0) {
-              } else if (frm.dispose == 1) UPNG3._copyTile(empty, fw, fh, img, w, h, fx, fy, 0);
-              else if (frm.dispose == 2) {
-                var pi = i - 1;
-                while (out.frames[pi].dispose == 2) pi--;
-                img = new Uint8Array(frms[pi]).slice(0);
-              }
-            }
-            return frms;
-          };
-          UPNG3.toRGBA8.decodeImage = function(data, w, h, out) {
-            var area = w * h, bpp = UPNG3.decode._getBPP(out);
-            var bpl = Math.ceil(w * bpp / 8);
-            var bf = new Uint8Array(area * 4), bf32 = new Uint32Array(bf.buffer);
-            var ctype = out.ctype, depth = out.depth;
-            var rs = UPNG3._bin.readUshort;
-            if (ctype == 6) {
-              var qarea = area << 2;
-              if (depth == 8) for (var i = 0; i < qarea; i++) {
-                bf[i] = data[i];
-              }
-              if (depth == 16) for (var i = 0; i < qarea; i++) {
-                bf[i] = data[i << 1];
-              }
-            } else if (ctype == 2) {
-              var ts = out.tabs["tRNS"], tr = -1, tg = -1, tb = -1;
-              if (ts) {
-                tr = ts[0];
-                tg = ts[1];
-                tb = ts[2];
-              }
-              if (depth == 8) for (var i = 0; i < area; i++) {
-                var qi = i << 2, ti = i * 3;
-                bf[qi] = data[ti];
-                bf[qi + 1] = data[ti + 1];
-                bf[qi + 2] = data[ti + 2];
-                bf[qi + 3] = 255;
-                if (tr != -1 && data[ti] == tr && data[ti + 1] == tg && data[ti + 2] == tb) bf[qi + 3] = 0;
-              }
-              if (depth == 16) for (var i = 0; i < area; i++) {
-                var qi = i << 2, ti = i * 6;
-                bf[qi] = data[ti];
-                bf[qi + 1] = data[ti + 2];
-                bf[qi + 2] = data[ti + 4];
-                bf[qi + 3] = 255;
-                if (tr != -1 && rs(data, ti) == tr && rs(data, ti + 2) == tg && rs(data, ti + 4) == tb) bf[qi + 3] = 0;
-              }
-            } else if (ctype == 3) {
-              var p = out.tabs["PLTE"], ap = out.tabs["tRNS"], tl = ap ? ap.length : 0;
-              if (depth == 1) for (var y = 0; y < h; y++) {
-                var s0 = y * bpl, t0 = y * w;
-                for (var i = 0; i < w; i++) {
-                  var qi = t0 + i << 2, j = data[s0 + (i >> 3)] >> 7 - ((i & 7) << 0) & 1, cj = 3 * j;
-                  bf[qi] = p[cj];
-                  bf[qi + 1] = p[cj + 1];
-                  bf[qi + 2] = p[cj + 2];
-                  bf[qi + 3] = j < tl ? ap[j] : 255;
-                }
-              }
-              if (depth == 2) for (var y = 0; y < h; y++) {
-                var s0 = y * bpl, t0 = y * w;
-                for (var i = 0; i < w; i++) {
-                  var qi = t0 + i << 2, j = data[s0 + (i >> 2)] >> 6 - ((i & 3) << 1) & 3, cj = 3 * j;
-                  bf[qi] = p[cj];
-                  bf[qi + 1] = p[cj + 1];
-                  bf[qi + 2] = p[cj + 2];
-                  bf[qi + 3] = j < tl ? ap[j] : 255;
-                }
-              }
-              if (depth == 4) for (var y = 0; y < h; y++) {
-                var s0 = y * bpl, t0 = y * w;
-                for (var i = 0; i < w; i++) {
-                  var qi = t0 + i << 2, j = data[s0 + (i >> 1)] >> 4 - ((i & 1) << 2) & 15, cj = 3 * j;
-                  bf[qi] = p[cj];
-                  bf[qi + 1] = p[cj + 1];
-                  bf[qi + 2] = p[cj + 2];
-                  bf[qi + 3] = j < tl ? ap[j] : 255;
-                }
-              }
-              if (depth == 8) for (var i = 0; i < area; i++) {
-                var qi = i << 2, j = data[i], cj = 3 * j;
-                bf[qi] = p[cj];
-                bf[qi + 1] = p[cj + 1];
-                bf[qi + 2] = p[cj + 2];
-                bf[qi + 3] = j < tl ? ap[j] : 255;
-              }
-            } else if (ctype == 4) {
-              if (depth == 8) for (var i = 0; i < area; i++) {
-                var qi = i << 2, di = i << 1, gr = data[di];
-                bf[qi] = gr;
-                bf[qi + 1] = gr;
-                bf[qi + 2] = gr;
-                bf[qi + 3] = data[di + 1];
-              }
-              if (depth == 16) for (var i = 0; i < area; i++) {
-                var qi = i << 2, di = i << 2, gr = data[di];
-                bf[qi] = gr;
-                bf[qi + 1] = gr;
-                bf[qi + 2] = gr;
-                bf[qi + 3] = data[di + 2];
-              }
-            } else if (ctype == 0) {
-              var tr = out.tabs["tRNS"] ? out.tabs["tRNS"] : -1;
-              if (depth == 1) for (var i = 0; i < area; i++) {
-                var gr = 255 * (data[i >> 3] >> 7 - (i & 7) & 1), al = gr == tr * 255 ? 0 : 255;
-                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
-              }
-              if (depth == 2) for (var i = 0; i < area; i++) {
-                var gr = 85 * (data[i >> 2] >> 6 - ((i & 3) << 1) & 3), al = gr == tr * 85 ? 0 : 255;
-                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
-              }
-              if (depth == 4) for (var i = 0; i < area; i++) {
-                var gr = 17 * (data[i >> 1] >> 4 - ((i & 1) << 2) & 15), al = gr == tr * 17 ? 0 : 255;
-                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
-              }
-              if (depth == 8) for (var i = 0; i < area; i++) {
-                var gr = data[i], al = gr == tr ? 0 : 255;
-                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
-              }
-              if (depth == 16) for (var i = 0; i < area; i++) {
-                var gr = data[i << 1], al = rs(data, i << 1) == tr ? 0 : 255;
-                bf32[i] = al << 24 | gr << 16 | gr << 8 | gr;
-              }
-            }
-            return bf;
-          };
-          UPNG3.decode = function(buff) {
-            var data = new Uint8Array(buff), offset = 8, bin = UPNG3._bin, rUs = bin.readUshort, rUi = bin.readUint;
-            var out = { tabs: {}, frames: [] };
-            var dd = new Uint8Array(data.length), doff = 0;
-            var fd, foff = 0;
-            var mgck = [137, 80, 78, 71, 13, 10, 26, 10];
-            for (var i = 0; i < 8; i++) if (data[i] != mgck[i]) throw "The input is not a PNG file!";
-            while (offset < data.length) {
-              var len = bin.readUint(data, offset);
-              offset += 4;
-              var type = bin.readASCII(data, offset, 4);
-              offset += 4;
-              if (type == "IHDR") {
-                UPNG3.decode._IHDR(data, offset, out);
-              } else if (type == "IDAT") {
-                for (var i = 0; i < len; i++) dd[doff + i] = data[offset + i];
-                doff += len;
-              } else if (type == "acTL") {
-                out.tabs[type] = { num_frames: rUi(data, offset), num_plays: rUi(data, offset + 4) };
-                fd = new Uint8Array(data.length);
-              } else if (type == "fcTL") {
-                if (foff != 0) {
-                  var fr = out.frames[out.frames.length - 1];
-                  fr.data = UPNG3.decode._decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
-                  foff = 0;
-                }
-                var rct = { x: rUi(data, offset + 12), y: rUi(data, offset + 16), width: rUi(data, offset + 4), height: rUi(data, offset + 8) };
-                var del = rUs(data, offset + 22);
-                del = rUs(data, offset + 20) / (del == 0 ? 100 : del);
-                var frm = { rect: rct, delay: Math.round(del * 1e3), dispose: data[offset + 24], blend: data[offset + 25] };
-                out.frames.push(frm);
-              } else if (type == "fdAT") {
-                for (var i = 0; i < len - 4; i++) fd[foff + i] = data[offset + i + 4];
-                foff += len - 4;
-              } else if (type == "pHYs") {
-                out.tabs[type] = [bin.readUint(data, offset), bin.readUint(data, offset + 4), data[offset + 8]];
-              } else if (type == "cHRM") {
-                out.tabs[type] = [];
-                for (var i = 0; i < 8; i++) out.tabs[type].push(bin.readUint(data, offset + i * 4));
-              } else if (type == "tEXt") {
-                if (out.tabs[type] == null) out.tabs[type] = {};
-                var nz = bin.nextZero(data, offset);
-                var keyw = bin.readASCII(data, offset, nz - offset);
-                var text = bin.readASCII(data, nz + 1, offset + len - nz - 1);
-                out.tabs[type][keyw] = text;
-              } else if (type == "iTXt") {
-                if (out.tabs[type] == null) out.tabs[type] = {};
-                var nz = 0, off = offset;
-                nz = bin.nextZero(data, off);
-                var keyw = bin.readASCII(data, off, nz - off);
-                off = nz + 1;
-                var cflag = data[off], cmeth = data[off + 1];
-                off += 2;
-                nz = bin.nextZero(data, off);
-                var ltag = bin.readASCII(data, off, nz - off);
-                off = nz + 1;
-                nz = bin.nextZero(data, off);
-                var tkeyw = bin.readUTF8(data, off, nz - off);
-                off = nz + 1;
-                var text = bin.readUTF8(data, off, len - (off - offset));
-                out.tabs[type][keyw] = text;
-              } else if (type == "PLTE") {
-                out.tabs[type] = bin.readBytes(data, offset, len);
-              } else if (type == "hIST") {
-                var pl = out.tabs["PLTE"].length / 3;
-                out.tabs[type] = [];
-                for (var i = 0; i < pl; i++) out.tabs[type].push(rUs(data, offset + i * 2));
-              } else if (type == "tRNS") {
-                if (out.ctype == 3) out.tabs[type] = bin.readBytes(data, offset, len);
-                else if (out.ctype == 0) out.tabs[type] = rUs(data, offset);
-                else if (out.ctype == 2) out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
-              } else if (type == "gAMA") out.tabs[type] = bin.readUint(data, offset) / 1e5;
-              else if (type == "sRGB") out.tabs[type] = data[offset];
-              else if (type == "bKGD") {
-                if (out.ctype == 0 || out.ctype == 4) out.tabs[type] = [rUs(data, offset)];
-                else if (out.ctype == 2 || out.ctype == 6) out.tabs[type] = [rUs(data, offset), rUs(data, offset + 2), rUs(data, offset + 4)];
-                else if (out.ctype == 3) out.tabs[type] = data[offset];
-              } else if (type == "IEND") {
-                if (foff != 0) {
-                  var fr = out.frames[out.frames.length - 1];
-                  fr.data = UPNG3.decode._decompress(out, fd.slice(0, foff), fr.rect.width, fr.rect.height);
-                  foff = 0;
-                }
-                out.data = UPNG3.decode._decompress(out, dd, out.width, out.height);
-                break;
-              }
-              offset += len;
-              var crc = bin.readUint(data, offset);
-              offset += 4;
-            }
-            delete out.compress;
-            delete out.interlace;
-            delete out.filter;
-            return out;
-          };
-          UPNG3.decode._decompress = function(out, dd, w, h) {
-            if (out.compress == 0) dd = UPNG3.decode._inflate(dd);
-            if (out.interlace == 0) dd = UPNG3.decode._filterZero(dd, out, 0, w, h);
-            else if (out.interlace == 1) dd = UPNG3.decode._readInterlace(dd, out);
-            return dd;
-          };
-          UPNG3.decode._inflate = function(data) {
-            return pako2["inflate"](data);
-          };
-          UPNG3.decode._readInterlace = function(data, out) {
-            var w = out.width, h = out.height;
-            var bpp = UPNG3.decode._getBPP(out), cbpp = bpp >> 3, bpl = Math.ceil(w * bpp / 8);
-            var img = new Uint8Array(h * bpl);
-            var di = 0;
-            var starting_row = [0, 0, 4, 0, 2, 0, 1];
-            var starting_col = [0, 4, 0, 2, 0, 1, 0];
-            var row_increment = [8, 8, 8, 4, 4, 2, 2];
-            var col_increment = [8, 8, 4, 4, 2, 2, 1];
-            var pass = 0;
-            while (pass < 7) {
-              var ri = row_increment[pass], ci = col_increment[pass];
-              var sw = 0, sh = 0;
-              var cr = starting_row[pass];
-              while (cr < h) {
-                cr += ri;
-                sh++;
-              }
-              var cc = starting_col[pass];
-              while (cc < w) {
-                cc += ci;
-                sw++;
-              }
-              var bpll = Math.ceil(sw * bpp / 8);
-              UPNG3.decode._filterZero(data, out, di, sw, sh);
-              var y = 0, row = starting_row[pass];
-              while (row < h) {
-                var col = starting_col[pass];
-                var cdi = di + y * bpll << 3;
-                while (col < w) {
-                  if (bpp == 1) {
-                    var val = data[cdi >> 3];
-                    val = val >> 7 - (cdi & 7) & 1;
-                    img[row * bpl + (col >> 3)] |= val << 7 - ((col & 3) << 0);
-                  }
-                  if (bpp == 2) {
-                    var val = data[cdi >> 3];
-                    val = val >> 6 - (cdi & 7) & 3;
-                    img[row * bpl + (col >> 2)] |= val << 6 - ((col & 3) << 1);
-                  }
-                  if (bpp == 4) {
-                    var val = data[cdi >> 3];
-                    val = val >> 4 - (cdi & 7) & 15;
-                    img[row * bpl + (col >> 1)] |= val << 4 - ((col & 1) << 2);
-                  }
-                  if (bpp >= 8) {
-                    var ii = row * bpl + col * cbpp;
-                    for (var j = 0; j < cbpp; j++) img[ii + j] = data[(cdi >> 3) + j];
-                  }
-                  cdi += bpp;
-                  col += ci;
-                }
-                y++;
-                row += ri;
-              }
-              if (sw * sh != 0) di += sh * (1 + bpll);
-              pass = pass + 1;
-            }
-            return img;
-          };
-          UPNG3.decode._getBPP = function(out) {
-            var noc = [1, null, 3, 1, 2, null, 4][out.ctype];
-            return noc * out.depth;
-          };
-          UPNG3.decode._filterZero = function(data, out, off, w, h) {
-            var bpp = UPNG3.decode._getBPP(out), bpl = Math.ceil(w * bpp / 8), paeth = UPNG3.decode._paeth;
-            bpp = Math.ceil(bpp / 8);
-            for (var y = 0; y < h; y++) {
-              var i = off + y * bpl, di = i + y + 1;
-              var type = data[di - 1];
-              if (type == 0) for (var x = 0; x < bpl; x++) data[i + x] = data[di + x];
-              else if (type == 1) {
-                for (var x = 0; x < bpp; x++) data[i + x] = data[di + x];
-                for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + data[i + x - bpp] & 255;
-              } else if (y == 0) {
-                for (var x = 0; x < bpp; x++) data[i + x] = data[di + x];
-                if (type == 2) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] & 255;
-                if (type == 3) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + (data[i + x - bpp] >> 1) & 255;
-                if (type == 4) for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + paeth(data[i + x - bpp], 0, 0) & 255;
-              } else {
-                if (type == 2) {
-                  for (var x = 0; x < bpl; x++) data[i + x] = data[di + x] + data[i + x - bpl] & 255;
-                }
-                if (type == 3) {
-                  for (var x = 0; x < bpp; x++) data[i + x] = data[di + x] + (data[i + x - bpl] >> 1) & 255;
-                  for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + (data[i + x - bpl] + data[i + x - bpp] >> 1) & 255;
-                }
-                if (type == 4) {
-                  for (var x = 0; x < bpp; x++) data[i + x] = data[di + x] + paeth(0, data[i + x - bpl], 0) & 255;
-                  for (var x = bpp; x < bpl; x++) data[i + x] = data[di + x] + paeth(data[i + x - bpp], data[i + x - bpl], data[i + x - bpp - bpl]) & 255;
-                }
-              }
-            }
-            return data;
-          };
-          UPNG3.decode._paeth = function(a, b, c) {
-            var p = a + b - c, pa = Math.abs(p - a), pb = Math.abs(p - b), pc = Math.abs(p - c);
-            if (pa <= pb && pa <= pc) return a;
-            else if (pb <= pc) return b;
-            return c;
-          };
-          UPNG3.decode._IHDR = function(data, offset, out) {
-            var bin = UPNG3._bin;
-            out.width = bin.readUint(data, offset);
-            offset += 4;
-            out.height = bin.readUint(data, offset);
-            offset += 4;
-            out.depth = data[offset];
-            offset++;
-            out.ctype = data[offset];
-            offset++;
-            out.compress = data[offset];
-            offset++;
-            out.filter = data[offset];
-            offset++;
-            out.interlace = data[offset];
-            offset++;
-          };
-          UPNG3._bin = {
-            nextZero: function(data, p) {
-              while (data[p] != 0) p++;
-              return p;
-            },
-            readUshort: function(buff, p) {
-              return buff[p] << 8 | buff[p + 1];
-            },
-            writeUshort: function(buff, p, n) {
-              buff[p] = n >> 8 & 255;
-              buff[p + 1] = n & 255;
-            },
-            readUint: function(buff, p) {
-              return buff[p] * (256 * 256 * 256) + (buff[p + 1] << 16 | buff[p + 2] << 8 | buff[p + 3]);
-            },
-            writeUint: function(buff, p, n) {
-              buff[p] = n >> 24 & 255;
-              buff[p + 1] = n >> 16 & 255;
-              buff[p + 2] = n >> 8 & 255;
-              buff[p + 3] = n & 255;
-            },
-            readASCII: function(buff, p, l) {
-              var s = "";
-              for (var i = 0; i < l; i++) s += String.fromCharCode(buff[p + i]);
-              return s;
-            },
-            writeASCII: function(data, p, s) {
-              for (var i = 0; i < s.length; i++) data[p + i] = s.charCodeAt(i);
-            },
-            readBytes: function(buff, p, l) {
-              var arr = [];
-              for (var i = 0; i < l; i++) arr.push(buff[p + i]);
-              return arr;
-            },
-            pad: function(n) {
-              return n.length < 2 ? "0" + n : n;
-            },
-            readUTF8: function(buff, p, l) {
-              var s = "", ns2;
-              for (var i = 0; i < l; i++) s += "%" + UPNG3._bin.pad(buff[p + i].toString(16));
-              try {
-                ns2 = decodeURIComponent(s);
-              } catch (e) {
-                return UPNG3._bin.readASCII(buff, p, l);
-              }
-              return ns2;
-            }
-          };
-          UPNG3._copyTile = function(sb, sw, sh, tb, tw, th, xoff, yoff, mode) {
-            var w = Math.min(sw, tw), h = Math.min(sh, th);
-            var si = 0, ti = 0;
-            for (var y = 0; y < h; y++)
-              for (var x = 0; x < w; x++) {
-                if (xoff >= 0 && yoff >= 0) {
-                  si = y * sw + x << 2;
-                  ti = (yoff + y) * tw + xoff + x << 2;
-                } else {
-                  si = (-yoff + y) * sw - xoff + x << 2;
-                  ti = y * tw + x << 2;
-                }
-                if (mode == 0) {
-                  tb[ti] = sb[si];
-                  tb[ti + 1] = sb[si + 1];
-                  tb[ti + 2] = sb[si + 2];
-                  tb[ti + 3] = sb[si + 3];
-                } else if (mode == 1) {
-                  var fa = sb[si + 3] * (1 / 255), fr = sb[si] * fa, fg = sb[si + 1] * fa, fb = sb[si + 2] * fa;
-                  var ba = tb[ti + 3] * (1 / 255), br = tb[ti] * ba, bg = tb[ti + 1] * ba, bb = tb[ti + 2] * ba;
-                  var ifa = 1 - fa, oa = fa + ba * ifa, ioa = oa == 0 ? 0 : 1 / oa;
-                  tb[ti + 3] = 255 * oa;
-                  tb[ti + 0] = (fr + br * ifa) * ioa;
-                  tb[ti + 1] = (fg + bg * ifa) * ioa;
-                  tb[ti + 2] = (fb + bb * ifa) * ioa;
-                } else if (mode == 2) {
-                  var fa = sb[si + 3], fr = sb[si], fg = sb[si + 1], fb = sb[si + 2];
-                  var ba = tb[ti + 3], br = tb[ti], bg = tb[ti + 1], bb = tb[ti + 2];
-                  if (fa == ba && fr == br && fg == bg && fb == bb) {
-                    tb[ti] = 0;
-                    tb[ti + 1] = 0;
-                    tb[ti + 2] = 0;
-                    tb[ti + 3] = 0;
-                  } else {
-                    tb[ti] = fr;
-                    tb[ti + 1] = fg;
-                    tb[ti + 2] = fb;
-                    tb[ti + 3] = fa;
-                  }
-                } else if (mode == 3) {
-                  var fa = sb[si + 3], fr = sb[si], fg = sb[si + 1], fb = sb[si + 2];
-                  var ba = tb[ti + 3], br = tb[ti], bg = tb[ti + 1], bb = tb[ti + 2];
-                  if (fa == ba && fr == br && fg == bg && fb == bb) continue;
-                  if (fa < 220 && ba > 20) return false;
-                }
-              }
-            return true;
-          };
-          UPNG3.encode = function(bufs, w, h, ps, dels, forbidPlte) {
-            if (ps == null) ps = 0;
-            if (forbidPlte == null) forbidPlte = false;
-            var data = new Uint8Array(bufs[0].byteLength * bufs.length + 100);
-            var wr = [137, 80, 78, 71, 13, 10, 26, 10];
-            for (var i = 0; i < 8; i++) data[i] = wr[i];
-            var offset = 8, bin = UPNG3._bin, crc = UPNG3.crc.crc, wUi = bin.writeUint, wUs = bin.writeUshort, wAs = bin.writeASCII;
-            var nimg = UPNG3.encode.compressPNG(bufs, w, h, ps, forbidPlte);
-            wUi(data, offset, 13);
-            offset += 4;
-            wAs(data, offset, "IHDR");
-            offset += 4;
-            wUi(data, offset, w);
-            offset += 4;
-            wUi(data, offset, h);
-            offset += 4;
-            data[offset] = nimg.depth;
-            offset++;
-            data[offset] = nimg.ctype;
-            offset++;
-            data[offset] = 0;
-            offset++;
-            data[offset] = 0;
-            offset++;
-            data[offset] = 0;
-            offset++;
-            wUi(data, offset, crc(data, offset - 17, 17));
-            offset += 4;
-            wUi(data, offset, 1);
-            offset += 4;
-            wAs(data, offset, "sRGB");
-            offset += 4;
-            data[offset] = 1;
-            offset++;
-            wUi(data, offset, crc(data, offset - 5, 5));
-            offset += 4;
-            var anim = bufs.length > 1;
-            if (anim) {
-              wUi(data, offset, 8);
-              offset += 4;
-              wAs(data, offset, "acTL");
-              offset += 4;
-              wUi(data, offset, bufs.length);
-              offset += 4;
-              wUi(data, offset, 0);
-              offset += 4;
-              wUi(data, offset, crc(data, offset - 12, 12));
-              offset += 4;
-            }
-            if (nimg.ctype == 3) {
-              var dl = nimg.plte.length;
-              wUi(data, offset, dl * 3);
-              offset += 4;
-              wAs(data, offset, "PLTE");
-              offset += 4;
-              for (var i = 0; i < dl; i++) {
-                var ti = i * 3, c = nimg.plte[i], r = c & 255, g = c >> 8 & 255, b = c >> 16 & 255;
-                data[offset + ti + 0] = r;
-                data[offset + ti + 1] = g;
-                data[offset + ti + 2] = b;
-              }
-              offset += dl * 3;
-              wUi(data, offset, crc(data, offset - dl * 3 - 4, dl * 3 + 4));
-              offset += 4;
-              if (nimg.gotAlpha) {
-                wUi(data, offset, dl);
-                offset += 4;
-                wAs(data, offset, "tRNS");
-                offset += 4;
-                for (var i = 0; i < dl; i++) data[offset + i] = nimg.plte[i] >> 24 & 255;
-                offset += dl;
-                wUi(data, offset, crc(data, offset - dl - 4, dl + 4));
-                offset += 4;
-              }
-            }
-            var fi = 0;
-            for (var j = 0; j < nimg.frames.length; j++) {
-              var fr = nimg.frames[j];
-              if (anim) {
-                wUi(data, offset, 26);
-                offset += 4;
-                wAs(data, offset, "fcTL");
-                offset += 4;
-                wUi(data, offset, fi++);
-                offset += 4;
-                wUi(data, offset, fr.rect.width);
-                offset += 4;
-                wUi(data, offset, fr.rect.height);
-                offset += 4;
-                wUi(data, offset, fr.rect.x);
-                offset += 4;
-                wUi(data, offset, fr.rect.y);
-                offset += 4;
-                wUs(data, offset, dels[j]);
-                offset += 2;
-                wUs(data, offset, 1e3);
-                offset += 2;
-                data[offset] = fr.dispose;
-                offset++;
-                data[offset] = fr.blend;
-                offset++;
-                wUi(data, offset, crc(data, offset - 30, 30));
-                offset += 4;
-              }
-              var imgd = fr.cimg, dl = imgd.length;
-              wUi(data, offset, dl + (j == 0 ? 0 : 4));
-              offset += 4;
-              var ioff = offset;
-              wAs(data, offset, j == 0 ? "IDAT" : "fdAT");
-              offset += 4;
-              if (j != 0) {
-                wUi(data, offset, fi++);
-                offset += 4;
-              }
-              for (var i = 0; i < dl; i++) data[offset + i] = imgd[i];
-              offset += dl;
-              wUi(data, offset, crc(data, ioff, offset - ioff));
-              offset += 4;
-            }
-            wUi(data, offset, 0);
-            offset += 4;
-            wAs(data, offset, "IEND");
-            offset += 4;
-            wUi(data, offset, crc(data, offset - 4, 4));
-            offset += 4;
-            return data.buffer.slice(0, offset);
-          };
-          UPNG3.encode.compressPNG = function(bufs, w, h, ps, forbidPlte) {
-            var out = UPNG3.encode.compress(bufs, w, h, ps, false, forbidPlte);
-            for (var i = 0; i < bufs.length; i++) {
-              var frm = out.frames[i], nw = frm.rect.width, nh = frm.rect.height, bpl = frm.bpl, bpp = frm.bpp;
-              var fdata = new Uint8Array(nh * bpl + nh);
-              frm.cimg = UPNG3.encode._filterZero(frm.img, nh, bpp, bpl, fdata);
-            }
-            return out;
-          };
-          UPNG3.encode.compress = function(bufs, w, h, ps, forGIF, forbidPlte) {
-            if (forbidPlte == null) forbidPlte = false;
-            var ctype = 6, depth = 8, bpp = 4, alphaAnd = 255;
-            for (var j = 0; j < bufs.length; j++) {
-              var img = new Uint8Array(bufs[j]), ilen = img.length;
-              for (var i = 0; i < ilen; i += 4) alphaAnd &= img[i + 3];
-            }
-            var gotAlpha = alphaAnd != 255;
-            var cmap = {}, plte = [];
-            if (bufs.length != 0) {
-              cmap[0] = 0;
-              plte.push(0);
-              if (ps != 0) ps--;
-            }
-            if (ps != 0) {
-              var qres = UPNG3.quantize(bufs, ps, forGIF);
-              bufs = qres.bufs;
-              for (var i = 0; i < qres.plte.length; i++) {
-                var c = qres.plte[i].est.rgba;
-                if (cmap[c] == null) {
-                  cmap[c] = plte.length;
-                  plte.push(c);
-                }
-              }
-            } else {
-              for (var j = 0; j < bufs.length; j++) {
-                var img32 = new Uint32Array(bufs[j]), ilen = img32.length;
-                for (var i = 0; i < ilen; i++) {
-                  var c = img32[i];
-                  if ((i < w || c != img32[i - 1] && c != img32[i - w]) && cmap[c] == null) {
-                    cmap[c] = plte.length;
-                    plte.push(c);
-                    if (plte.length >= 300) break;
-                  }
-                }
-              }
-            }
-            var brute = gotAlpha ? forGIF : false;
-            var cc = plte.length;
-            if (cc <= 256 && forbidPlte == false) {
-              if (cc <= 2) depth = 1;
-              else if (cc <= 4) depth = 2;
-              else if (cc <= 16) depth = 4;
-              else depth = 8;
-              if (forGIF) depth = 8;
-              gotAlpha = true;
-            }
-            var frms = [];
-            for (var j = 0; j < bufs.length; j++) {
-              var cimg = new Uint8Array(bufs[j]), cimg32 = new Uint32Array(cimg.buffer);
-              var nx = 0, ny = 0, nw = w, nh = h, blend = 0;
-              if (j != 0 && !brute) {
-                var tlim = forGIF || j == 1 || frms[frms.length - 2].dispose == 2 ? 1 : 2, tstp = 0, tarea = 1e9;
-                for (var it = 0; it < tlim; it++) {
-                  var pimg = new Uint8Array(bufs[j - 1 - it]), p32 = new Uint32Array(bufs[j - 1 - it]);
-                  var mix = w, miy = h, max = -1, may = -1;
-                  for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
-                    var i = y * w + x;
-                    if (cimg32[i] != p32[i]) {
-                      if (x < mix) mix = x;
-                      if (x > max) max = x;
-                      if (y < miy) miy = y;
-                      if (y > may) may = y;
-                    }
-                  }
-                  var sarea = max == -1 ? 1 : (max - mix + 1) * (may - miy + 1);
-                  if (sarea < tarea) {
-                    tarea = sarea;
-                    tstp = it;
-                    if (max == -1) {
-                      nx = ny = 0;
-                      nw = nh = 1;
-                    } else {
-                      nx = mix;
-                      ny = miy;
-                      nw = max - mix + 1;
-                      nh = may - miy + 1;
-                    }
-                  }
-                }
-                var pimg = new Uint8Array(bufs[j - 1 - tstp]);
-                if (tstp == 1) frms[frms.length - 1].dispose = 2;
-                var nimg = new Uint8Array(nw * nh * 4), nimg32 = new Uint32Array(nimg.buffer);
-                UPNG3._copyTile(pimg, w, h, nimg, nw, nh, -nx, -ny, 0);
-                if (UPNG3._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 3)) {
-                  UPNG3._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 2);
-                  blend = 1;
-                } else {
-                  UPNG3._copyTile(cimg, w, h, nimg, nw, nh, -nx, -ny, 0);
-                  blend = 0;
-                }
-                cimg = nimg;
-                cimg32 = new Uint32Array(cimg.buffer);
-              }
-              var bpl = 4 * nw;
-              if (cc <= 256 && forbidPlte == false) {
-                bpl = Math.ceil(depth * nw / 8);
-                var nimg = new Uint8Array(bpl * nh);
-                for (var y = 0; y < nh; y++) {
-                  var i = y * bpl, ii = y * nw;
-                  if (depth == 8) for (var x = 0; x < nw; x++) nimg[i + x] = cmap[cimg32[ii + x]];
-                  else if (depth == 4) for (var x = 0; x < nw; x++) nimg[i + (x >> 1)] |= cmap[cimg32[ii + x]] << 4 - (x & 1) * 4;
-                  else if (depth == 2) for (var x = 0; x < nw; x++) nimg[i + (x >> 2)] |= cmap[cimg32[ii + x]] << 6 - (x & 3) * 2;
-                  else if (depth == 1) for (var x = 0; x < nw; x++) nimg[i + (x >> 3)] |= cmap[cimg32[ii + x]] << 7 - (x & 7) * 1;
-                }
-                cimg = nimg;
-                ctype = 3;
-                bpp = 1;
-              } else if (gotAlpha == false && bufs.length == 1) {
-                var nimg = new Uint8Array(nw * nh * 3), area = nw * nh;
-                for (var i = 0; i < area; i++) {
-                  var ti = i * 3, qi = i * 4;
-                  nimg[ti] = cimg[qi];
-                  nimg[ti + 1] = cimg[qi + 1];
-                  nimg[ti + 2] = cimg[qi + 2];
-                }
-                cimg = nimg;
-                ctype = 2;
-                bpp = 3;
-                bpl = 3 * nw;
-              }
-              frms.push({ rect: { x: nx, y: ny, width: nw, height: nh }, img: cimg, bpl, bpp, blend, dispose: brute ? 1 : 0 });
-            }
-            return { ctype, depth, plte, gotAlpha, frames: frms };
-          };
-          UPNG3.encode._filterZero = function(img, h, bpp, bpl, data) {
-            var fls = [];
-            for (var t = 0; t < 5; t++) {
-              if (h * bpl > 5e5 && (t == 2 || t == 3 || t == 4)) continue;
-              for (var y = 0; y < h; y++) UPNG3.encode._filterLine(data, img, y, bpl, bpp, t);
-              fls.push(pako2["deflate"](data));
-              if (bpp == 1) break;
-            }
-            var ti, tsize = 1e9;
-            for (var i = 0; i < fls.length; i++) if (fls[i].length < tsize) {
-              ti = i;
-              tsize = fls[i].length;
-            }
-            return fls[ti];
-          };
-          UPNG3.encode._filterLine = function(data, img, y, bpl, bpp, type) {
-            var i = y * bpl, di = i + y, paeth = UPNG3.decode._paeth;
-            data[di] = type;
-            di++;
-            if (type == 0) for (var x = 0; x < bpl; x++) data[di + x] = img[i + x];
-            else if (type == 1) {
-              for (var x = 0; x < bpp; x++) data[di + x] = img[i + x];
-              for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - img[i + x - bpp] + 256 & 255;
-            } else if (y == 0) {
-              for (var x = 0; x < bpp; x++) data[di + x] = img[i + x];
-              if (type == 2) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x];
-              if (type == 3) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - (img[i + x - bpp] >> 1) + 256 & 255;
-              if (type == 4) for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] - paeth(img[i + x - bpp], 0, 0) + 256 & 255;
-            } else {
-              if (type == 2) {
-                for (var x = 0; x < bpl; x++) data[di + x] = img[i + x] + 256 - img[i + x - bpl] & 255;
-              }
-              if (type == 3) {
-                for (var x = 0; x < bpp; x++) data[di + x] = img[i + x] + 256 - (img[i + x - bpl] >> 1) & 255;
-                for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] + 256 - (img[i + x - bpl] + img[i + x - bpp] >> 1) & 255;
-              }
-              if (type == 4) {
-                for (var x = 0; x < bpp; x++) data[di + x] = img[i + x] + 256 - paeth(0, img[i + x - bpl], 0) & 255;
-                for (var x = bpp; x < bpl; x++) data[di + x] = img[i + x] + 256 - paeth(img[i + x - bpp], img[i + x - bpl], img[i + x - bpp - bpl]) & 255;
-              }
-            }
-          };
-          UPNG3.crc = {
-            table: (function() {
-              var tab = new Uint32Array(256);
-              for (var n = 0; n < 256; n++) {
-                var c = n;
-                for (var k = 0; k < 8; k++) {
-                  if (c & 1) c = 3988292384 ^ c >>> 1;
-                  else c = c >>> 1;
-                }
-                tab[n] = c;
-              }
-              return tab;
-            })(),
-            update: function(c, buf, off, len) {
-              for (var i = 0; i < len; i++) c = UPNG3.crc.table[(c ^ buf[off + i]) & 255] ^ c >>> 8;
-              return c;
-            },
-            crc: function(b, o, l) {
-              return UPNG3.crc.update(4294967295, b, o, l) ^ 4294967295;
-            }
-          };
-          UPNG3.quantize = function(bufs, ps, roundAlpha) {
-            var imgs = [], totl = 0;
-            for (var i = 0; i < bufs.length; i++) {
-              imgs.push(UPNG3.encode.alphaMul(new Uint8Array(bufs[i]), roundAlpha));
-              totl += bufs[i].byteLength;
-            }
-            var nimg = new Uint8Array(totl), nimg32 = new Uint32Array(nimg.buffer), noff = 0;
-            for (var i = 0; i < imgs.length; i++) {
-              var img = imgs[i], il = img.length;
-              for (var j = 0; j < il; j++) nimg[noff + j] = img[j];
-              noff += il;
-            }
-            var root = { i0: 0, i1: nimg.length, bst: null, est: null, tdst: 0, left: null, right: null };
-            root.bst = UPNG3.quantize.stats(nimg, root.i0, root.i1);
-            root.est = UPNG3.quantize.estats(root.bst);
-            var leafs = [root];
-            while (leafs.length < ps) {
-              var maxL = 0, mi = 0;
-              for (var i = 0; i < leafs.length; i++) if (leafs[i].est.L > maxL) {
-                maxL = leafs[i].est.L;
-                mi = i;
-              }
-              if (maxL < 1e-3) break;
-              var node = leafs[mi];
-              var s0 = UPNG3.quantize.splitPixels(nimg, nimg32, node.i0, node.i1, node.est.e, node.est.eMq255);
-              var ln = { i0: node.i0, i1: s0, bst: null, est: null, tdst: 0, left: null, right: null };
-              ln.bst = UPNG3.quantize.stats(nimg, ln.i0, ln.i1);
-              ln.est = UPNG3.quantize.estats(ln.bst);
-              var rn = { i0: s0, i1: node.i1, bst: null, est: null, tdst: 0, left: null, right: null };
-              rn.bst = { R: [], m: [], N: node.bst.N - ln.bst.N };
-              for (var i = 0; i < 16; i++) rn.bst.R[i] = node.bst.R[i] - ln.bst.R[i];
-              for (var i = 0; i < 4; i++) rn.bst.m[i] = node.bst.m[i] - ln.bst.m[i];
-              rn.est = UPNG3.quantize.estats(rn.bst);
-              node.left = ln;
-              node.right = rn;
-              leafs[mi] = ln;
-              leafs.push(rn);
-            }
-            leafs.sort(function(a2, b2) {
-              return b2.bst.N - a2.bst.N;
-            });
-            for (var ii = 0; ii < imgs.length; ii++) {
-              var planeDst = UPNG3.quantize.planeDst;
-              var sb = new Uint8Array(imgs[ii].buffer), tb = new Uint32Array(imgs[ii].buffer), len = sb.length;
-              var stack = [], si = 0;
-              for (var i = 0; i < len; i += 4) {
-                var r = sb[i] * (1 / 255), g = sb[i + 1] * (1 / 255), b = sb[i + 2] * (1 / 255), a = sb[i + 3] * (1 / 255);
-                var nd = root;
-                while (nd.left) nd = planeDst(nd.est, r, g, b, a) <= 0 ? nd.left : nd.right;
-                tb[i >> 2] = nd.est.rgba;
-              }
-              imgs[ii] = tb.buffer;
-            }
-            return { bufs: imgs, plte: leafs };
-          };
-          UPNG3.quantize.getNearest = function(nd, r, g, b, a) {
-            if (nd.left == null) {
-              nd.tdst = UPNG3.quantize.dist(nd.est.q, r, g, b, a);
-              return nd;
-            }
-            var planeDst = UPNG3.quantize.planeDst(nd.est, r, g, b, a);
-            var node0 = nd.left, node1 = nd.right;
-            if (planeDst > 0) {
-              node0 = nd.right;
-              node1 = nd.left;
-            }
-            var ln = UPNG3.quantize.getNearest(node0, r, g, b, a);
-            if (ln.tdst <= planeDst * planeDst) return ln;
-            var rn = UPNG3.quantize.getNearest(node1, r, g, b, a);
-            return rn.tdst < ln.tdst ? rn : ln;
-          };
-          UPNG3.quantize.planeDst = function(est, r, g, b, a) {
-            var e = est.e;
-            return e[0] * r + e[1] * g + e[2] * b + e[3] * a - est.eMq;
-          };
-          UPNG3.quantize.dist = function(q, r, g, b, a) {
-            var d0 = r - q[0], d1 = g - q[1], d2 = b - q[2], d3 = a - q[3];
-            return d0 * d0 + d1 * d1 + d2 * d2 + d3 * d3;
-          };
-          UPNG3.quantize.splitPixels = function(nimg, nimg32, i0, i1, e, eMq) {
-            var vecDot = UPNG3.quantize.vecDot;
-            i1 -= 4;
-            var shfs = 0;
-            while (i0 < i1) {
-              while (vecDot(nimg, i0, e) <= eMq) i0 += 4;
-              while (vecDot(nimg, i1, e) > eMq) i1 -= 4;
-              if (i0 >= i1) break;
-              var t = nimg32[i0 >> 2];
-              nimg32[i0 >> 2] = nimg32[i1 >> 2];
-              nimg32[i1 >> 2] = t;
-              i0 += 4;
-              i1 -= 4;
-            }
-            while (vecDot(nimg, i0, e) > eMq) i0 -= 4;
-            return i0 + 4;
-          };
-          UPNG3.quantize.vecDot = function(nimg, i, e) {
-            return nimg[i] * e[0] + nimg[i + 1] * e[1] + nimg[i + 2] * e[2] + nimg[i + 3] * e[3];
-          };
-          UPNG3.quantize.stats = function(nimg, i0, i1) {
-            var R = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-            var m = [0, 0, 0, 0];
-            var N = i1 - i0 >> 2;
-            for (var i = i0; i < i1; i += 4) {
-              var r = nimg[i] * (1 / 255), g = nimg[i + 1] * (1 / 255), b = nimg[i + 2] * (1 / 255), a = nimg[i + 3] * (1 / 255);
-              m[0] += r;
-              m[1] += g;
-              m[2] += b;
-              m[3] += a;
-              R[0] += r * r;
-              R[1] += r * g;
-              R[2] += r * b;
-              R[3] += r * a;
-              R[5] += g * g;
-              R[6] += g * b;
-              R[7] += g * a;
-              R[10] += b * b;
-              R[11] += b * a;
-              R[15] += a * a;
-            }
-            R[4] = R[1];
-            R[8] = R[2];
-            R[12] = R[3];
-            R[9] = R[6];
-            R[13] = R[7];
-            R[14] = R[11];
-            return { R, m, N };
-          };
-          UPNG3.quantize.estats = function(stats) {
-            var R = stats.R, m = stats.m, N = stats.N;
-            var m0 = m[0], m1 = m[1], m2 = m[2], m3 = m[3], iN = N == 0 ? 0 : 1 / N;
-            var Rj = [
-              R[0] - m0 * m0 * iN,
-              R[1] - m0 * m1 * iN,
-              R[2] - m0 * m2 * iN,
-              R[3] - m0 * m3 * iN,
-              R[4] - m1 * m0 * iN,
-              R[5] - m1 * m1 * iN,
-              R[6] - m1 * m2 * iN,
-              R[7] - m1 * m3 * iN,
-              R[8] - m2 * m0 * iN,
-              R[9] - m2 * m1 * iN,
-              R[10] - m2 * m2 * iN,
-              R[11] - m2 * m3 * iN,
-              R[12] - m3 * m0 * iN,
-              R[13] - m3 * m1 * iN,
-              R[14] - m3 * m2 * iN,
-              R[15] - m3 * m3 * iN
-            ];
-            var A = Rj, M = UPNG3.M4;
-            var b = [0.5, 0.5, 0.5, 0.5], mi = 0, tmi = 0;
-            if (N != 0)
-              for (var i = 0; i < 10; i++) {
-                b = M.multVec(A, b);
-                tmi = Math.sqrt(M.dot(b, b));
-                b = M.sml(1 / tmi, b);
-                if (Math.abs(tmi - mi) < 1e-9) break;
-                mi = tmi;
-              }
-            var q = [m0 * iN, m1 * iN, m2 * iN, m3 * iN];
-            var eMq255 = M.dot(M.sml(255, q), b);
-            var ia = q[3] < 1e-3 ? 0 : 1 / q[3];
-            return {
-              Cov: Rj,
-              q,
-              e: b,
-              L: mi,
-              eMq255,
-              eMq: M.dot(b, q),
-              rgba: (Math.round(255 * q[3]) << 24 | Math.round(255 * q[2] * ia) << 16 | Math.round(255 * q[1] * ia) << 8 | Math.round(255 * q[0] * ia) << 0) >>> 0
-            };
-          };
-          UPNG3.M4 = {
-            multVec: function(m, v) {
-              return [
-                m[0] * v[0] + m[1] * v[1] + m[2] * v[2] + m[3] * v[3],
-                m[4] * v[0] + m[5] * v[1] + m[6] * v[2] + m[7] * v[3],
-                m[8] * v[0] + m[9] * v[1] + m[10] * v[2] + m[11] * v[3],
-                m[12] * v[0] + m[13] * v[1] + m[14] * v[2] + m[15] * v[3]
-              ];
-            },
-            dot: function(x, y) {
-              return x[0] * y[0] + x[1] * y[1] + x[2] * y[2] + x[3] * y[3];
-            },
-            sml: function(a, y) {
-              return [a * y[0], a * y[1], a * y[2], a * y[3]];
-            }
-          };
-          UPNG3.encode.alphaMul = function(img, roundA) {
-            var nimg = new Uint8Array(img.length), area = img.length >> 2;
-            for (var i = 0; i < area; i++) {
-              var qi = i << 2, ia = img[qi + 3];
-              if (roundA) ia = ia < 128 ? 0 : 255;
-              var a = ia * (1 / 255);
-              nimg[qi + 0] = img[qi + 0] * a;
-              nimg[qi + 1] = img[qi + 1] * a;
-              nimg[qi + 2] = img[qi + 2] * a;
-              nimg[qi + 3] = ia;
-            }
-            return nimg;
-          };
-        })(UPNG2, pako);
-      })();
-    }
-  });
-
-  // node_modules/@xmldom/xmldom/lib/conventions.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/conventions.js
   var require_conventions = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/conventions.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/conventions.js"(exports) {
       "use strict";
       function find(list, predicate, ac) {
         if (ac === void 0) {
@@ -7674,9 +7674,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/errors.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/errors.js
   var require_errors = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/errors.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/errors.js"(exports) {
       "use strict";
       var conventions = require_conventions();
       function extendError(constructor, writableName) {
@@ -7832,9 +7832,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/grammar.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/grammar.js
   var require_grammar = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/grammar.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/grammar.js"(exports) {
       "use strict";
       function detectUnicodeSupport(RegExpImpl) {
         try {
@@ -8035,9 +8035,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/dom.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/dom.js
   var require_dom = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/dom.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/dom.js"(exports) {
       "use strict";
       var conventions = require_conventions();
       var find = conventions.find;
@@ -10597,9 +10597,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/entities.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/entities.js
   var require_entities = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/entities.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/entities.js"(exports) {
       "use strict";
       var freeze = require_conventions().freeze;
       exports.XML_ENTITIES = freeze({
@@ -12740,9 +12740,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/sax.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/sax.js
   var require_sax = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/sax.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/sax.js"(exports) {
       "use strict";
       var conventions = require_conventions();
       var g = require_grammar();
@@ -13496,9 +13496,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/dom-parser.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/dom-parser.js
   var require_dom_parser = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/dom-parser.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/dom-parser.js"(exports) {
       "use strict";
       var conventions = require_conventions();
       var dom = require_dom();
@@ -13762,9 +13762,9 @@
     }
   });
 
-  // node_modules/@xmldom/xmldom/lib/index.js
+  // node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/index.js
   var require_lib = __commonJS({
-    "node_modules/@xmldom/xmldom/lib/index.js"(exports) {
+    "node_modules/.pnpm/@xmldom+xmldom@0.9.10/node_modules/@xmldom/xmldom/lib/index.js"(exports) {
       "use strict";
       var conventions = require_conventions();
       exports.assign = conventions.assign;
@@ -15012,6 +15012,9 @@
         case "fontScheme":
           result.fontScheme = parseFontScheme(el, xml);
           break;
+        case "fmtScheme":
+          result.formatScheme = parseFormatScheme(el, xml);
+          break;
       }
     }
     return result;
@@ -15063,6 +15066,25 @@
       eaTypeface: xml.elementAttr(elem, "ea", "typeface"),
       csTypeface: xml.elementAttr(elem, "cs", "typeface"),
       scriptTypefaces
+    };
+  }
+  function parseFormatScheme(elem, xml) {
+    const result = {
+      name: xml.attr(elem, "name"),
+      lineStyles: []
+    };
+    const lineStyleList = xml.element(elem, "lnStyleLst");
+    if (lineStyleList) {
+      for (const line of xml.elements(lineStyleList, "ln"))
+        result.lineStyles.push(parseThemeLineStyle(line, xml));
+    }
+    return result;
+  }
+  function parseThemeLineStyle(elem, xml) {
+    return {
+      width: xml.floatAttr(elem, "w", null),
+      cap: xml.attr(elem, "cap"),
+      dash: xml.elementAttr(elem, "prstDash", "val")
     };
   }
 
@@ -15277,6 +15299,7 @@
   };
 
   // src/metafile/emf-to-svg.ts
+  var UPNG = __toESM(require_UPNG());
   var EMR = {
     HEADER: 1,
     POLYBEZIER: 2,
@@ -15406,6 +15429,42 @@
   var PS_JOIN_BEVEL = 4096;
   var PS_JOIN_MITER = 8192;
   var EMF_FRAME_VIEWBOX_GUTTER_RATIO_LIMIT = 3e-3;
+  var WMF_PLACEABLE_KEY = 2596720087;
+  var WMF_META_ESCAPE = 1574;
+  var WMF_ESCAPE_MFCOMMENT = 15;
+  var WMFC_COMMENT_HEADER_BYTES = 34;
+  var WMF = {
+    EOF: 0,
+    SETBKCOLOR: 513,
+    SETBKMODE: 258,
+    SETMAPMODE: 259,
+    SETTEXTCOLOR: 521,
+    SETTEXTALIGN: 302,
+    SETWINDOWORG: 523,
+    SETWINDOWEXT: 524,
+    SETVIEWPORTORG: 525,
+    SETVIEWPORTEXT: 526,
+    MOVETO: 532,
+    LINETO: 531,
+    DELETEOBJECT: 496,
+    SELECTOBJECT: 301,
+    CREATEPENINDIRECT: 762,
+    CREATEFONTINDIRECT: 763,
+    CREATEBRUSHINDIRECT: 764,
+    POLYGON: 804,
+    POLYLINE: 805,
+    ELLIPSE: 1048,
+    RECTANGLE: 1051,
+    ROUNDRECT: 1564,
+    ARC: 2071,
+    PIE: 2074,
+    CHORD: 2096,
+    TEXTOUT: 1313,
+    EXTTEXTOUT: 2610
+  };
+  var ROP_SRCAND = 8913094;
+  var ROP_SRCPAINT = 15597702;
+  var DIB_TO_PNG_MAX_PIXELS = 24 * 1024 * 1024;
   function isEmfBinary(data) {
     if (!data || data.length < 48)
       return false;
@@ -15415,6 +15474,9 @@
   function extractEmbeddedEmfBinary(data) {
     if (!data || data.length < 48)
       return null;
+    const compressed = extractWmfCompressedEmfBinary(data);
+    if (compressed)
+      return compressed;
     for (let magicOffset = data.indexOf(32, 40); magicOffset >= 40 && magicOffset + 4 <= data.length; magicOffset = data.indexOf(32, magicOffset + 1)) {
       if (data[magicOffset + 1] !== 69 || data[magicOffset + 2] !== 77 || data[magicOffset + 3] !== 70)
         continue;
@@ -15435,9 +15497,232 @@
     }
     return null;
   }
+  function extractWmfCompressedEmfBinary(data) {
+    const wmfStart = readU32LE(data, 0) == WMF_PLACEABLE_KEY ? 22 : 0;
+    if (wmfStart + 18 > data.length)
+      return null;
+    const fileType = readU16LE(data, wmfStart);
+    const headerWords = readU16LE(data, wmfStart + 2);
+    if (fileType != 1 && fileType != 2 || headerWords < 9)
+      return null;
+    let offset = wmfStart + headerWords * 2;
+    const chunks = [];
+    let total = 0;
+    for (let records = 0; offset + 6 <= data.length && records < 1e6; records++) {
+      const recordWords = readU32LE(data, offset);
+      const recordBytes = recordWords * 2;
+      const fn = readU16LE(data, offset + 4);
+      if (!recordWords || recordBytes < 6 || offset + recordBytes > data.length)
+        break;
+      if (fn == WMF_META_ESCAPE && recordBytes >= 10) {
+        const escapeFunction = readU16LE(data, offset + 6);
+        const byteCount = readU16LE(data, offset + 8);
+        const payloadStart = offset + 10;
+        const payloadEnd = payloadStart + byteCount;
+        if (escapeFunction == WMF_ESCAPE_MFCOMMENT && byteCount > WMFC_COMMENT_HEADER_BYTES && payloadEnd <= offset + recordBytes && data[payloadStart] == 87 && data[payloadStart + 1] == 77 && data[payloadStart + 2] == 70 && data[payloadStart + 3] == 67) {
+          const chunk = data.subarray(payloadStart + WMFC_COMMENT_HEADER_BYTES, payloadEnd);
+          chunks.push(chunk);
+          total += chunk.length;
+        }
+      }
+      offset += recordBytes;
+    }
+    if (!chunks.length || total <= 0 || total > data.length)
+      return null;
+    const out = new Uint8Array(total);
+    let outOffset = 0;
+    for (const chunk of chunks) {
+      out.set(chunk, outOffset);
+      outOffset += chunk.length;
+    }
+    return isEmfBinary(out) ? out : null;
+  }
   function convertEmfToSvgDataUrl(data, options) {
     const svg = convertEmfToSvg(data, options);
     return svg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}` : null;
+  }
+  function isWmfBinary(data) {
+    return !!parseWmfHeader(data);
+  }
+  function convertWmfToSvgDataUrl(data, options) {
+    const svg = convertWmfToSvg(data, options);
+    return svg ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}` : null;
+  }
+  function convertWmfToSvg(data, options = {}) {
+    const header = parseWmfHeader(data);
+    if (!header)
+      return null;
+    const view = toDataView(data);
+    const state = initialState();
+    const objects = [];
+    const elements = [];
+    const observed = emptyBounds();
+    let records = 0;
+    let shapeCount = 0;
+    let offset = header.recordsOffset;
+    let pathData = "";
+    let inPath = false;
+    const maxRecords = options.maxRecords ?? 1e5;
+    const maxShapes = options.maxShapes ?? 5e4;
+    if (header.viewBox) {
+      state.windowOrg = { x: header.viewBox.left, y: header.viewBox.top };
+      state.windowExt = { x: header.viewBox.right - header.viewBox.left, y: header.viewBox.bottom - header.viewBox.top };
+    }
+    const emit = (markup) => {
+      if (!markup || shapeCount >= maxShapes)
+        return;
+      elements.push(markup);
+      shapeCount++;
+    };
+    const appendPath = (segment) => {
+      if (!segment)
+        return;
+      pathData += (pathData ? " " : "") + segment;
+    };
+    while (offset + 6 <= view.byteLength && records++ <= maxRecords) {
+      const recordWords = view.getUint32(offset, true);
+      const recordBytes = recordWords * 2;
+      const fn = view.getUint16(offset + 4, true);
+      const paramsOffset = offset + 6;
+      const paramsBytes = recordBytes - 6;
+      if (!recordWords || recordBytes < 6 || offset + recordBytes > view.byteLength)
+        break;
+      switch (fn) {
+        case WMF.EOF:
+          offset += recordBytes;
+          records = maxRecords + 1;
+          break;
+        case WMF.SETBKMODE:
+          if (paramsBytes >= 2)
+            state.bkMode = view.getUint16(paramsOffset, true);
+          break;
+        case WMF.SETBKCOLOR:
+          if (paramsBytes >= 4)
+            state.bkColor = colorRefToCss(view.getUint32(paramsOffset, true));
+          break;
+        case WMF.SETTEXTCOLOR:
+          if (paramsBytes >= 4)
+            state.textColor = colorRefToCss(view.getUint32(paramsOffset, true));
+          break;
+        case WMF.SETTEXTALIGN:
+          if (paramsBytes >= 2)
+            state.textAlign = view.getUint16(paramsOffset, true);
+          break;
+        case WMF.SETWINDOWORG:
+          if (paramsBytes >= 4)
+            state.windowOrg = readWmfYXPoint(view, paramsOffset);
+          break;
+        case WMF.SETWINDOWEXT:
+          if (paramsBytes >= 4)
+            state.windowExt = readWmfYXPoint(view, paramsOffset);
+          break;
+        case WMF.SETVIEWPORTORG:
+          if (paramsBytes >= 4)
+            state.viewportOrg = readWmfYXPoint(view, paramsOffset);
+          break;
+        case WMF.SETVIEWPORTEXT:
+          if (paramsBytes >= 4)
+            state.viewportExt = readWmfYXPoint(view, paramsOffset);
+          break;
+        case WMF.MOVETO: {
+          if (paramsBytes < 4)
+            break;
+          const p = transformPoint(state, readWmfYXPoint(view, paramsOffset));
+          state.currentPoint = p;
+          observePoint(observed, p);
+          if (inPath)
+            appendPath(`M ${fmt(p.x)} ${fmt(p.y)}`);
+          break;
+        }
+        case WMF.LINETO: {
+          if (paramsBytes < 4)
+            break;
+          const p = transformPoint(state, readWmfYXPoint(view, paramsOffset));
+          observePoint(observed, state.currentPoint);
+          observePoint(observed, p);
+          if (inPath)
+            appendPath(`L ${fmt(p.x)} ${fmt(p.y)}`);
+          else
+            emit(`<path d="M ${fmt(state.currentPoint.x)} ${fmt(state.currentPoint.y)} L ${fmt(p.x)} ${fmt(p.y)}" ${paintAttrs(state, false, true)}/>`);
+          state.currentPoint = p;
+          break;
+        }
+        case WMF.CREATEPENINDIRECT: {
+          const pen = parseWmfPen(view, paramsOffset, paramsBytes);
+          if (pen)
+            storeWmfObject(objects, pen);
+          break;
+        }
+        case WMF.CREATEBRUSHINDIRECT: {
+          const brush = parseWmfBrush(view, paramsOffset, paramsBytes);
+          if (brush)
+            storeWmfObject(objects, brush);
+          break;
+        }
+        case WMF.CREATEFONTINDIRECT: {
+          const font = parseWmfFont(view, paramsOffset, paramsBytes);
+          if (font)
+            storeWmfObject(objects, font);
+          break;
+        }
+        case WMF.SELECTOBJECT: {
+          if (paramsBytes < 2)
+            break;
+          const handle = view.getUint16(paramsOffset, true);
+          const obj = objects[handle] ?? STOCK_OBJECTS[handle];
+          if (obj?.type == "pen") state.pen = clonePen(obj);
+          else if (obj?.type == "brush") state.brush = cloneBrush(obj);
+          else if (obj?.type == "font") state.font = { ...obj };
+          break;
+        }
+        case WMF.DELETEOBJECT:
+          if (paramsBytes >= 2)
+            objects[view.getUint16(paramsOffset, true)] = null;
+          break;
+        case WMF.POLYGON:
+        case WMF.POLYLINE:
+          emitWmfPoly(view, paramsOffset, paramsBytes, fn == WMF.POLYGON, inPath, state, observed, appendPath, emit);
+          break;
+        case WMF.RECTANGLE:
+          emitWmfRect(view, paramsOffset, paramsBytes, state, observed, emit, false);
+          break;
+        case WMF.ELLIPSE:
+          emitWmfEllipse(view, paramsOffset, paramsBytes, state, observed, emit);
+          break;
+        case WMF.ROUNDRECT:
+          emitWmfRect(view, paramsOffset + 4, Math.max(0, paramsBytes - 4), state, observed, emit, true);
+          break;
+        case WMF.ARC:
+        case WMF.CHORD:
+        case WMF.PIE:
+          emitWmfArcLike(view, paramsOffset, paramsBytes, fn, inPath, state, observed, appendPath, emit);
+          break;
+        case WMF.TEXTOUT:
+          emitWmfTextOut(view, paramsOffset, paramsBytes, state, observed, emit);
+          break;
+        case WMF.EXTTEXTOUT:
+          emitWmfExtTextOut(view, paramsOffset, paramsBytes, state, observed, emit);
+          break;
+      }
+      offset += recordBytes;
+    }
+    if (pathData)
+      emitPath(pathData, state, emit, true, true);
+    if (!elements.length) {
+      const fallbackBounds = wmfOutputBounds(header, state, observed);
+      const rasterFallback = emitEmbeddedRasterFallback(data, fallbackBounds);
+      if (rasterFallback.length)
+        elements.push(...rasterFallback);
+    }
+    const output = wmfOutputBounds(header, state, observed);
+    const width = Math.max(1, output.right - output.left);
+    const height = Math.max(1, output.bottom - output.top);
+    const physicalWidth = header.physicalWidth || Math.max(1, width) * 25.4 / 96;
+    const physicalHeight = header.physicalHeight || Math.max(1, height) * 25.4 / 96;
+    if (!elements.length)
+      return emptySvg(width, height, output.left, output.top, physicalWidth, physicalHeight, "Unsupported WMF image").replace('data-docx-metafile="emf"', 'data-docx-metafile="wmf"');
+    const body = elements.join("");
+    return `<svg xmlns="http://www.w3.org/2000/svg" width="${fmt(physicalWidth)}mm" height="${fmt(physicalHeight)}mm" viewBox="${fmt(output.left)} ${fmt(output.top)} ${fmt(width)} ${fmt(height)}" preserveAspectRatio="xMidYMid meet" data-docx-metafile="wmf"${svgMetafileMetadataAttrs(body)}>${body}</svg>`;
   }
   function convertEmfToSvg(data, options = {}) {
     if (!isEmfBinary(data))
@@ -15733,6 +16018,272 @@
       return emptySvg(width, height, viewLeft, viewTop, physicalWidth, physicalHeight, "Unsupported EMF image");
     const body = elements.join("");
     return `<svg xmlns="http://www.w3.org/2000/svg" width="${fmt(physicalWidth)}mm" height="${fmt(physicalHeight)}mm" viewBox="${fmt(viewLeft)} ${fmt(viewTop)} ${fmt(width)} ${fmt(height)}" preserveAspectRatio="xMidYMid meet" data-docx-metafile="emf"${svgMetafileMetadataAttrs(body)}>${body}</svg>`;
+  }
+  function parseWmfHeader(data) {
+    if (!data || data.length < 18)
+      return null;
+    const placeable = readU32LE(data, 0) == WMF_PLACEABLE_KEY && data.length >= 40;
+    const start = placeable ? 22 : 0;
+    if (start + 18 > data.length)
+      return null;
+    const fileType = readU16LE(data, start);
+    const headerWords = readU16LE(data, start + 2);
+    const version = readU16LE(data, start + 4);
+    if (fileType != 1 && fileType != 2 || headerWords < 9 || version < 256)
+      return null;
+    const recordsOffset = start + headerWords * 2;
+    if (recordsOffset + 6 > data.length)
+      return null;
+    let viewBox = null;
+    let physicalWidth = 0;
+    let physicalHeight = 0;
+    if (placeable) {
+      const left = readI16LE(data, 6);
+      const top = readI16LE(data, 8);
+      const right = readI16LE(data, 10);
+      const bottom = readI16LE(data, 12);
+      const inch = readU16LE(data, 14);
+      const width = Math.abs(right - left);
+      const height = Math.abs(bottom - top);
+      if (width > 0 && height > 0) {
+        viewBox = {
+          left: Math.min(left, right),
+          top: Math.min(top, bottom),
+          right: Math.max(left, right),
+          bottom: Math.max(top, bottom)
+        };
+        if (inch > 0) {
+          physicalWidth = width * 25.4 / inch;
+          physicalHeight = height * 25.4 / inch;
+        }
+      }
+    }
+    return { recordsOffset, viewBox, physicalWidth, physicalHeight };
+  }
+  function readWmfYXPoint(view, offset) {
+    return { x: view.getInt16(offset + 2, true), y: view.getInt16(offset, true) };
+  }
+  function parseWmfPen(view, offset, available) {
+    if (available < 10)
+      return null;
+    const style = view.getUint16(offset, true);
+    const width = Math.abs(view.getInt16(offset + 2, true)) || 1;
+    const color = colorRefToCss(view.getUint32(offset + 6, true));
+    return createPenObject(style, color, width, (style & 15) == 5);
+  }
+  function parseWmfBrush(view, offset, available) {
+    if (available < 8)
+      return null;
+    const style = view.getUint16(offset, true);
+    const color = colorRefToCss(view.getUint32(offset + 2, true));
+    return { type: "brush", color, nullBrush: style == 1 };
+  }
+  function parseWmfFont(view, offset, available) {
+    if (available < 5)
+      return null;
+    const height = view.getInt16(offset, true);
+    const weight = available >= 10 ? view.getUint16(offset + 8, true) : 400;
+    const italic = available >= 11 ? view.getUint8(offset + 10) != 0 : false;
+    const underline = available >= 12 ? view.getUint8(offset + 11) != 0 : false;
+    let family = "";
+    const faceOffset = offset + 18;
+    const faceBytes = Math.max(0, Math.min(64, available - 18));
+    for (let i = 0; i < faceBytes; i++) {
+      const code = view.getUint8(faceOffset + i);
+      if (!code)
+        break;
+      family += String.fromCharCode(code);
+    }
+    return { type: "font", family, size: Math.abs(height) || 12, weight, italic, underline };
+  }
+  function storeWmfObject(objects, object) {
+    let index = objects.findIndex((item) => item == null);
+    if (index < 0)
+      index = objects.length;
+    objects[index] = object;
+    return index;
+  }
+  function emitWmfPoly(view, offset, size, closed, inPath, state, observed, appendPath, emit) {
+    if (size < 2)
+      return;
+    const count = view.getUint16(offset, true);
+    if (!count || 2 + count * 4 > size)
+      return;
+    const points = [];
+    for (let i = 0; i < count; i++) {
+      const p = transformPoint(state, readPointS(view, offset + 2 + i * 4));
+      observePoint(observed, p);
+      points.push(p);
+    }
+    emitPolyline(points, closed, false, inPath, state, appendPath, emit);
+  }
+  function emitWmfRect(view, offset, size, state, observed, emit, rounded) {
+    if (size < 8)
+      return;
+    const r = readWmfLTRBRect(view, offset);
+    const p1 = transformPoint(state, { x: r.left, y: r.top });
+    const p2 = transformPoint(state, { x: r.right, y: r.bottom });
+    observePoint(observed, p1);
+    observePoint(observed, p2);
+    const x = Math.min(p1.x, p2.x);
+    const y = Math.min(p1.y, p2.y);
+    const w = Math.abs(p2.x - p1.x);
+    const h = Math.abs(p2.y - p1.y);
+    const radius = rounded ? ` rx="${fmt(Math.min(w, h) / 8)}" ry="${fmt(Math.min(w, h) / 8)}"` : "";
+    emit(`<rect x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}"${radius} ${paintAttrs(state, true, true)}/>`);
+  }
+  function emitWmfEllipse(view, offset, size, state, observed, emit) {
+    if (size < 8)
+      return;
+    const r = readWmfLTRBRect(view, offset);
+    const p1 = transformPoint(state, { x: r.left, y: r.top });
+    const p2 = transformPoint(state, { x: r.right, y: r.bottom });
+    observePoint(observed, p1);
+    observePoint(observed, p2);
+    const cx = (p1.x + p2.x) / 2;
+    const cy = (p1.y + p2.y) / 2;
+    const rx = Math.abs(p2.x - p1.x) / 2;
+    const ry = Math.abs(p2.y - p1.y) / 2;
+    emit(`<ellipse cx="${fmt(cx)}" cy="${fmt(cy)}" rx="${fmt(rx)}" ry="${fmt(ry)}" ${paintAttrs(state, true, true)}/>`);
+  }
+  function emitWmfArcLike(view, offset, size, type, inPath, state, observed, appendPath, emit) {
+    if (size < 16)
+      return;
+    const endRef = readWmfYXPoint(view, offset);
+    const startRef = readWmfYXPoint(view, offset + 4);
+    const r = readWmfLTRBRect(view, offset + 8);
+    const cx = (r.left + r.right) / 2;
+    const cy = (r.top + r.bottom) / 2;
+    const rxRaw = Math.abs(r.right - r.left) / 2;
+    const ryRaw = Math.abs(r.bottom - r.top) / 2;
+    if (!rxRaw || !ryRaw)
+      return;
+    const startAngle = Math.atan2(startRef.y - cy, startRef.x - cx);
+    let endAngle = Math.atan2(endRef.y - cy, endRef.x - cx);
+    let delta = endAngle - startAngle;
+    if (delta <= 0)
+      delta += Math.PI * 2;
+    const largeArc = delta > Math.PI ? 1 : 0;
+    const pStart = transformPoint(state, { x: cx + Math.cos(startAngle) * rxRaw, y: cy + Math.sin(startAngle) * ryRaw });
+    const pEnd = transformPoint(state, { x: cx + Math.cos(endAngle) * rxRaw, y: cy + Math.sin(endAngle) * ryRaw });
+    const pCenter = transformPoint(state, { x: cx, y: cy });
+    const pRx = transformPoint(state, { x: cx + rxRaw, y: cy });
+    const pRy = transformPoint(state, { x: cx, y: cy + ryRaw });
+    observePoint(observed, pStart);
+    observePoint(observed, pEnd);
+    observePoint(observed, pCenter);
+    const rx = Math.max(0.01, Math.abs(pRx.x - pCenter.x) || Math.abs(pRy.x - pCenter.x));
+    const ry = Math.max(0.01, Math.abs(pRy.y - pCenter.y) || Math.abs(pRx.y - pCenter.y));
+    let d = `M ${fmt(pStart.x)} ${fmt(pStart.y)} A ${fmt(rx)} ${fmt(ry)} 0 ${largeArc} 1 ${fmt(pEnd.x)} ${fmt(pEnd.y)}`;
+    let fill = false;
+    let stroke = true;
+    if (type == WMF.CHORD) {
+      d += " Z";
+      fill = true;
+    } else if (type == WMF.PIE) {
+      d += ` L ${fmt(pCenter.x)} ${fmt(pCenter.y)} Z`;
+      fill = true;
+    }
+    if (inPath)
+      appendPath(d);
+    else
+      emit(`<path d="${d}" ${paintAttrs(state, fill, stroke)}/>`);
+  }
+  function emitWmfTextOut(view, offset, size, state, observed, emit) {
+    if (size < 8)
+      return;
+    const chars = view.getUint16(offset, true);
+    const textOffset = offset + 2;
+    const paddedTextBytes = chars + (chars & 1);
+    const pointOffset = textOffset + paddedTextBytes;
+    if (!chars || pointOffset + 4 > offset + size)
+      return;
+    const text = decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars));
+    const recordRawRef = readWmfYXPoint(view, pointOffset);
+    const useCurrentPoint = !!(state.textAlign & 1);
+    const rawRef = useCurrentPoint && canUseWmfCurrentPointAsRaw(state) ? { x: state.currentPoint.x, y: state.currentPoint.y } : recordRawRef;
+    const ref = useCurrentPoint ? state.currentPoint : transformPoint(state, recordRawRef);
+    observePoint(observed, ref);
+    emitText(text, ref, state, emit, rawRef);
+    if (useCurrentPoint)
+      advanceWmfCurrentPointAfterText(state, rawRef, text, null);
+  }
+  function emitWmfExtTextOut(view, offset, size, state, observed, emit) {
+    if (size < 8)
+      return;
+    const recordRawRef = readWmfYXPoint(view, offset);
+    const chars = view.getUint16(offset + 4, true);
+    const options = view.getUint16(offset + 6, true);
+    let textOffset = offset + 8;
+    if (options & 6)
+      textOffset += 8;
+    if (!chars || textOffset + chars > offset + size)
+      return;
+    const text = decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars));
+    const dxOffset = textOffset + chars + (chars & 1);
+    const dx = [];
+    if (dxOffset + chars * 2 <= offset + size) {
+      for (let i = 0; i < chars; i++)
+        dx.push(view.getInt16(dxOffset + i * 2, true));
+    }
+    const useCurrentPoint = !!(state.textAlign & 1);
+    const rawRef = useCurrentPoint && canUseWmfCurrentPointAsRaw(state) ? { x: state.currentPoint.x, y: state.currentPoint.y } : recordRawRef;
+    const ref = useCurrentPoint ? state.currentPoint : transformPoint(state, recordRawRef);
+    observePoint(observed, ref);
+    emitText(text, ref, state, emit, rawRef, dx.length == chars ? dx : null);
+    if (useCurrentPoint)
+      advanceWmfCurrentPointAfterText(state, rawRef, text, dx.length == chars ? dx : null);
+  }
+  function readWmfLTRBRect(view, offset) {
+    const bottom = view.getInt16(offset, true);
+    const right = view.getInt16(offset + 2, true);
+    const top = view.getInt16(offset + 4, true);
+    const left = view.getInt16(offset + 6, true);
+    return { left, top, right, bottom };
+  }
+  function emptyBounds() {
+    return { left: Infinity, top: Infinity, right: -Infinity, bottom: -Infinity };
+  }
+  function observePoint(bounds, p) {
+    if (!Number.isFinite(p.x) || !Number.isFinite(p.y))
+      return;
+    bounds.left = Math.min(bounds.left, p.x);
+    bounds.top = Math.min(bounds.top, p.y);
+    bounds.right = Math.max(bounds.right, p.x);
+    bounds.bottom = Math.max(bounds.bottom, p.y);
+  }
+  function boundsFinite(bounds) {
+    return Number.isFinite(bounds.left) && Number.isFinite(bounds.top) && Number.isFinite(bounds.right) && Number.isFinite(bounds.bottom) && bounds.right > bounds.left && bounds.bottom > bounds.top;
+  }
+  function wmfOutputBounds(header, state, observed) {
+    if (header.viewBox)
+      return header.viewBox;
+    if (state.windowExt && state.windowExt.x && state.windowExt.y) {
+      const right = state.windowOrg.x + state.windowExt.x;
+      const bottom = state.windowOrg.y + state.windowExt.y;
+      return {
+        left: Math.min(state.windowOrg.x, right),
+        top: Math.min(state.windowOrg.y, bottom),
+        right: Math.max(state.windowOrg.x, right),
+        bottom: Math.max(state.windowOrg.y, bottom)
+      };
+    }
+    if (boundsFinite(observed))
+      return {
+        left: observed.left,
+        top: observed.top,
+        right: observed.right,
+        bottom: observed.bottom
+      };
+    return { left: 0, top: 0, right: 1, bottom: 1 };
+  }
+  function canUseWmfCurrentPointAsRaw(state) {
+    const world = state.world;
+    return world.m11 == 1 && world.m12 == 0 && world.m21 == 0 && world.m22 == 1 && world.dx == 0 && world.dy == 0 && !(state.windowExt && state.viewportExt && state.windowExt.x && state.windowExt.y);
+  }
+  function advanceWmfCurrentPointAfterText(state, rawRef, text, dx) {
+    const advance = dx?.length ? dx.reduce((sum, value) => sum + (Number(value) || 0), 0) : Math.max(1, text.length) * Math.max(1, state.font?.size ?? 12) * 0.5;
+    state.currentPoint = transformPoint(state, { x: rawRef.x + advance, y: rawRef.y });
   }
   function initialState() {
     return {
@@ -16698,6 +17249,7 @@
     let cbBmi = 0;
     let offBits = 0;
     let cbBits = 0;
+    let rop = 0;
     if (type == EMR.STRETCHDIBITS) {
       if (size < 80)
         return;
@@ -16707,6 +17259,7 @@
       cbBmi = view.getUint32(offset + 52, true);
       offBits = view.getUint32(offset + 56, true);
       cbBits = view.getUint32(offset + 60, true);
+      rop = view.getUint32(offset + 68, true);
       cxDest = view.getInt32(offset + 72, true);
       cyDest = view.getInt32(offset + 76, true);
     } else {
@@ -16720,10 +17273,13 @@
       cbBmi = view.getUint32(offset + 88, true);
       offBits = view.getUint32(offset + 92, true);
       cbBits = view.getUint32(offset + 96, true);
+      rop = size >= 84 ? view.getUint32(offset + 80, true) : 0;
     }
     if (!offBmi || !cbBmi || !offBits || !cbBits || offBmi + cbBmi > size || offBits + cbBits > size)
       return;
-    const imageUrl = dibToImageDataUrl(view, offset, offBmi, cbBmi, offBits, cbBits);
+    if ((rop == ROP_SRCAND || rop == ROP_SRCPAINT) && isMonochromeDib(view, offset, offBmi, cbBmi))
+      return;
+    const imageUrl = dibToImageDataUrl(view, offset, offBmi, cbBmi, offBits, cbBits, rop);
     if (!imageUrl)
       return;
     const p1 = transformPoint(state, { x: xDest, y: yDest });
@@ -16734,7 +17290,7 @@
     const h = Math.abs(p2.y - p1.y);
     emit(`<image x="${fmt(x)}" y="${fmt(y)}" width="${fmt(w)}" height="${fmt(h)}" href="${imageUrl}" preserveAspectRatio="none"/>`);
   }
-  function dibToImageDataUrl(view, recordOffset, offBmi, cbBmi, offBits, cbBits) {
+  function dibToImageDataUrl(view, recordOffset, offBmi, cbBmi, offBits, cbBits, rop) {
     const bmiStart = recordOffset + offBmi;
     const bitsStart = recordOffset + offBits;
     if (cbBmi < 4 || bmiStart + cbBmi > view.byteLength || bitsStart + cbBits > view.byteLength)
@@ -16746,10 +17302,163 @@
       return `data:image/jpeg;base64,${base64(bits)}`;
     if (compression == 5)
       return `data:image/png;base64,${base64(bits)}`;
+    const png = dibToPngDataUrl(view, bmiStart, cbBmi, bitsStart, cbBits, rop);
+    if (png)
+      return png;
     const dib = new Uint8Array(cbBmi + cbBits);
     dib.set(new Uint8Array(view.buffer, view.byteOffset + bmiStart, cbBmi), 0);
     dib.set(bits, cbBmi);
     return dibToBmpDataUrl(dib, cbBmi);
+  }
+  function isMonochromeDib(view, recordOffset, offBmi, cbBmi) {
+    const bmiStart = recordOffset + offBmi;
+    if (cbBmi < 16 || bmiStart + cbBmi > view.byteLength)
+      return false;
+    const headerSize = view.getUint32(bmiStart, true);
+    if (headerSize >= 40 && cbBmi >= 16)
+      return view.getUint16(bmiStart + 14, true) == 1;
+    if (headerSize == 12 && cbBmi >= 10)
+      return view.getUint16(bmiStart + 10, true) == 1;
+    return false;
+  }
+  function dibToPngDataUrl(view, bmiStart, cbBmi, bitsStart, cbBits, rop) {
+    try {
+      const info = readDibInfo(view, bmiStart, cbBmi);
+      if (!info || !isReasonableRasterDimensions(info.width, info.height) || info.width * info.height > DIB_TO_PNG_MAX_PIXELS)
+        return null;
+      const stride = Math.floor((info.width * info.bitCount + 31) / 32) * 4;
+      if (stride <= 0 || stride * info.height > cbBits)
+        return null;
+      const rgba = new Uint8Array(info.width * info.height * 4);
+      for (let y = 0; y < info.height; y++) {
+        const sourceY = info.bottomUp ? info.height - 1 - y : y;
+        const row = bitsStart + sourceY * stride;
+        for (let x = 0; x < info.width; x++) {
+          const out = (y * info.width + x) * 4;
+          writeDibPixel(view, row, x, info, rgba, out);
+          if (rop == ROP_SRCAND && isRgbNearWhite(rgba[out], rgba[out + 1], rgba[out + 2]))
+            rgba[out + 3] = 0;
+        }
+      }
+      const encoded = UPNG.encode([rgba.buffer], info.width, info.height, 0);
+      return `data:image/png;base64,${base64(new Uint8Array(encoded))}`;
+    } catch {
+      return null;
+    }
+  }
+  function isRgbNearWhite(r, g, b) {
+    return r >= 250 && g >= 250 && b >= 250;
+  }
+  function readDibInfo(view, bmiStart, cbBmi) {
+    if (cbBmi < 12 || bmiStart + cbBmi > view.byteLength)
+      return null;
+    const headerSize = view.getUint32(bmiStart, true);
+    if (headerSize == 12) {
+      const width2 = view.getUint16(bmiStart + 4, true);
+      const rawHeight2 = view.getUint16(bmiStart + 6, true);
+      const bitCount2 = view.getUint16(bmiStart + 10, true);
+      const palette2 = readDibPalette(view, bmiStart + headerSize, cbBmi - headerSize, bitCount2, 3, 0);
+      return { width: width2, height: rawHeight2, bitCount: bitCount2, bottomUp: true, palette: palette2, redMask: 0, greenMask: 0, blueMask: 0, alphaMask: 0 };
+    }
+    if (headerSize < 40 || cbBmi < headerSize || bmiStart + headerSize > view.byteLength)
+      return null;
+    const width = view.getInt32(bmiStart + 4, true);
+    const rawHeight = view.getInt32(bmiStart + 8, true);
+    const bitCount = view.getUint16(bmiStart + 14, true);
+    const compression = view.getUint32(bmiStart + 16, true);
+    const clrUsed = view.getUint32(bmiStart + 32, true);
+    let maskOffset = bmiStart + headerSize;
+    let redMask = bitCount == 16 ? 31744 : 16711680;
+    let greenMask = bitCount == 16 ? 992 : 65280;
+    let blueMask = bitCount == 16 ? 31 : 255;
+    let alphaMask = bitCount == 32 ? 4278190080 : 0;
+    if (compression == 3 && headerSize == 40 && cbBmi >= 52) {
+      redMask = view.getUint32(maskOffset, true);
+      greenMask = view.getUint32(maskOffset + 4, true);
+      blueMask = view.getUint32(maskOffset + 8, true);
+      maskOffset += 12;
+      if (cbBmi >= 56) {
+        alphaMask = view.getUint32(maskOffset, true);
+        maskOffset += 4;
+      }
+    }
+    const paletteOffset = headerSize == 40 && compression == 3 ? maskOffset : bmiStart + headerSize;
+    const palette = readDibPalette(view, paletteOffset, Math.max(0, bmiStart + cbBmi - paletteOffset), bitCount, 4, clrUsed);
+    return {
+      width: Math.abs(width),
+      height: Math.abs(rawHeight),
+      bitCount,
+      bottomUp: rawHeight > 0,
+      palette,
+      redMask,
+      greenMask,
+      blueMask,
+      alphaMask
+    };
+  }
+  function readDibPalette(view, offset, availableBytes, bitCount, entryBytes, clrUsed) {
+    if (bitCount > 8 || availableBytes < entryBytes)
+      return [];
+    const maxColors = Math.min(clrUsed || 1 << bitCount, Math.floor(availableBytes / entryBytes));
+    const palette = [];
+    for (let i = 0; i < maxColors; i++) {
+      const p = offset + i * entryBytes;
+      if (entryBytes == 3)
+        palette.push([view.getUint8(p + 2), view.getUint8(p + 1), view.getUint8(p), 255]);
+      else
+        palette.push([view.getUint8(p + 2), view.getUint8(p + 1), view.getUint8(p), 255]);
+    }
+    return palette;
+  }
+  function writeDibPixel(view, row, x, info, rgba, out) {
+    let r = 0;
+    let g = 0;
+    let b = 0;
+    let a = 255;
+    if (info.bitCount == 1) {
+      const index = view.getUint8(row + (x >> 3)) >> 7 - (x & 7) & 1;
+      [r, g, b, a] = dibPaletteColor(info, index);
+    } else if (info.bitCount == 4) {
+      const value = view.getUint8(row + (x >> 1));
+      const index = x & 1 ? value & 15 : value >> 4;
+      [r, g, b, a] = dibPaletteColor(info, index);
+    } else if (info.bitCount == 8) {
+      [r, g, b, a] = dibPaletteColor(info, view.getUint8(row + x));
+    } else if (info.bitCount == 16) {
+      const value = view.getUint16(row + x * 2, true);
+      r = scaleMaskedColor(value, info.redMask);
+      g = scaleMaskedColor(value, info.greenMask);
+      b = scaleMaskedColor(value, info.blueMask);
+    } else if (info.bitCount == 24) {
+      b = view.getUint8(row + x * 3);
+      g = view.getUint8(row + x * 3 + 1);
+      r = view.getUint8(row + x * 3 + 2);
+    } else if (info.bitCount == 32) {
+      const value = view.getUint32(row + x * 4, true);
+      r = scaleMaskedColor(value, info.redMask);
+      g = scaleMaskedColor(value, info.greenMask);
+      b = scaleMaskedColor(value, info.blueMask);
+      a = info.alphaMask ? scaleMaskedColor(value, info.alphaMask) : 255;
+    }
+    rgba[out] = r;
+    rgba[out + 1] = g;
+    rgba[out + 2] = b;
+    rgba[out + 3] = a;
+  }
+  function dibPaletteColor(info, index) {
+    return info.palette[index] ?? [index, index, index, 255];
+  }
+  function scaleMaskedColor(value, mask) {
+    if (!mask)
+      return 0;
+    let shift = 0;
+    let m = mask >>> 0;
+    while (m && !(m & 1)) {
+      m >>>= 1;
+      shift++;
+    }
+    const max = m || 1;
+    return Math.round(((value & mask) >>> shift) * 255 / max);
   }
   function dibToBmpDataUrl(dib, headerBytes) {
     if (!dib?.length || headerBytes <= 0 || headerBytes > dib.length)
@@ -16773,22 +17482,47 @@
     const height = Math.max(1, bounds.bottom - bounds.top);
     return [`<image x="${fmt(bounds.left)}" y="${fmt(bounds.top)}" width="${fmt(width)}" height="${fmt(height)}" href="${url}" preserveAspectRatio="xMidYMid meet"/>`];
   }
-  function extractEmbeddedRasterDataUrl(data) {
-    const png = findPng(data);
-    if (png)
-      return `data:image/png;base64,${base64(png)}`;
-    const jpeg = findJpeg(data);
-    if (jpeg)
-      return `data:image/jpeg;base64,${base64(jpeg)}`;
-    const bmp = findBmp(data);
-    if (bmp)
-      return `data:image/bmp;base64,${base64(bmp)}`;
-    return null;
+  function extractEmbeddedRasterDataUrl(data, options = {}) {
+    const candidate = findBestEmbeddedRasterCandidate(data, options);
+    return candidate ? `data:${candidate.mime};base64,${base64(candidate.data)}` : null;
   }
   function findEmbeddedRasterDataUrl(data) {
     return extractEmbeddedRasterDataUrl(data);
   }
-  function findPng(data) {
+  function findBestEmbeddedRasterCandidate(data, options = {}) {
+    let best = null;
+    const consider = (candidate) => {
+      if (!candidate || !embeddedRasterCandidateAllowed(candidate, options))
+        return;
+      if (!best || compareEmbeddedRasterCandidates(candidate, best) > 0)
+        best = candidate;
+    };
+    findPngCandidates(data, consider);
+    findJpegCandidates(data, consider);
+    findBmpCandidates(data, consider);
+    return best;
+  }
+  function embeddedRasterCandidateAllowed(candidate, options) {
+    if (!isReasonableRasterDimensions(candidate.width, candidate.height))
+      return false;
+    if (options.minWidth && candidate.width < options.minWidth)
+      return false;
+    if (options.minHeight && candidate.height < options.minHeight)
+      return false;
+    if (options.minArea && candidate.width * candidate.height < options.minArea)
+      return false;
+    return candidate.bytes > 0;
+  }
+  function compareEmbeddedRasterCandidates(a, b) {
+    const area = a.width * a.height - b.width * b.height;
+    if (area)
+      return area;
+    return a.bytes - b.bytes;
+  }
+  function isReasonableRasterDimensions(width, height) {
+    return Number.isFinite(width) && Number.isFinite(height) && width > 0 && height > 0 && width <= 16384 && height <= 16384;
+  }
+  function findPngCandidates(data, emit) {
     const sig = [137, 80, 78, 71, 13, 10, 26, 10];
     for (let i = 0; i + sig.length + 12 <= data.length; i++) {
       if (!startsWith(data, sig, i))
@@ -16797,24 +17531,33 @@
       let lastValidEnd = p;
       let hasIhdr = false;
       let hasIdat = false;
+      let hasIend = false;
+      let width = 0;
+      let height = 0;
       while (p + 12 <= data.length) {
         const len = readU32BE(data, p);
         if (!isPngChunkType(data, p + 4) || p + 12 + len > data.length)
           break;
         const type = String.fromCharCode(data[p + 4], data[p + 5], data[p + 6], data[p + 7]);
+        if (type == "IHDR" && len >= 8) {
+          width = readU32BE(data, p + 8);
+          height = readU32BE(data, p + 12);
+        }
         p += 12 + len;
         lastValidEnd = p;
         if (type == "IHDR")
           hasIhdr = true;
         else if (type == "IDAT")
           hasIdat = true;
-        if (type == "IEND")
-          return data.subarray(i, p);
+        if (type == "IEND") {
+          hasIend = true;
+          emit({ mime: "image/png", data: data.subarray(i, p), width, height, bytes: p - i });
+          break;
+        }
       }
-      if (hasIhdr && hasIdat && lastValidEnd > i + 8)
-        return appendPngIend(data.subarray(i, lastValidEnd));
+      if (!hasIend && hasIhdr && hasIdat && lastValidEnd > i + 8)
+        emit({ mime: "image/png", data: appendPngIend(data.subarray(i, lastValidEnd)), width, height, bytes: lastValidEnd - i });
     }
-    return null;
   }
   function isPngChunkType(data, offset) {
     if (offset + 4 > data.length)
@@ -16833,26 +17576,47 @@
     out.set(iend, data.length);
     return out;
   }
-  function findJpeg(data) {
+  function findJpegCandidates(data, emit) {
     for (let i = 0; i + 4 < data.length; i++) {
       if (data[i] != 255 || data[i + 1] != 216 || data[i + 2] != 255)
         continue;
+      let width = 0;
+      let height = 0;
       for (let j = i + 4; j + 1 < data.length; j++) {
-        if (data[j] == 255 && data[j + 1] == 217)
-          return data.subarray(i, j + 2);
+        if (data[j] == 255 && data[j + 1] == 217) {
+          emit({ mime: "image/jpeg", data: data.subarray(i, j + 2), width, height, bytes: j + 2 - i });
+          break;
+        }
+        if (data[j] != 255 || j + 4 >= data.length)
+          continue;
+        const marker = data[j + 1];
+        if (marker == 218)
+          continue;
+        const len = data[j + 2] << 8 | data[j + 3];
+        if (len < 2 || j + 2 + len > data.length)
+          continue;
+        if ((marker >= 192 && marker <= 195 || marker >= 197 && marker <= 199 || marker >= 201 && marker <= 203 || marker >= 205 && marker <= 207) && len >= 7) {
+          height = data[j + 5] << 8 | data[j + 6];
+          width = data[j + 7] << 8 | data[j + 8];
+        }
       }
     }
-    return null;
   }
-  function findBmp(data) {
+  function findBmpCandidates(data, emit) {
     for (let i = 0; i + 14 < data.length; i++) {
       if (data[i] != 66 || data[i + 1] != 77)
         continue;
       const fileSize = readU32LE(data, i + 2);
-      if (fileSize > 14 && i + fileSize <= data.length)
-        return data.subarray(i, i + fileSize);
+      if (fileSize <= 14 || i + fileSize > data.length)
+        continue;
+      const dibOffset = i + 14;
+      const headerSize = dibOffset + 4 <= data.length ? readU32LE(data, dibOffset) : 0;
+      if (headerSize < 12 || dibOffset + headerSize > data.length)
+        continue;
+      const width = headerSize >= 40 ? Math.abs(readS32LE(data, dibOffset + 4)) : readU16LE(data, dibOffset + 4);
+      const height = headerSize >= 40 ? Math.abs(readS32LE(data, dibOffset + 8)) : readU16LE(data, dibOffset + 6);
+      emit({ mime: "image/bmp", data: data.subarray(i, i + fileSize), width, height, bytes: fileSize });
     }
-    return null;
   }
   function startsWith(data, sig, offset) {
     for (let i = 0; i < sig.length; i++) {
@@ -16866,6 +17630,17 @@
   }
   function readU32LE(data, offset) {
     return (data[offset] | data[offset + 1] << 8 | data[offset + 2] << 16 | data[offset + 3] << 24) >>> 0;
+  }
+  function readS32LE(data, offset) {
+    const value = readU32LE(data, offset);
+    return value > 2147483647 ? value - 4294967296 : value;
+  }
+  function readU16LE(data, offset) {
+    return (data[offset] | data[offset + 1] << 8) >>> 0;
+  }
+  function readI16LE(data, offset) {
+    const value = readU16LE(data, offset);
+    return value > 32767 ? value - 65536 : value;
   }
   function writeU322(out, offset, value) {
     out[offset] = value & 255;
@@ -16891,10 +17666,12 @@
 
   // src/model/word-document.ts
   var UTIF = __toESM(require_UTIF());
-  var UPNG = __toESM(require_UPNG());
+  var UPNG2 = __toESM(require_UPNG());
   var EMF_FULL_VECTOR_INPUT_LIMIT = 32 * 1024 * 1024;
   var EMF_EMBEDDED_VECTOR_INPUT_LIMIT = 96 * 1024 * 1024;
   var EMF_FULL_VECTOR_DATA_URL_LIMIT = 16 * 1024 * 1024;
+  var EMF_FULL_VECTOR_BLOB_URL_LIMIT = 128 * 1024 * 1024;
+  var EMF_LARGE_RASTER_PREVIEW_MIN_AREA = 128 * 1024;
   var topLevelRels = [
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */, target: "word/document.xml" },
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" /* ExtendedProperties */, target: "docProps/app.xml" },
@@ -16940,10 +17717,15 @@
       d._package = await OpenXmlPackage.load(blob, options);
       d.rels = await d._package.loadRelationships();
       d.contentTypes = await d._package.loadContentTypes();
-      await Promise.all(topLevelRels.map((rel) => {
+      const officeRel = d.rels.find((x) => x.type === "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */) ?? topLevelRels.find((x) => x.type === "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */);
+      await Promise.all(topLevelRels.filter((rel) => rel.type !== "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */).map((rel) => {
         const r = d.rels.find((x) => x.type === rel.type) ?? rel;
         return d.loadRelationshipPart(r.target, r.type);
       }));
+      if (officeRel) {
+        await d.preloadThemeForDocumentPart(officeRel.target);
+        await d.loadRelationshipPart(officeRel.target, officeRel.type);
+      }
       return d;
     }
     restoreSnapshotPart(snapshot) {
@@ -17113,6 +17895,16 @@
         delete this._partLoadPromises[path];
       }
     }
+    async preloadThemeForDocumentPart(path) {
+      if (!path || !this._package.get(path))
+        return;
+      const rels = await this._package.loadRelationships(path) ?? [];
+      const themeRel = rels.find((rel) => rel.type === "http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" /* Theme */ && rel.targetMode !== "External");
+      if (!themeRel)
+        return;
+      const [folder] = splitPath(path);
+      await this.loadRelationshipPart(resolvePath(themeRel.target, folder), themeRel.type);
+    }
     async loadRelationshipPartOnce(path, type) {
       if (!this._package.get(path))
         return null;
@@ -17169,6 +17961,8 @@
       this.partsMap[path] = part;
       this.parts.push(part);
       await part.load();
+      if (part === this.themePart)
+        this._parser?.setTheme?.(part.theme);
       if (part.rels?.length > 0) {
         const [folder] = splitPath(part.path);
         await Promise.all(part.rels.filter((rel) => rel.targetMode !== "External").map((rel) => this.loadRelationshipPart(resolvePath(rel.target, folder), rel.type)));
@@ -17251,7 +18045,7 @@
         const data = await this._package.load(normalizedPath, "uint8array");
         if (!data)
           return null;
-        const converted = this.convertEmfAsset(data, normalizedPath);
+        const converted = this.convertEmfAsset(data, normalizedPath, "blobUrl");
         if (converted)
           return converted;
         return this.blobToURL(new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/x-emf" }), normalizedPath);
@@ -17275,7 +18069,7 @@
         const data = await this._package.load(normalizedPath, "uint8array");
         if (!data)
           return null;
-        const converted = this.convertEmfAsset(data, normalizedPath);
+        const converted = this.convertEmfAsset(data, normalizedPath, "dataUrl");
         if (converted)
           return converted;
         const fallback = data ? new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/x-emf" }) : null;
@@ -17295,26 +18089,64 @@
       const typedBlob = this.blobWithContentType(blob, normalizedPath);
       return typedBlob ? blobToBase64(typedBlob) : null;
     }
-    convertEmfAsset(data, path) {
+    convertEmfAsset(data, path, mode = "dataUrl") {
       if (!data)
         return null;
       if (!isEmfBinary(data)) {
         const embeddedEmf = extractEmbeddedEmfBinary(data);
         if (embeddedEmf) {
-          const converted = this.convertEmfBinaryAsset(embeddedEmf, path, EMF_EMBEDDED_VECTOR_INPUT_LIMIT);
+          const converted = this.convertEmfBinaryAsset(embeddedEmf, path, EMF_EMBEDDED_VECTOR_INPUT_LIMIT, mode);
           if (converted)
             return converted;
         }
+        if (isWmfBinary(data)) {
+          const converted = this.convertWmfBinaryAsset(data, path, EMF_FULL_VECTOR_INPUT_LIMIT, mode);
+          if (converted)
+            return converted;
+        }
+        const largeRasterPreview = data.byteLength > EMF_FULL_VECTOR_INPUT_LIMIT ? extractEmbeddedRasterDataUrl(data, { minArea: EMF_LARGE_RASTER_PREVIEW_MIN_AREA }) : null;
+        if (largeRasterPreview)
+          return largeRasterPreview;
         return extractEmbeddedRasterDataUrl(data) ?? (data.byteLength > EMF_FULL_VECTOR_INPUT_LIMIT ? this.genericEmfPlaceholder() : null);
       }
-      return this.convertEmfBinaryAsset(data, path, EMF_FULL_VECTOR_INPUT_LIMIT);
+      return this.convertEmfBinaryAsset(data, path, EMF_FULL_VECTOR_INPUT_LIMIT, mode);
     }
-    convertEmfBinaryAsset(data, path, inputLimit) {
+    convertWmfBinaryAsset(data, path, inputLimit, mode) {
       try {
         if (data.byteLength > inputLimit)
           return this.lightweightEmfPlaceholder(data);
-        const converted = convertEmfToSvgDataUrl(data);
-        if (converted && converted.length > EMF_FULL_VECTOR_DATA_URL_LIMIT)
+        const svg = convertWmfToSvg(data);
+        if (!svg)
+          return null;
+        if (mode == "blobUrl" && svg.length > EMF_FULL_VECTOR_DATA_URL_LIMIT) {
+          if (svg.length <= EMF_FULL_VECTOR_BLOB_URL_LIMIT)
+            return this.svgToBlobUrl(svg);
+          return this.lightweightEmfPlaceholder(data);
+        }
+        const converted = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        if (converted.length > EMF_FULL_VECTOR_DATA_URL_LIMIT)
+          return this.lightweightEmfPlaceholder(data);
+        return converted;
+      } catch (e) {
+        if (this._options?.debug)
+          console.warn(`docx-viewer: unable to convert WMF asset ${path}`, e);
+        return null;
+      }
+    }
+    convertEmfBinaryAsset(data, path, inputLimit, mode) {
+      try {
+        if (data.byteLength > inputLimit)
+          return this.lightweightEmfPlaceholder(data);
+        const svg = convertEmfToSvg(data);
+        if (!svg)
+          return null;
+        if (mode == "blobUrl" && svg.length > EMF_FULL_VECTOR_DATA_URL_LIMIT) {
+          if (svg.length <= EMF_FULL_VECTOR_BLOB_URL_LIMIT)
+            return this.svgToBlobUrl(svg);
+          return this.lightweightEmfPlaceholder(data);
+        }
+        const converted = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+        if (converted.length > EMF_FULL_VECTOR_DATA_URL_LIMIT)
           return this.lightweightEmfPlaceholder(data);
         return converted;
       } catch (e) {
@@ -17324,14 +18156,19 @@
       }
     }
     lightweightEmfPlaceholder(data) {
-      return convertEmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) ?? this.genericEmfPlaceholder();
+      return (isWmfBinary(data) ? convertWmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) : null) ?? convertEmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) ?? this.genericEmfPlaceholder();
+    }
+    svgToBlobUrl(svg) {
+      if (typeof Blob == "undefined" || typeof URL == "undefined" || typeof URL.createObjectURL != "function")
+        return null;
+      return URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
     }
     genericEmfPlaceholder() {
       return "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221%22%20height%3D%221%22%20viewBox%3D%220%200%201%201%22%20data-docx-metafile%3D%22emf%22%2F%3E";
     }
     isEmfAsset(path) {
       const contentType = this.contentTypeForPath(path).toLowerCase();
-      return /\.emf$/i.test(path ?? "") || contentType == "image/x-emf" || contentType == "image/emf";
+      return /\.(emf|wmf)$/i.test(path ?? "") || contentType == "image/x-emf" || contentType == "image/emf" || contentType == "image/x-wmf" || contentType == "image/wmf";
     }
     async convertTiffAsset(data, path) {
       try {
@@ -17387,7 +18224,7 @@
     }
     encodeRgbaPngWithUpng(rgba, width, height) {
       const buffer = rgba.buffer.slice(rgba.byteOffset, rgba.byteOffset + rgba.byteLength);
-      const png = new Uint8Array(UPNG.encode([buffer], width, height, 0));
+      const png = new Uint8Array(UPNG2.encode([buffer], width, height, 0));
       return this.dataUrlFromBytes(png, "image/png");
     }
     dataUrlFromBytes(bytes, mime) {
@@ -17995,6 +18832,11 @@
     white: "#ffffff",
     yellow: "#ffff00"
   };
+  var defaultDmlThemeLineStyles = [
+    { width: 9525, cap: "flat", dash: "solid" },
+    { width: 25400, cap: "flat", dash: "solid" },
+    { width: 38100, cap: "flat", dash: "solid" }
+  ];
   function normalizeShadingHexColor(value) {
     if (!value)
       return null;
@@ -18047,6 +18889,9 @@
         hideWebHiddenContent: false,
         ...options
       };
+    }
+    setTheme(theme) {
+      this.theme = theme;
     }
     parseNotes(xmlDoc, elemName, elemClass) {
       var result = [];
@@ -18794,13 +19639,15 @@
           case "footnoteReference":
             result.children.push({
               type: "footnoteReference" /* FootnoteReference */,
-              id: xml_parser_default.attr(c, "id")
+              id: xml_parser_default.attr(c, "id"),
+              customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
             });
             break;
           case "endnoteReference":
             result.children.push({
               type: "endnoteReference" /* EndnoteReference */,
-              id: xml_parser_default.attr(c, "id")
+              id: xml_parser_default.attr(c, "id"),
+              customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
             });
             break;
           case "drawing":
@@ -19044,8 +19891,8 @@
       drawingMeta.relativeHeight = relativeHeight;
       if (behindDoc)
         result.cssStyle["z-index"] = "0";
-      let posX = { relative: "page", align: "left", offset: "0" };
-      let posY = { relative: "page", align: "top", offset: "0" };
+      let posX = { relative: "page", align: "left", offset: null };
+      let posY = { relative: "page", align: "top", offset: null };
       for (var n of xml_parser_default.elements(node)) {
         switch (n.localName) {
           case "simplePos":
@@ -19086,8 +19933,11 @@
               var alignNode = xml_parser_default.element(n, "align");
               var offsetNode = xml_parser_default.element(n, "posOffset");
               pos.relative = xml_parser_default.attr(n, "relativeFrom") ?? pos.relative;
-              if (alignNode)
+              if (alignNode) {
                 pos.align = alignNode.textContent;
+                if (!offsetNode)
+                  pos.offset = null;
+              }
               if (offsetNode)
                 pos.offset = convertLength(offsetNode.textContent, LengthUsage.Emu);
             }
@@ -19386,7 +20236,8 @@
       const explicitFillStyle = this.parseDmlFillStyle(spPr);
       const styleFill = !explicitFillStyle.explicit ? this.parseDmlShapeStyleFill(elem) : null;
       const fillStyle = styleFill ?? explicitFillStyle;
-      const lineStyle = this.parseDmlLineStyle(xml_parser_default.element(spPr, "ln"));
+      const explicitLine = xml_parser_default.element(spPr, "ln");
+      const lineStyle = explicitLine ? this.parseDmlLineStyle(explicitLine) : this.parseDmlShapeStyleLine(elem) ?? this.parseDmlLineStyle(null);
       if (textChildren.length) {
         cssStyle["display"] = "flex";
         cssStyle["flex-direction"] = "column";
@@ -19537,6 +20388,28 @@
         backgroundColor: color,
         explicit: false
       };
+    }
+    parseDmlShapeStyleLine(shape) {
+      const style = xml_parser_default.element(shape, "style");
+      const lineRef = style ? xml_parser_default.element(style, "lnRef") : null;
+      if (!lineRef)
+        return null;
+      const themeLine = this.resolveDmlThemeLineStyle(xml_parser_default.intAttr(lineRef, "idx", null));
+      const dash = themeLine?.dash;
+      const strokeDasharray = dash && dash != "solid" ? dash == "dot" ? "1 2" : "4 3" : null;
+      return {
+        stroke: this.parseDmlColor(lineRef) ?? "black",
+        strokeWidth: themeLine?.width ? this.pt(this.emuToPt(themeLine.width)) : "0.75pt",
+        borderType: strokeDasharray ? "dashed" : "solid",
+        strokeDasharray,
+        strokeLinecap: this.parseDmlLineCap(themeLine?.cap)
+      };
+    }
+    resolveDmlThemeLineStyle(idx) {
+      if (idx == null || idx <= 0)
+        return null;
+      const themeLines = this.theme?.formatScheme?.lineStyles;
+      return themeLines?.[idx - 1] ?? defaultDmlThemeLineStyles[idx - 1] ?? null;
     }
     parseDmlLineStyle(line) {
       if (!line || xml_parser_default.element(line, "noFill"))
@@ -19784,17 +20657,13 @@
       const styleFill = !explicitFillStyle.explicit && owner ? this.parseDmlShapeStyleFill(owner) : null;
       const fillStyle = styleFill ?? explicitFillStyle;
       const line = xml_parser_default.element(elem, "ln");
+      const lineStyle = line ? this.parseDmlLineStyle(line) : owner ? this.parseDmlShapeStyleLine(owner) : null;
       if (fillStyle.backgroundColor)
         style["background-color"] = fillStyle.backgroundColor;
       if (fillStyle.backgroundImage)
         style["background-image"] = fillStyle.backgroundImage;
-      if (line) {
-        const lineColor = this.parseDmlColor(xml_parser_default.element(line, "solidFill")) ?? "black";
-        const lineWidth = xml_parser_default.lengthAttr(line, "w", LengthUsage.Emu) ?? "1px";
-        const dash = xml_parser_default.elementAttr(line, "prstDash", "val");
-        const borderType = dash && dash != "solid" ? "dashed" : "solid";
-        style["border"] = `${lineWidth} ${borderType} ${lineColor}`;
-      }
+      if (lineStyle?.stroke && lineStyle.stroke != "none")
+        style["border"] = `${lineStyle.strokeWidth || "0.75pt"} ${lineStyle.borderType || "solid"} ${lineStyle.stroke}`;
     }
     parseDmlColor(elem) {
       if (!elem)
@@ -19859,8 +20728,20 @@
       }
     }
     applyDmlColorTransforms(elem, color) {
+      const shade = xml_parser_default.elementAttr(elem, "shade", "val");
+      const tint = xml_parser_default.elementAttr(elem, "tint", "val");
       const lumMod = xml_parser_default.elementAttr(elem, "lumMod", "val");
       const lumOff = xml_parser_default.elementAttr(elem, "lumOff", "val");
+      if (shade != null) {
+        const percent2 = Math.max(0, Math.min(100, parseFloat(shade) / 1e3));
+        if (Number.isFinite(percent2) && percent2 < 100)
+          color = `color-mix(in srgb, ${color} ${percent2}%, black)`;
+      }
+      if (tint != null) {
+        const percent2 = Math.max(0, Math.min(100, parseFloat(tint) / 1e3));
+        if (Number.isFinite(percent2) && percent2 < 100)
+          color = `color-mix(in srgb, ${color} ${percent2}%, white)`;
+      }
       if (lumMod != null) {
         const percent2 = Math.max(0, Math.min(100, parseFloat(lumMod) / 1e3));
         if (Number.isFinite(percent2) && percent2 < 100)

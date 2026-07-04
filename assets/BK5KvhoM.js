@@ -18992,7 +18992,8 @@
         name: null,
         target: null,
         basedOn: null,
-        styles: []
+        styles: [],
+        hasParagraphDefaults: false
       };
       for (const c of xml_parser_default.elements(node)) {
         switch (c.localName) {
@@ -19007,6 +19008,7 @@
             }
             break;
           case "pPrDefault":
+            result.hasParagraphDefaults = true;
             var pPr = xml_parser_default.element(c, "pPr");
             if (pPr) {
               result.styles.push({
@@ -21068,7 +21070,7 @@
             break;
           }
           case "highlight":
-            style["background-color"] = xmlUtil.colorAttr(c, "val", null, autos.highlight);
+            style["background-color"] = xml_parser_default.attr(c, "val") === "none" ? "transparent" : xmlUtil.colorAttr(c, "val", null, autos.highlight);
             break;
           case "vertAlign":
             style["vertical-align"] = values.valueOfVertAlign(c);
@@ -21408,7 +21410,12 @@
       if (/^var\(/i.test(raw))
         return [raw];
       const normalized = raw.replace(/^['"]|['"]$/g, "").toLowerCase();
+      const compact = normalized.replace(/[－—–]/g, "-").replace(/\s+/g, "");
+      const baseCompact = compact.replace(/(?:[_-]?(?:gb2312|gbk|gb18030|gb0))$/i, "");
       const emit = (items) => items.map((x) => /^(serif|sans-serif|monospace)$/i.test(x) ? x : encloseFontFamily(x));
+      const emitUnique = (items) => emit([...new Set(items.filter(Boolean))]);
+      const founderSong = /^fz(?:xiao|da)?biaosong|^fzshusong|^fzsongyi|^fzcusong|^fangzheng(?:xiao|da)?biaosong|^fangzhengshusong|方正(?:小标宋|大标宋|书宋|宋一|粗宋)/.test(baseCompact);
+      const cesiFangSong = /^cesi.*仿宋|^cesifangsong/.test(baseCompact);
       if (normalized == "microsoft yahei" || normalized == "\u5FAE\u8F6F\u96C5\u9ED1" || normalized == "ms yahei")
         return emit(["Microsoft YaHei", "\u5FAE\u8F6F\u96C5\u9ED1", "Microsoft YaHei UI", "Noto Sans CJK SC", "Noto Sans SC", "SimHei", "sans-serif"]);
       if (normalized == "times new roman" || normalized == "timesnewroman")
@@ -21419,10 +21426,26 @@
         return emit(["SimSun", "\u5B8B\u4F53", "Songti SC", "Noto Serif CJK SC", "AR PL SungtiL GB", "serif"]);
       if (/^(songti sc|songtisc|stsongti-sc|stsongtisc|宋体-简|宋體-簡)$/i.test(normalized))
         return emit(["Songti SC", "STSong", "SimSun", "\u5B8B\u4F53", "serif"]);
+      if (/^fzhei|^fangzhenghei|方正黑体/.test(baseCompact))
+        return emitUnique([raw, "FZHei-B01S", "FZHei-B01", "SimHei", "\u9ED1\u4F53", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]);
       if (normalized == "simhei" || normalized == "\u9ED1\u4F53")
         return emit(["SimHei", "\u9ED1\u4F53", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]);
-      if (normalized == "fangsong" || normalized == "\u4EFF\u5B8B" || normalized == "stfangsong" || normalized == "\u534E\u6587\u4EFF\u5B8B" || normalized == "\u83EF\u6587\u4EFF\u5B8B")
-        return emit(["FangSong", "\u4EFF\u5B8B", "STFangsong", "\u534E\u6587\u4EFF\u5B8B", "serif"]);
+      if (/^fzkai|^fangzhengkai|方正楷体/.test(baseCompact))
+        return emitUnique([raw, "FZKai-Z03S", "FZKai-Z03", "STKaiti", "\u534E\u6587\u6977\u4F53", "Kaiti SC", "KaiTi", "\u6977\u4F53", "serif"]);
+      if (/^(stkaiti|kaiti|kaiti[-_]?sc|kaiti[-_]?tc|楷[体體]|楷[体體][-－]?简|楷[体體][-－]?繁|华文楷体|華文楷體)/.test(baseCompact))
+        return emitUnique([raw, "STKaiti", "\u534E\u6587\u6977\u4F53", "Kaiti SC", "KaiTi", "\u6977\u4F53", "serif"]);
+      if (/^fzfangsong|^fangzhengfangsong|方正仿宋/.test(baseCompact))
+        return emitUnique([raw, "FZFangSong-Z02S", "FZFangSong-Z02", "FangSong", "\u4EFF\u5B8B", "STFangsong", "\u534E\u6587\u4EFF\u5B8B", "Songti SC", "serif"]);
+      if (cesiFangSong)
+        return emitUnique([raw, "CESI\u4EFF\u5B8B-GB2312", "CESI\u4EFF\u5B8B", "FangSong", "\u4EFF\u5B8B", "FangSong_GB2312", "\u4EFF\u5B8B_GB2312", "STFangsong", "\u534E\u6587\u4EFF\u5B8B", "Songti SC", "serif"]);
+      if (baseCompact == "fangsong" || baseCompact == "\u4EFF\u5B8B" || baseCompact == "stfangsong" || baseCompact == "\u534E\u6587\u4EFF\u5B8B" || baseCompact == "\u83EF\u6587\u4EFF\u5B8B")
+        return emitUnique([raw, "FangSong", "\u4EFF\u5B8B", "FangSong_GB2312", "\u4EFF\u5B8B_GB2312", "STFangsong", "\u534E\u6587\u4EFF\u5B8B", "Songti SC", "serif"]);
+      if (/^fzxiaobiaosong|^fangzhengxiaobiaosong|方正小标宋/.test(baseCompact))
+        return emitUnique([raw, "FZXiaoBiaoSong-B05S", "\u65B9\u6B63\u5C0F\u6807\u5B8B\u7B80\u4F53", "FZXiaoBiaoSong-B05", "\u65B9\u6B63\u5C0F\u6807\u5B8B_GBK", "SimSun", "\u5B8B\u4F53", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]);
+      if (/^fzdabiaosong|^fangzhengdabiaosong|方正大标宋/.test(baseCompact))
+        return emitUnique([raw, "FZDaBiaoSong-B06S", "\u65B9\u6B63\u5927\u6807\u5B8B\u7B80\u4F53", "FZDaBiaoSong-B06", "\u65B9\u6B63\u5927\u6807\u5B8B_GBK", "SimSun", "\u5B8B\u4F53", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]);
+      if (founderSong)
+        return emitUnique([raw, "FZShuSong-Z01S", "FZShuSong-Z01", "\u65B9\u6B63\u4E66\u5B8B\u7B80\u4F53", "\u65B9\u6B63\u4E66\u5B8B_GBK", "SimSun", "\u5B8B\u4F53", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]);
       if (normalized == "arial")
         return emit(["Arial", "Arimo", "Liberation Sans", "Noto Sans", "sans-serif"]);
       return [encloseFontFamily(raw)];

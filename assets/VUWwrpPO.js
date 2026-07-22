@@ -14276,20 +14276,21 @@
     throw new Error("Unsupported ZIP entry content type");
   }
   async function inflateRaw(data) {
-    const zlib = nodeZlib();
-    if (zlib?.inflateRawSync)
-      return new Uint8Array(zlib.inflateRawSync(data));
     const DecompressionStreamCtor = globalThis.DecompressionStream;
     if (DecompressionStreamCtor) {
       const stream = new Blob([toArrayBuffer(data)]).stream().pipeThrough(new DecompressionStreamCtor("deflate-raw"));
       return new Uint8Array(await new Response(stream).arrayBuffer());
     }
+    const zlib = nodeZlib();
+    if (zlib?.inflateRawSync)
+      return new Uint8Array(zlib.inflateRawSync(data));
     throw new Error("This runtime does not support deflate-raw ZIP entries");
   }
   function nodeZlib() {
     try {
-      const req = (0, eval)('typeof require === "function" && require');
-      return req ? req("zlib") : null;
+      const processObject = globalThis.process;
+      const getBuiltinModule = processObject?.getBuiltinModule;
+      return typeof getBuiltinModule == "function" ? getBuiltinModule.call(processObject, "node:zlib") : null;
     } catch {
       return null;
     }

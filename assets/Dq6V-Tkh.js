@@ -15198,6 +15198,14 @@
         case "splitPgBreakAndParaMark":
           result.splitPageBreakAndParagraphMark = xml.boolAttr(el, "val", true);
           break;
+        case "mathPr":
+          for (const c of xml.elements(el)) {
+            if (c.localName == "mathFont")
+              result.mathFont = xml.attr(c, "val");
+            if (c.localName == "defJc")
+              result.mathDefaultJustification = xml.attr(c, "val");
+          }
+          break;
         case "compat":
           for (const c of xml.elements(el)) {
             if (c.localName == "adjustLineHeightInTable")
@@ -19779,6 +19787,12 @@
           case "chr":
             result.char = xml_parser_default.attr(el, "val");
             break;
+          case "type":
+            result.type = xml_parser_default.attr(el, "val");
+            break;
+          case "jc":
+            result.justification = xml_parser_default.attr(el, "val");
+            break;
           case "vertJc":
             result.verticalJustification = xml_parser_default.attr(el, "val");
             break;
@@ -19787,6 +19801,12 @@
             break;
           case "degHide":
             result.hideDegree = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "subHide":
+            result.hideSubscript = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "supHide":
+            result.hideSuperscript = xml_parser_default.boolAttr(el, "val");
             break;
           case "begChr":
             result.beginChar = xml_parser_default.attr(el, "val");

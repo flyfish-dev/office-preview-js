@@ -19623,7 +19623,12 @@
             });
             break;
           case "ptab":
-            result.children.push({ type: "positionalTab" /* PositionalTab */ });
+            result.children.push({
+              type: "positionalTab" /* PositionalTab */,
+              alignment: xml_parser_default.attr(c, "alignment") || "left",
+              relativeTo: xml_parser_default.attr(c, "relativeTo") || "margin",
+              leader: xml_parser_default.attr(c, "leader") || "none"
+            });
             break;
           case "br":
             result.children.push({

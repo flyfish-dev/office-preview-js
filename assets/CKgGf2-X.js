@@ -740,7 +740,7 @@ var e=`
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 760px), (max-width: 900px) and (max-height: 520px) and (orientation: landscape) {
   .pptxv-toolbar {
     gap: 4px;
     overflow: hidden;
@@ -762,8 +762,7 @@ var e=`
     grid-template-columns: 84px minmax(0, 1fr);
   }
   .pptxv-stage-nav {
-    width: 32px;
-    height: 40px;
+    display: none;
   }
 }
 

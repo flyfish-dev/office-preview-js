@@ -136,11 +136,25 @@ var e=`
 .pptxv-picture {
   overflow: hidden;
 }
+.pptxv-table {
+  overflow: hidden;
+}
+.pptxv-table table,
+.pptxv-table tr,
+.pptxv-table td {
+  box-sizing: border-box;
+}
 .pptxv-table table {
   width: 100%;
   height: 100%;
+  min-width: 0;
+  max-width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+}
+.pptxv-table td {
+  min-width: 0;
+  min-height: 0;
 }
 .pptxv-comment-layer {
   position: absolute;

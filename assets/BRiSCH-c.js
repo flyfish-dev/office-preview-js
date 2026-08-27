@@ -12015,7 +12015,30 @@
   }
 
   // src/model/word-document.ts
-  var UTIF = __toESM(require_UTIF()), UPNG2 = __toESM(require_UPNG()), EMF_FULL_VECTOR_INPUT_LIMIT = 32 * 1024 * 1024, EMF_EMBEDDED_VECTOR_INPUT_LIMIT = 96 * 1024 * 1024, EMF_FULL_VECTOR_DATA_URL_LIMIT = 16 * 1024 * 1024, EMF_FULL_VECTOR_BLOB_URL_LIMIT = 128 * 1024 * 1024, EMF_LARGE_RASTER_PREVIEW_MIN_AREA = 128 * 1024, topLevelRels = [
+  var UTIF = __toESM(require_UTIF()), UPNG2 = __toESM(require_UPNG());
+
+  // src/security/links.ts
+  function normalizeHref(value) {
+    return value?.trim().replace(/[\u0000-\u0020\u007f-\u009f]+/g, "") || void 0;
+  }
+  function sanitizeExternalResourceHref(value, policy = "block") {
+    let compact = normalizeHref(value);
+    if (compact) {
+      if (/^data:image\//i.test(compact) || /^blob:/i.test(compact)) return compact;
+      if (!(policy !== "allow" || compact.startsWith("//") || compact.includes("\\")))
+        return /^https?:/i.test(compact) ? compact : void 0;
+    }
+  }
+  function sanitizeDocumentStyleText(value) {
+    return String(value ?? "").split(";").filter((entry) => /^\s*-?[a-z][a-z0-9-]*\s*:/i.test(entry) && !/(?:url|image-set|expression)\s*\(|@import|(?:java|vb)script\s*:|behavior\s*:|-moz-binding/i.test(entry)).join(";");
+  }
+  function sanitizeSvgPaint(value) {
+    let paint = String(value ?? "").trim();
+    return /^(?:none|transparent|currentcolor|#[0-9a-f]{3,8}|[a-z]{1,32}|(?:rgb|hsl)a?\([0-9%.,+\-\s]+\))$/i.test(paint) ? paint : void 0;
+  }
+
+  // src/model/word-document.ts
+  var EMF_FULL_VECTOR_INPUT_LIMIT = 32 * 1024 * 1024, EMF_EMBEDDED_VECTOR_INPUT_LIMIT = 96 * 1024 * 1024, EMF_FULL_VECTOR_DATA_URL_LIMIT = 16 * 1024 * 1024, EMF_FULL_VECTOR_BLOB_URL_LIMIT = 128 * 1024 * 1024, EMF_LARGE_RASTER_PREVIEW_MIN_AREA = 128 * 1024, topLevelRels = [
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */, target: "word/document.xml" },
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" /* ExtendedProperties */, target: "docProps/app.xml" },
     { type: "http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" /* CoreProperties */, target: "docProps/core.xml" },
@@ -12274,21 +12297,21 @@
       let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
       return path ? Promise.resolve(this._snapshotTextParts?.[path] ?? this._package.load(path, "string")) : Promise.resolve(null);
     }
-    async loadRelationshipBlobUrl(id, part) {
+    async loadRelationshipBlobUrl(id, part, resourcePolicy = "block") {
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
       if (!rel)
         return null;
       if (rel.targetMode === "External")
-        return rel.target;
+        return sanitizeExternalResourceHref(rel.target, resourcePolicy) ?? null;
       let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
       return path ? this.loadPackageAssetUrl(path) : null;
     }
-    async loadDocumentImage(id, part) {
+    async loadDocumentImage(id, part, resourcePolicy = "block") {
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
       if (!rel)
         return null;
       if (rel.targetMode === "External")
-        return rel.target;
+        return sanitizeExternalResourceHref(rel.target, resourcePolicy) ?? null;
       let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
       return path ? this.loadPackageAssetUrl(path) : null;
     }
@@ -12580,16 +12603,19 @@
     for (let at of xml_parser_default.attrs(elem))
       switch (at.localName) {
         case "style":
-          result.cssStyleText = at.value;
+          result.cssStyleText = sanitizeDocumentStyleText(at.value);
           break;
         case "fillcolor":
-          result.attrs.fill = at.value;
+          let fill = sanitizeSvgPaint(at.value);
+          fill && (result.attrs.fill = fill);
           break;
         case "strokecolor":
-          result.attrs.stroke = at.value;
+          let stroke = sanitizeSvgPaint(at.value);
+          stroke && (result.attrs.stroke = stroke);
           break;
         case "strokeweight":
-          result.attrs["stroke-width"] = convertLength(at.value, LengthUsage.Point) ?? at.value;
+          let strokeWidth = convertLength(at.value, LengthUsage.Point);
+          strokeWidth && (result.attrs["stroke-width"] = strokeWidth);
           break;
         case "filled":
           (at.value == "f" || at.value == "false") && (result.attrs.fill = "none");
@@ -12656,11 +12682,32 @@
   }
   function parseStroke(el) {
     let result = {}, color = xml_parser_default.attr(el, "color"), weight = xml_parser_default.attr(el, "weight"), on = xml_parser_default.attr(el, "on");
-    return on == "f" || on == "false" ? result.stroke = "none" : color && (result.stroke = color), weight ? result["stroke-width"] = convertLength(weight, LengthUsage.Point) ?? weight : result["stroke-width"] = "1px", result;
+    if (on == "f" || on == "false")
+      result.stroke = "none";
+    else if (color) {
+      let safeColor = sanitizeSvgPaint(color);
+      safeColor && (result.stroke = safeColor);
+    }
+    if (weight) {
+      let safeWeight = convertLength(weight, LengthUsage.Point);
+      safeWeight && (result["stroke-width"] = safeWeight);
+    } else
+      result["stroke-width"] = "1px";
+    return result;
   }
   function parseFill(el) {
     let result = {}, color = xml_parser_default.attr(el, "color") ?? xml_parser_default.attr(el, "color2"), on = xml_parser_default.attr(el, "on"), opacity = xml_parser_default.attr(el, "opacity");
-    return on == "f" || on == "false" ? result.fill = "none" : color && (result.fill = color), opacity && (result["fill-opacity"] = opacity.endsWith("%") ? `${parseFloat(opacity) / 100}` : opacity), result;
+    if (on == "f" || on == "false")
+      result.fill = "none";
+    else if (color) {
+      let safeColor = sanitizeSvgPaint(color);
+      safeColor && (result.fill = safeColor);
+    }
+    if (opacity) {
+      let normalizedOpacity = opacity.endsWith("%") ? parseFloat(opacity) / 100 : Number(opacity);
+      Number.isFinite(normalizedOpacity) && (result["fill-opacity"] = String(Math.max(0, Math.min(1, normalizedOpacity))));
+    }
+    return result;
   }
   function parsePoint(val) {
     return val.split(",");

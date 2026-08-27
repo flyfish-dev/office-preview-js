@@ -9353,10 +9353,10 @@
     }
     async async(type = "string") {
       let data = this.updatedData ?? await this.archive.readEntryData(this.metadata);
-      return convertOutput(data, type);
+      return convertZipOutput(data, type);
     }
     setContent(content) {
-      this.updatedData = contentToBytes(content), this.metadata.compression = 0, this.metadata.compressedSize = this.updatedData.length, this.metadata.uncompressedSize = this.updatedData.length, this.metadata.crc32 = crc32(this.updatedData);
+      this.updatedData = zipContentToBytes(content), this.metadata.compression = 0, this.metadata.compressedSize = this.updatedData.length, this.metadata.uncompressedSize = this.updatedData.length, this.metadata.crc32 = crc32(this.updatedData);
     }
     async bytes() {
       return this.updatedData ?? await this.archive.readEntryData(this.metadata);
@@ -9365,10 +9365,33 @@
     constructor(source) {
       this.source = source;
       this.files = {};
+      this.bytesRead = 0;
+      this.readOperations = 0;
+      this.directoryBytesRead = 0;
+      this.entryBytesRead = 0;
+      this.entryReads = 0;
+      this.disposed = !1;
+      this.sourceKind = source.kind, this.sourceSize = source.size, this.fullyMaterialized = source.fullyMaterialized;
     }
     static async loadAsync(input) {
-      let archive = new _ZipArchive(await inputToBytes(input));
-      return archive.readCentralDirectory(), archive;
+      let archive = new _ZipArchive(createByteSource(input));
+      return await archive.readCentralDirectory(), archive;
+    }
+    getReadStats() {
+      return {
+        sourceKind: this.sourceKind,
+        sourceSize: this.sourceSize,
+        bytesRead: this.bytesRead,
+        readOperations: this.readOperations,
+        directoryBytesRead: this.directoryBytesRead,
+        entryBytesRead: this.entryBytesRead,
+        entryReads: this.entryReads,
+        fullyMaterialized: this.fullyMaterialized,
+        disposed: this.disposed
+      };
+    }
+    dispose() {
+      this.disposed = !0, this.source = null, this.files = {};
     }
     file(path, content) {
       let normalized = normalizePath(path), entry = this.files[normalized] ?? this.files[normalized.replace(/\//g, "\\")];
@@ -9391,14 +9414,16 @@
         writeU32(centralView, 0, 33639248), writeU16(centralView, 4, 20), writeU16(centralView, 6, 20), writeU16(centralView, 8, 2048), writeU16(centralView, 10, 0), writeU16(centralView, 12, 0), writeU16(centralView, 14, 0), writeU32(centralView, 16, crc), writeU32(centralView, 20, data.length), writeU32(centralView, 24, data.length), writeU16(centralView, 28, nameBytes.length), writeU16(centralView, 30, 0), writeU16(centralView, 32, 0), writeU16(centralView, 34, 0), writeU16(centralView, 36, 0), writeU32(centralView, 38, 0), writeU32(centralView, 42, offset), central.set(nameBytes, 46), centralParts.push(central), offset += local.length + data.length;
       }
       let centralOffset = offset, centralSize = centralParts.reduce((sum, part) => sum + part.length, 0), end = new Uint8Array(22), endView = new DataView(end.buffer);
-      return writeU32(endView, 0, 101010256), writeU16(endView, 4, 0), writeU16(endView, 6, 0), writeU16(endView, 8, centralParts.length), writeU16(endView, 10, centralParts.length), writeU32(endView, 12, centralSize), writeU32(endView, 16, centralOffset), writeU16(endView, 20, 0), convertOutput(concatBytes([...localParts, ...centralParts, end]), options.type);
+      return writeU32(endView, 0, 101010256), writeU16(endView, 4, 0), writeU16(endView, 6, 0), writeU16(endView, 8, centralParts.length), writeU16(endView, 10, centralParts.length), writeU32(endView, 12, centralSize), writeU32(endView, 16, centralOffset), writeU16(endView, 20, 0), convertZipOutput(concatBytes([...localParts, ...centralParts, end]), options.type);
     }
     async readEntryData(entry) {
-      let view = dataView(this.source);
-      if (readU32(view, entry.localHeaderOffset) !== 67324752)
+      if (entry.flags & 1)
+        throw new Error(`Encrypted ZIP entry is not supported: ${entry.name}`);
+      let localHeader = await this.readRange(entry.localHeaderOffset, entry.localHeaderOffset + 30, "entry"), view = dataView(localHeader);
+      if (readU32(view, 0) !== 67324752)
         throw new Error(`Invalid ZIP local header for ${entry.name}`);
-      let nameLength = readU16(view, entry.localHeaderOffset + 26), extraLength = readU16(view, entry.localHeaderOffset + 28), dataStart = entry.localHeaderOffset + 30 + nameLength + extraLength, compressed = this.source.slice(dataStart, dataStart + entry.compressedSize);
-      switch (entry.compression) {
+      let nameLength = readU16(view, 26), extraLength = readU16(view, 28), dataStart = entry.localHeaderOffset + 30 + nameLength + extraLength, compressed = await this.readRange(dataStart, dataStart + entry.compressedSize, "entry");
+      switch (this.entryReads++, entry.compression) {
         case 0:
           return compressed;
         case 8:
@@ -9407,12 +9432,22 @@
           throw new Error(`Unsupported ZIP compression method ${entry.compression} for ${entry.name}`);
       }
     }
-    readCentralDirectory() {
-      let view = dataView(this.source), eocd = findEndOfCentralDirectory(view), totalEntries = readU16(view, eocd + 10), offset = readU32(view, eocd + 16);
+    async readCentralDirectory() {
+      let sourceSize = this.requireSource().size, tailSize = Math.min(sourceSize, 65557), tailOffset = sourceSize - tailSize, tail = await this.readRange(tailOffset, sourceSize, "directory"), tailView = dataView(tail), eocd = findEndOfCentralDirectory(tailView), diskNumber = readU16(tailView, eocd + 4), centralDisk = readU16(tailView, eocd + 6), diskEntries = readU16(tailView, eocd + 8), totalEntries = readU16(tailView, eocd + 10), centralSize = readU32(tailView, eocd + 12), centralOffset = readU32(tailView, eocd + 16);
+      if (diskNumber !== 0 || centralDisk !== 0 || diskEntries !== totalEntries)
+        throw new Error("Multi-disk ZIP packages are not supported");
+      if (totalEntries === 65535 || centralSize === 4294967295 || centralOffset === 4294967295)
+        throw new Error("ZIP64 packages are not supported");
+      if (centralOffset + centralSize > sourceSize)
+        throw new Error("Invalid ZIP central directory bounds");
+      let central = centralOffset >= tailOffset ? tail.slice(centralOffset - tailOffset, centralOffset - tailOffset + centralSize) : await this.readRange(centralOffset, centralOffset + centralSize, "directory"), view = dataView(central), offset = 0;
       for (let i = 0; i < totalEntries; i++) {
         if (readU32(view, offset) !== 33639248)
           throw new Error("Invalid ZIP central directory");
-        let flags = readU16(view, offset + 8), compression = readU16(view, offset + 10), crc = readU32(view, offset + 16), compressedSize = readU32(view, offset + 20), uncompressedSize = readU32(view, offset + 24), nameLength = readU16(view, offset + 28), extraLength = readU16(view, offset + 30), commentLength = readU16(view, offset + 32), localHeaderOffset = readU32(view, offset + 42), nameBytes = this.source.slice(offset + 46, offset + 46 + nameLength), name = decodeFileName(nameBytes, flags);
+        let flags = readU16(view, offset + 8), compression = readU16(view, offset + 10), crc = readU32(view, offset + 16), compressedSize = readU32(view, offset + 20), uncompressedSize = readU32(view, offset + 24), nameLength = readU16(view, offset + 28), extraLength = readU16(view, offset + 30), commentLength = readU16(view, offset + 32), localHeaderOffset = readU32(view, offset + 42);
+        if (offset + 46 + nameLength + extraLength + commentLength > central.byteLength)
+          throw new Error("Invalid ZIP central directory entry bounds");
+        let nameBytes = central.slice(offset + 46, offset + 46 + nameLength), name = decodeFileName(nameBytes, flags);
         this.files[name] = new ZipEntry(this, {
           name,
           flags,
@@ -9424,19 +9459,50 @@
         }), offset += 46 + nameLength + extraLength + commentLength;
       }
     }
+    requireSource() {
+      if (!this.source || this.disposed)
+        throw new Error("ZIP package has been disposed");
+      return this.source;
+    }
+    async readRange(start, end, category) {
+      let source = this.requireSource(), safeStart = Math.max(0, Math.min(source.size, start)), safeEnd = Math.max(safeStart, Math.min(source.size, end));
+      if (safeStart !== start || safeEnd !== end)
+        throw new Error(`Invalid ZIP byte range ${start}-${end}`);
+      let data = await source.slice(safeStart, safeEnd);
+      if (data.byteLength !== safeEnd - safeStart)
+        throw new Error(`Incomplete ZIP byte range ${start}-${end}`);
+      return this.bytesRead += data.byteLength, this.readOperations++, category === "directory" ? this.directoryBytesRead += data.byteLength : this.entryBytesRead += data.byteLength, data;
+    }
   };
-  async function inputToBytes(input) {
-    if (input instanceof Uint8Array)
-      return input;
-    if (input instanceof ArrayBuffer)
-      return new Uint8Array(input);
-    if (ArrayBuffer.isView(input))
-      return new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+  function createByteSource(input) {
     if (typeof Blob < "u" && input instanceof Blob)
-      return new Uint8Array(await input.arrayBuffer());
-    throw new Error("Unsupported ZIP input type");
+      return {
+        kind: "blob",
+        size: input.size,
+        fullyMaterialized: !1,
+        async slice(start, end) {
+          return new Uint8Array(await input.slice(start, end).arrayBuffer());
+        }
+      };
+    let bytes;
+    if (input instanceof Uint8Array)
+      bytes = input;
+    else if (input instanceof ArrayBuffer)
+      bytes = new Uint8Array(input);
+    else if (ArrayBuffer.isView(input))
+      bytes = new Uint8Array(input.buffer, input.byteOffset, input.byteLength);
+    else
+      throw new Error("Unsupported ZIP input type");
+    return {
+      kind: "memory",
+      size: bytes.byteLength,
+      fullyMaterialized: !0,
+      async slice(start, end) {
+        return bytes.slice(start, end);
+      }
+    };
   }
-  function contentToBytes(content) {
+  function zipContentToBytes(content) {
     if (content instanceof Uint8Array)
       return content;
     if (content instanceof ArrayBuffer)
@@ -9448,25 +9514,33 @@
     throw new Error("Unsupported ZIP entry content type");
   }
   async function inflateRaw(data) {
+    let zlib = await nodeZlib();
+    if (zlib?.inflateRawSync)
+      return new Uint8Array(zlib.inflateRawSync(data));
     let DecompressionStreamCtor = globalThis.DecompressionStream;
     if (DecompressionStreamCtor) {
       let stream = new Blob([toArrayBuffer(data)]).stream().pipeThrough(new DecompressionStreamCtor("deflate-raw"));
       return new Uint8Array(await new Response(stream).arrayBuffer());
     }
-    let zlib = nodeZlib();
-    if (zlib?.inflateRawSync)
-      return new Uint8Array(zlib.inflateRawSync(data));
     throw new Error("This runtime does not support deflate-raw ZIP entries");
   }
+  var nodeZlibPromise;
   function nodeZlib() {
-    try {
-      let processObject = globalThis.process, getBuiltinModule = processObject?.getBuiltinModule;
-      return typeof getBuiltinModule == "function" ? getBuiltinModule.call(processObject, "node:zlib") : null;
-    } catch {
-      return null;
-    }
+    return nodeZlibPromise ?? (nodeZlibPromise = (async () => {
+      let processObject = globalThis.process;
+      if (!processObject?.versions?.node)
+        return null;
+      let getBuiltinModule = processObject?.getBuiltinModule;
+      if (typeof getBuiltinModule == "function")
+        return getBuiltinModule.call(processObject, "node:zlib");
+      try {
+        return await import("node:zlib");
+      } catch {
+        return null;
+      }
+    })());
   }
-  function convertOutput(data, type) {
+  function convertZipOutput(data, type) {
     switch (type) {
       case "string":
       case "text":
@@ -9493,7 +9567,7 @@
   function findEndOfCentralDirectory(view) {
     let min = Math.max(0, view.byteLength - 22 - 65535);
     for (let i = view.byteLength - 22; i >= min; i--)
-      if (readU32(view, i) === 101010256)
+      if (readU32(view, i) === 101010256 && i + 22 + readU16(view, i + 20) === view.byteLength)
         return i;
     throw new Error("Invalid ZIP file: missing end of central directory");
   }
@@ -9585,6 +9659,19 @@
     }
     load(path, type = "string") {
       return this.get(path)?.async(type) ?? Promise.resolve(null);
+    }
+    listEntries() {
+      return Object.keys(this._zip.files);
+    }
+    getStreamStatus() {
+      return {
+        ...this._zip.getReadStats(),
+        entryCount: this.listEntries().length,
+        remote: !1
+      };
+    }
+    dispose() {
+      this._zip.dispose();
     }
     async loadRelationships(path = null) {
       let relsPath = "_rels/.rels";
@@ -12045,20 +12132,17 @@
     { type: "http://schemas.openxmlformats.org/package/2006/relationships/metadata/custom-properties" /* CustomProperties */, target: "docProps/custom.xml" }
   ], WordDocument = class _WordDocument {
     constructor() {
+      this._objectUrls = /* @__PURE__ */ new Set();
+      this._assetUrlPromises = /* @__PURE__ */ new Map();
+      this._disposed = !1;
       this.parts = [];
       this.partsMap = {};
       this.contentTypes = [];
-      this._snapshotAssetDataUrls = null;
-      this._snapshotTextParts = null;
       this._partLoadPromises = {};
     }
-    static fromSnapshot(snapshot, options) {
+    static fromSnapshot(snapshot, options, sourcePackage) {
       let d = new _WordDocument();
-      d._options = options, d.rels = snapshot.rels ?? [], d.contentTypes = snapshot.contentTypes ?? [], d.parts = [], d.partsMap = {}, d._snapshotAssetDataUrls = snapshot.assetDataUrls ?? {}, d._snapshotTextParts = snapshot.textParts ?? {}, d._package = {
-        load: (path) => Promise.resolve(d._snapshotTextParts?.[normalizeSnapshotPath(path)] ?? null),
-        parseXmlDocument: (txt) => parseXmlString(txt, options?.trimXmlDeclaration ?? !0),
-        get: (path) => d._snapshotTextParts?.[normalizeSnapshotPath(path)] != null ? {} : null
-      };
+      d._options = options, d.rels = snapshot.rels ?? [], d.contentTypes = snapshot.contentTypes ?? [], d.parts = [], d.partsMap = {}, d._package = sourcePackage;
       for (let partSnapshot of snapshot.parts ?? []) {
         let part = d.restoreSnapshotPart(partSnapshot);
         part && (d.parts.push(part), d.partsMap[part.path] = part);
@@ -12066,13 +12150,36 @@
       return d;
     }
     static async load(blob, parser, options) {
+      let pkg = await OpenXmlPackage.load(blob, options);
+      try {
+        return await this.loadPackage(pkg, parser, options);
+      } catch (error) {
+        throw pkg.dispose(), error;
+      }
+    }
+    /** @internal Worker entrypoint that preserves package ownership after parsing. */
+    static async loadPackage(pkg, parser, options) {
       var d = new _WordDocument();
-      d._options = options, d._parser = parser, d._package = await OpenXmlPackage.load(blob, options), d.rels = await d._package.loadRelationships(), d.contentTypes = await d._package.loadContentTypes();
+      d._options = options, d._parser = parser, d._package = pkg, d.rels = await d._package.loadRelationships(), d.contentTypes = await d._package.loadContentTypes();
       let officeRel = d.rels.find((x) => x.type === "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */) ?? topLevelRels.find((x) => x.type === "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */);
       return await Promise.all(topLevelRels.filter((rel) => rel.type !== "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */).map((rel) => {
         let r = d.rels.find((x) => x.type === rel.type) ?? rel;
         return d.loadRelationshipPart(r.target, r.type);
       })), officeRel && (await d.preloadThemeForDocumentPart(officeRel.target), await d.loadRelationshipPart(officeRel.target, officeRel.type)), d;
+    }
+    async getPackageStreamStatus() {
+      return await this._package.getStreamStatus();
+    }
+    dispose() {
+      if (!this._disposed) {
+        this._disposed = !0;
+        for (let url of this._objectUrls)
+          try {
+            URL.revokeObjectURL(url);
+          } catch {
+          }
+        this._objectUrls.clear(), this._assetUrlPromises.clear(), this._package?.dispose();
+      }
     }
     restoreSnapshotPart(snapshot) {
       let part = {
@@ -12119,15 +12226,12 @@
       }
       return part;
     }
-    async createSnapshot() {
-      let snapshot = {
+    createSnapshot() {
+      return {
         rels: this.rels ?? [],
         contentTypes: this.contentTypes ?? [],
-        parts: this.parts.map((p) => this.snapshotPart(p)).filter(Boolean),
-        assetDataUrls: {},
-        textParts: {}
+        parts: this.parts.map((p) => this.snapshotPart(p)).filter(Boolean)
       };
-      return await this.preloadSnapshotRelationshipTargets(snapshot), snapshot;
     }
     snapshotPart(part) {
       let anyPart = part, kind = "part", data = {};
@@ -12159,35 +12263,6 @@
         kind = anyPart.rootElement.type === "header" ? "header" : "footer", data = { rootElement: anyPart.rootElement };
       else return null;
       return { kind, path: part.path, rels: part.rels ?? [], data };
-    }
-    async preloadSnapshotRelationshipTargets(snapshot) {
-      let seen = /* @__PURE__ */ new Set(), collect = (part) => {
-        for (let rel of part?.rels ?? []) {
-          if (!rel || rel.targetMode === "External")
-            continue;
-          let path = normalizeSnapshotPath(this.resolveRelationshipTarget(part, rel));
-          !path || seen.has(path) || seen.add(path);
-        }
-      };
-      for (let part of this.parts)
-        collect(part);
-      let concurrency = Math.max(1, Number(this._options?.snapshotPreloadConcurrency) || 6);
-      await eachLimit([...seen], concurrency, async (path) => {
-        if (this.partsMap[path])
-          return;
-        let lower = path.toLowerCase(), isXmlLike = /\.(xml|rels|html?|txt)$/i.test(lower);
-        try {
-          if (isXmlLike) {
-            let text = await this._package.load(path, "string");
-            text != null && (snapshot.textParts[path] = text);
-          } else {
-            let url = await this.loadPackageAssetDataUrl(path);
-            url && (snapshot.assetDataUrls[path] = url);
-          }
-        } catch (e) {
-          this._options?.debug && console.warn(`docx-viewer: unable to preload relationship target ${path}`, e);
-        }
-      });
     }
     blobWithContentType(blob, path) {
       if (!blob)
@@ -12287,7 +12362,7 @@
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
       if (!rel || rel.targetMode === "External")
         return null;
-      let path = this.resolveRelationshipTarget(sourcePart, rel), normalizedPath = normalizeSnapshotPath(path), xmlText = normalizedPath ? this._snapshotTextParts?.[normalizedPath] ?? await this._package.load(normalizedPath, "string") : null;
+      let path = this.resolveRelationshipTarget(sourcePart, rel), normalizedPath = normalizeSnapshotPath(path), xmlText = normalizedPath ? await this._package.load(normalizedPath, "string") : null;
       return xmlText ? this._package.parseXmlDocument(xmlText) : null;
     }
     async loadRelationshipText(id, part) {
@@ -12295,7 +12370,7 @@
       if (!rel || rel.targetMode === "External")
         return null;
       let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
-      return path ? Promise.resolve(this._snapshotTextParts?.[path] ?? this._package.load(path, "string")) : Promise.resolve(null);
+      return path ? this._package.load(path, "string") : null;
     }
     async loadRelationshipBlobUrl(id, part, resourcePolicy = "block") {
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
@@ -12322,7 +12397,6 @@
     async loadFont(id, key) {
       let path = normalizeSnapshotPath(this.getPathById(this.fontTablePart, id));
       if (!path) return null;
-      if (this._snapshotAssetDataUrls?.[path]) return this._snapshotAssetDataUrls[path];
       let x = await this._package.load(path, "uint8array");
       return x && this.blobToURL(new Blob([deobfuscate(x, key)]), path);
     }
@@ -12331,17 +12405,24 @@
       if (!rel || rel.targetMode === "External")
         return Promise.resolve(null);
       let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
-      return path ? Promise.resolve(this._snapshotTextParts?.[path] ?? this._package.load(path, "string")) : Promise.resolve(null);
+      return path ? this._package.load(path, "string") : null;
     }
     blobToURL(blob, path) {
-      return blob ? (blob = this.blobWithContentType(blob, path), this._options.useBase64URL ? blobToBase64(blob) : URL.createObjectURL(blob)) : null;
+      if (!blob)
+        return null;
+      if (blob = this.blobWithContentType(blob, path), this._options.useBase64URL)
+        return blobToBase64(blob);
+      let url = URL.createObjectURL(blob);
+      return this._objectUrls.add(url), url;
     }
     async loadPackageAssetUrl(path) {
       let normalizedPath = normalizeSnapshotPath(path);
       if (!normalizedPath)
         return null;
-      if (this._snapshotAssetDataUrls?.[normalizedPath])
-        return this._snapshotAssetDataUrls[normalizedPath];
+      let pending = this._assetUrlPromises.get(normalizedPath);
+      return pending || (pending = this.loadPackageAssetUrlOnce(normalizedPath), this._assetUrlPromises.set(normalizedPath, pending), pending.catch(() => this._assetUrlPromises.delete(normalizedPath))), pending;
+    }
+    async loadPackageAssetUrlOnce(normalizedPath) {
       if (this.isEmfAsset(normalizedPath)) {
         let data = await this._package.load(normalizedPath, "uint8array");
         if (!data)
@@ -12357,33 +12438,6 @@
         return converted || this.blobToURL(new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/tiff" }), normalizedPath);
       }
       return this.blobToURL(await this._package.load(normalizedPath, "blob"), normalizedPath);
-    }
-    async loadPackageAssetDataUrl(path) {
-      let normalizedPath = normalizeSnapshotPath(path);
-      if (!normalizedPath)
-        return null;
-      if (this.isEmfAsset(normalizedPath)) {
-        let data = await this._package.load(normalizedPath, "uint8array");
-        if (!data)
-          return null;
-        let converted = this.convertEmfAsset(data, normalizedPath, "dataUrl");
-        if (converted)
-          return converted;
-        let fallback = data ? new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/x-emf" }) : null;
-        return fallback ? blobToBase64(fallback) : null;
-      }
-      if (this.isTiffAsset(normalizedPath)) {
-        let data = await this._package.load(normalizedPath, "uint8array");
-        if (!data)
-          return null;
-        let converted = await this.convertTiffAsset(data, normalizedPath);
-        if (converted)
-          return converted;
-        let fallback = data ? new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/tiff" }) : null;
-        return fallback ? blobToBase64(fallback) : null;
-      }
-      let blob = await this._package.load(normalizedPath, "blob"), typedBlob = this.blobWithContentType(blob, normalizedPath);
-      return typedBlob ? blobToBase64(typedBlob) : null;
     }
     convertEmfAsset(data, path, mode = "dataUrl") {
       if (!data)
@@ -12439,7 +12493,10 @@
       return (isWmfBinary(data) ? convertWmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) : null) ?? convertEmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) ?? this.genericEmfPlaceholder();
     }
     svgToBlobUrl(svg) {
-      return typeof Blob > "u" || typeof URL > "u" || typeof URL.createObjectURL != "function" ? null : URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+      if (typeof Blob > "u" || typeof URL > "u" || typeof URL.createObjectURL != "function")
+        return null;
+      let url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
+      return this._objectUrls.add(url), url;
     }
     genericEmfPlaceholder() {
       return "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221%22%20height%3D%221%22%20viewBox%3D%220%200%201%201%22%20data-docx-metafile%3D%22emf%22%2F%3E";
@@ -12535,15 +12592,6 @@
       binary += String.fromCharCode.apply(null, Array.from(chunk));
     }
     return g.btoa(binary);
-  }
-  async function eachLimit(items, limit, fn) {
-    let index = 0, workerCount = Math.max(1, Math.min(items.length, limit || 1)), workers = Array.from({ length: workerCount }, async () => {
-      for (; index < items.length; ) {
-        let current = index++;
-        await fn(items[current], current);
-      }
-    });
-    await Promise.all(workers);
   }
   function deobfuscate(data, guidKey) {
     let trimmed = guidKey.replace(/{|}|-/g, ""), numbers = new Array(16);
@@ -15178,26 +15226,40 @@
   };
 
   // src/worker/docx-viewer-worker.ts
-  var import_xmldom = __toESM(require_lib()), ctx = self;
+  var import_xmldom = __toESM(require_lib()), ctx = self, packages = /* @__PURE__ */ new Map();
   typeof globalThis.DOMParser > "u" && (globalThis.DOMParser = import_xmldom.DOMParser);
   typeof globalThis.XMLSerializer > "u" && (globalThis.XMLSerializer = import_xmldom.XMLSerializer);
-  function post(id, type, payload = {}) {
-    ctx.postMessage({ id, type, ...payload });
+  function post(id, type, payload = {}, transfer = []) {
+    ctx.postMessage({ id, type, ...payload }, transfer);
   }
   ctx.onmessage = async (ev) => {
     let msg = ev.data;
-    if (!msg || msg.type !== "parse")
+    if (!msg)
       return;
-    let id = msg.id;
+    if (msg.type === "dispose") {
+      packages.get(msg.id)?.dispose(), packages.delete(msg.id);
+      return;
+    }
+    if (msg.type === "package") {
+      await handlePackageMessage(msg);
+      return;
+    }
+    if (msg.type !== "parse")
+      return;
+    let id = msg.id, sourcePackage = null;
     try {
       let options = { ...msg.options, useWorker: !1, h: void 0, progress: void 0 };
-      post(id, "progress", { current: 0, total: 3, message: "Loading package relationships" });
-      let document2 = await WordDocument.load(msg.data, new DocumentParser(options), options);
+      post(id, "progress", { current: 0, total: 3, message: "Loading package relationships" }), sourcePackage = await OpenXmlPackage.load(msg.data, options);
+      let document2 = await WordDocument.loadPackage(sourcePackage, new DocumentParser(options), options);
       post(id, "progress", { current: 2, total: 3, message: "Serializing parsed document model" });
-      let snapshot = await document2.createSnapshot();
-      post(id, "progress", { current: 3, total: 3, message: "Document model ready" }), post(id, "parsed", { snapshot });
+      let snapshot = document2.createSnapshot();
+      packages.set(id, sourcePackage), post(id, "progress", { current: 3, total: 3, message: "Document model ready" }), post(id, "parsed", {
+        snapshot,
+        packageEntries: sourcePackage.listEntries(),
+        packageStatus: sourcePackage.getStreamStatus()
+      });
     } catch (error) {
-      post(id, "error", {
+      packages.delete(id), sourcePackage?.dispose(), post(id, "error", {
         error: {
           message: error?.message ?? `${error}`,
           stack: error?.stack
@@ -15205,4 +15267,56 @@
       });
     }
   };
+  async function handlePackageMessage(msg) {
+    let sourcePackage = packages.get(msg.id);
+    if (!sourcePackage) {
+      post(msg.id, "package-error", {
+        requestId: msg.requestId,
+        error: { message: "DOCX worker package session is not available" }
+      });
+      return;
+    }
+    try {
+      switch (msg.operation) {
+        case "status":
+          post(msg.id, "package-result", {
+            requestId: msg.requestId,
+            value: sourcePackage.getStreamStatus()
+          });
+          return;
+        case "save": {
+          for (let update of msg.updates ?? [])
+            sourcePackage.update(update.path, update.content);
+          let bytes = await sourcePackage.save("uint8array");
+          postBinaryResult(msg, bytes);
+          return;
+        }
+        case "load": {
+          if (isBinaryOutput(msg.outputType)) {
+            let bytes = await sourcePackage.load(msg.path, "uint8array");
+            bytes == null ? post(msg.id, "package-result", { requestId: msg.requestId, value: null }) : postBinaryResult(msg, bytes);
+          } else {
+            let value = await sourcePackage.load(msg.path, msg.outputType ?? "string");
+            post(msg.id, "package-result", { requestId: msg.requestId, value });
+          }
+          return;
+        }
+      }
+    } catch (error) {
+      post(msg.id, "package-error", {
+        requestId: msg.requestId,
+        error: {
+          message: error?.message ?? `${error}`,
+          stack: error?.stack
+        }
+      });
+    }
+  }
+  function postBinaryResult(msg, bytes) {
+    let value = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
+    post(msg.id, "package-result", { requestId: msg.requestId, value }, [value]);
+  }
+  function isBinaryOutput(type) {
+    return type === "blob" || type === "array" || type === "uint8array" || type === "arraybuffer" || type === "nodebuffer";
+  }
 })();

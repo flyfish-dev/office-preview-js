@@ -11055,14 +11055,14 @@
   function parseWmfFont(view, offset, available) {
     if (available < 5)
       return null;
-    let height = view.getInt16(offset, !0), weight = available >= 10 ? view.getUint16(offset + 8, !0) : 400, italic = available >= 11 ? view.getUint8(offset + 10) != 0 : !1, underline = available >= 12 ? view.getUint8(offset + 11) != 0 : !1, family = "", faceOffset = offset + 18, faceBytes = Math.max(0, Math.min(64, available - 18));
+    let height = view.getInt16(offset, !0), weight = available >= 10 ? view.getUint16(offset + 8, !0) : 400, italic = available >= 11 ? view.getUint8(offset + 10) != 0 : !1, underline = available >= 12 ? view.getUint8(offset + 11) != 0 : !1, charset = available >= 14 ? view.getUint8(offset + 13) : 0, family = "", faceOffset = offset + 18, faceBytes = Math.max(0, Math.min(64, available - 18));
     for (let i = 0; i < faceBytes; i++) {
       let code = view.getUint8(faceOffset + i);
       if (!code)
         break;
       family += String.fromCharCode(code);
     }
-    return { type: "font", family, size: Math.abs(height) || 12, weight, italic, underline };
+    return { type: "font", family, size: Math.abs(height) || 12, weight, italic, underline, charset };
   }
   function storeWmfObject(objects, object) {
     let index = objects.findIndex((item) => item == null);
@@ -11116,7 +11116,7 @@
     let chars = view.getUint16(offset, !0), textOffset = offset + 2, paddedTextBytes = chars + (chars & 1), pointOffset = textOffset + paddedTextBytes;
     if (!chars || pointOffset + 4 > offset + size)
       return;
-    let text = decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars)), recordRawRef = readWmfYXPoint(view, pointOffset), useCurrentPoint = !!(state.textAlign & 1), rawRef = useCurrentPoint && canUseWmfCurrentPointAsRaw(state) ? { x: state.currentPoint.x, y: state.currentPoint.y } : recordRawRef, ref = useCurrentPoint ? state.currentPoint : transformPoint(state, recordRawRef);
+    let text = decodeGdiText(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars), state.font), recordRawRef = readWmfYXPoint(view, pointOffset), useCurrentPoint = !!(state.textAlign & 1), rawRef = useCurrentPoint && canUseWmfCurrentPointAsRaw(state) ? { x: state.currentPoint.x, y: state.currentPoint.y } : recordRawRef, ref = useCurrentPoint ? state.currentPoint : transformPoint(state, recordRawRef);
     observePoint(observed, ref), emitText(text, ref, state, emit, rawRef), useCurrentPoint && advanceWmfCurrentPointAfterText(state, rawRef, text, null);
   }
   function emitWmfExtTextOut(view, offset, size, state, observed, emit) {
@@ -11125,7 +11125,7 @@
     let recordRawRef = readWmfYXPoint(view, offset), chars = view.getUint16(offset + 4, !0), options = view.getUint16(offset + 6, !0), textOffset = offset + 8;
     if (options & 6 && (textOffset += 8), !chars || textOffset + chars > offset + size)
       return;
-    let text = decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars)), dxOffset = textOffset + chars + (chars & 1), dx = [];
+    let text = decodeGdiText(new Uint8Array(view.buffer, view.byteOffset + textOffset, chars), state.font), dxOffset = textOffset + chars + (chars & 1), dx = [];
     if (dxOffset + chars * 2 <= offset + size)
       for (let i = 0; i < chars; i++)
         dx.push(view.getInt16(dxOffset + i * 2, !0));
@@ -11703,14 +11703,14 @@
     type == EMR.CHORD ? (d += " Z", fill = !0) : type == EMR.PIE && (d += ` L ${fmt(pCenter.x)} ${fmt(pCenter.y)} Z`, fill = !0), type == EMR.ARCTO && (state.currentPoint = pEnd), inPath ? appendPath(d) : emit(`<path d="${d}" ${paintAttrs(state, fill, stroke)}/>`);
   }
   function parseFont2(view, offset, available) {
-    let height = available >= 4 ? view.getInt32(offset, !0) : 12, weight = available >= 20 ? view.getInt32(offset + 16, !0) : 400, italic = available >= 21 ? view.getUint8(offset + 20) != 0 : !1, underline = available >= 22 ? view.getUint8(offset + 21) != 0 : !1, family = "", faceOffset = offset + 28, faceBytes = Math.max(0, Math.min(64, available - 28));
+    let height = available >= 4 ? view.getInt32(offset, !0) : 12, weight = available >= 20 ? view.getInt32(offset + 16, !0) : 400, italic = available >= 21 ? view.getUint8(offset + 20) != 0 : !1, underline = available >= 22 ? view.getUint8(offset + 21) != 0 : !1, charset = available >= 24 ? view.getUint8(offset + 23) : 0, family = "", faceOffset = offset + 28, faceBytes = Math.max(0, Math.min(64, available - 28));
     for (let i = 0; i + 1 < faceBytes; i += 2) {
       let code = view.getUint16(faceOffset + i, !0);
       if (!code)
         break;
       family += String.fromCharCode(code);
     }
-    return { type: "font", family, size: Math.abs(height) || 12, weight, italic, underline };
+    return { type: "font", family, size: Math.abs(height) || 12, weight, italic, underline, charset };
   }
   function emitExtTextOut(view, offset, size, state, emit, unicode) {
     if (size < 76)
@@ -11718,7 +11718,7 @@
     let rawRef = readPointL(view, offset + 36), ref = transformPoint(state, rawRef), chars = view.getUint32(offset + 44, !0), offString = view.getUint32(offset + 48, !0);
     if (!chars || offString <= 0 || offString + chars * (unicode ? 2 : 1) > size)
       return;
-    let text = unicode ? decodeUtf16(view, offset + offString, chars) : decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + offset + offString, chars)), dx = readTextDx(view, offset, size, chars, 72);
+    let text = unicode ? decodeUtf16(view, offset + offString, chars) : decodeGdiText(new Uint8Array(view.buffer, view.byteOffset + offset + offString, chars), state.font), dx = readTextDx(view, offset, size, chars, 72);
     emitText(text, ref, state, emit, rawRef, dx);
   }
   function emitPolyTextOut(view, offset, size, state, emit, unicode) {
@@ -11729,7 +11729,7 @@
       let rawRef = readPointL(view, textOffset), ref = transformPoint(state, rawRef), chars = view.getUint32(textOffset + 8, !0), offString = view.getUint32(textOffset + 12, !0);
       if (!chars || !offString || offString + chars * (unicode ? 2 : 1) > size)
         continue;
-      let text = unicode ? decodeUtf16(view, offset + offString, chars) : decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + offset + offString, chars)), dx = readTextDx(view, offset, size, chars, textOffset + 36 - offset);
+      let text = unicode ? decodeUtf16(view, offset + offString, chars) : decodeGdiText(new Uint8Array(view.buffer, view.byteOffset + offset + offString, chars), state.font), dx = readTextDx(view, offset, size, chars, textOffset + 36 - offset);
       emitText(text, ref, state, emit, rawRef, dx);
     }
   }
@@ -11739,7 +11739,7 @@
     let ref = transformPoint(state, readPointL(view, offset + 8)), chars = view.getUint32(offset + 16, !0), textOffset = view.getUint32(offset + 20, !0) & 512 ? 40 : 28;
     if (!chars || textOffset + chars > size)
       return;
-    let text = decodeAnsi(new Uint8Array(view.buffer, view.byteOffset + offset + textOffset, chars));
+    let text = decodeGdiText(new Uint8Array(view.buffer, view.byteOffset + offset + textOffset, chars), state.font);
     emitText(text, ref, state, emit);
   }
   function readTextDx(view, recordOffset, recordSize, chars, offDxFieldOffset) {
@@ -11761,13 +11761,13 @@
     }
     return text;
   }
-  function decodeAnsi(bytes) {
+  function decodeAnsi(bytes, encoding = "windows-1252") {
     if (!bytes.length)
       return "";
     let decoder = globalThis.TextDecoder;
     if (decoder)
       try {
-        return new decoder("gb18030").decode(bytes).replace(/\0+$/g, "");
+        return new decoder(encoding).decode(bytes).replace(/\0+$/g, "");
       } catch {
         try {
           return new decoder("windows-1252").decode(bytes).replace(/\0+$/g, "");
@@ -11777,6 +11777,53 @@
     let text = "";
     for (let b of bytes)
       b && (text += String.fromCharCode(b));
+    return text;
+  }
+  var SYMBOL_ENCODING_LOW = " !∀#∃%&∋()∗+,−./0123456789:;<=>?≅ΑΒΧ∆ΕΦΓΗΙϑΚΛΜΝΟΠΘΡΣΤΥςΩΞΨΖ[∴]⊥_⎯αβχδεφγηιϕκλµνοπθρστυϖωξψζ{|}∼", SYMBOL_ENCODING_HIGH = "€ϒ′≤⁄∞ƒ♣♦♥♠↔←↑→↓°±″≥×∝∂•÷≠≡≈…⏐⎯↵ℵℑℜ℘⊗⊕∅∩∪⊃⊇⊄⊂⊆∈∉∠∇®©™∏√⋅¬∧∨⇔⇐⇑⇒⇓◊〈®©™∑⎛⎜⎝⎡⎢⎣⎧⎨⎩⎪\0〉∫⌠⎮⌡⎞⎟⎠⎤⎥⎦⎫⎬⎭";
+  function encodingForGdiCharset(font) {
+    switch (font?.charset) {
+      case 77:
+        return "macintosh";
+      case 128:
+        return "shift_jis";
+      case 129:
+        return "euc-kr";
+      case 134:
+        return "gb18030";
+      case 136:
+        return "big5";
+      case 161:
+        return "windows-1253";
+      case 162:
+        return "windows-1254";
+      case 163:
+        return "windows-1258";
+      case 177:
+        return "windows-1255";
+      case 178:
+        return "windows-1256";
+      case 186:
+        return "windows-1257";
+      case 204:
+        return "windows-1251";
+      case 222:
+        return "windows-874";
+      case 238:
+        return "windows-1250";
+      default:
+        return "windows-1252";
+    }
+  }
+  function decodeGdiText(bytes, font) {
+    if (!(font?.charset == 2 || /(?:^|\s)Symbol(?:\s|$)/i.test(font?.family ?? "")))
+      return decodeAnsi(bytes, encodingForGdiCharset(font));
+    let text = "";
+    for (let byte of bytes) {
+      if (!byte)
+        continue;
+      let decoded = "";
+      byte >= 32 && byte <= 126 ? decoded = SYMBOL_ENCODING_LOW[byte - 32] ?? "" : byte >= 160 && byte <= 254 && (decoded = SYMBOL_ENCODING_HIGH[byte - 160] ?? ""), text += decoded && decoded != "\0" ? decoded : String.fromCharCode(byte);
+    }
     return text;
   }
   function textAttrs(state, ref) {
@@ -12108,10 +12155,11 @@
   function normalizeHref(value) {
     return value?.trim().replace(/[\u0000-\u0020\u007f-\u009f]+/g, "") || void 0;
   }
-  function sanitizeExternalResourceHref(value, policy = "block") {
+  function sanitizeExternalResourceHref(value, policy = "block", allowInternalBlob = !1) {
     let compact = normalizeHref(value);
     if (compact) {
-      if (/^data:image\//i.test(compact) || /^blob:/i.test(compact)) return compact;
+      if (/^data:image\//i.test(compact)) return compact;
+      if (/^blob:/i.test(compact)) return allowInternalBlob ? compact : void 0;
       if (!(policy !== "allow" || compact.startsWith("//") || compact.includes("\\")))
         return /^https?:/i.test(compact) ? compact : void 0;
     }
@@ -12630,6 +12678,9 @@
   function parseVmlElement(elem, parser) {
     var result = new VmlElement();
     switch (elem.localName) {
+      case "group":
+        result.tagName = "g";
+        break;
       case "rect":
         result.tagName = "rect", Object.assign(result.attrs, { width: "100%", height: "100%" });
         break;
@@ -12650,6 +12701,15 @@
     }
     for (let at of xml_parser_default.attrs(elem))
       switch (at.localName) {
+        case "coordorigin":
+          result.attrs["data-vml-coordorigin"] = at.value;
+          break;
+        case "coordsize":
+          result.attrs["data-vml-coordsize"] = at.value;
+          break;
+        case "inset":
+          result.attrs["data-vml-inset"] = at.value;
+          break;
         case "style":
           result.cssStyleText = sanitizeDocumentStyleText(at.value);
           break;
@@ -12714,7 +12774,15 @@
       width: percent(1 / cropWidth),
       height: percent(1 / cropHeight)
     };
-    return (cropLeft || cropTop || cropRight || cropBottom) && (attrs.preserveAspectRatio = "none"), attrs;
+    (cropLeft || cropTop || cropRight || cropBottom) && (attrs.preserveAspectRatio = "none");
+    let gain = parseVmlNumber(xml_parser_default.attr(el, "gain")), blackLevel = parseVmlNumber(xml_parser_default.attr(el, "blacklevel"));
+    return Number.isFinite(gain) && (attrs["data-vml-gain"] = String(gain)), Number.isFinite(blackLevel) && (attrs["data-vml-blacklevel"] = String(blackLevel)), attrs;
+  }
+  function parseVmlNumber(value) {
+    if (value == null)
+      return Number.NaN;
+    let raw = String(value).trim();
+    return raw ? /^-?\d+(?:\.\d+)?f$/i.test(raw) ? parseFloat(raw.slice(0, -1)) / 65536 : raw.endsWith("%") ? parseFloat(raw) / 100 : Number(raw) : Number.NaN;
   }
   function parseVmlFraction(value) {
     if (!value)
@@ -13562,7 +13630,56 @@
             result.children.push(this.parseDeleted(el, (e) => this.parseParagraph(e)));
             break;
         }
-      return result;
+      return source && this.assignParagraphImageLocators(result, source), result;
+    }
+    /**
+     * 为段落内的真实图片生成与后端 Open XML 解析一致的稳定对象键。
+     * 这里只记录文档结构位置，不参与排版，也不会引入文本匹配开销。
+     */
+    assignParagraphImageLocators(paragraph, source) {
+      let sourceKey = this.sourceKeyFromOpenXmlSource(source);
+      if (!sourceKey)
+        return;
+      let objectIndex = 0, visit = (element) => {
+        if (element.type === "drawing" /* Drawing */ || element.type === "vmlPicture" /* VmlPicture */) {
+          let resourceKey = this.findImageResourceKey(element);
+          resourceKey && (element.props = {
+            ...element.props ?? {},
+            objectLocator: {
+              objectKey: `${sourceKey}:image:${objectIndex++}`,
+              resourceKey,
+              objectKind: "image"
+            }
+          });
+          return;
+        }
+        for (let child of element.children ?? [])
+          visit(child);
+      };
+      for (let child of paragraph.children ?? [])
+        visit(child);
+    }
+    findImageResourceKey(element) {
+      let candidate = element;
+      if (element.type === "image" /* Image */ && candidate.src)
+        return String(candidate.src);
+      if (candidate.imageHref?.id)
+        return String(candidate.imageHref.id);
+      for (let child of element.children ?? []) {
+        let resourceKey = this.findImageResourceKey(child);
+        if (resourceKey)
+          return resourceKey;
+      }
+      return "";
+    }
+    sourceKeyFromOpenXmlSource(source) {
+      if (source.paragraphIndex != null)
+        return `docx:body:${source.bodyIndex}:p:${source.paragraphIndex}`;
+      if (source.tableIndex != null && source.cellParagraphIndex != null) {
+        let nested = source.nestedTableIndex == null ? "" : `:nt:${source.nestedTableIndex}`;
+        return `docx:body:${source.bodyIndex}:tbl:${source.tableIndex}${nested}:r:${source.rowIndex}:c:${source.cellIndex}:p:${source.cellParagraphIndex}`;
+      }
+      return "";
     }
     parseParagraphProperties(elem, paragraph) {
       this.parseDefaultProperties(elem, paragraph.cssStyle = {}, null, (c) => {
@@ -13590,8 +13707,23 @@
       });
     }
     parseFrame(node, paragraph) {
-      var dropCap = xml_parser_default.attr(node, "dropCap");
-      dropCap == "drop" && (paragraph.cssStyle.float = "left");
+      let dropCap = xml_parser_default.attr(node, "dropCap");
+      paragraph.frame = {
+        width: xml_parser_default.lengthAttr(node, "w"),
+        height: xml_parser_default.lengthAttr(node, "h"),
+        x: xml_parser_default.lengthAttr(node, "x", LengthUsage.SignedDxa),
+        y: xml_parser_default.lengthAttr(node, "y", LengthUsage.SignedDxa),
+        hSpace: xml_parser_default.lengthAttr(node, "hSpace"),
+        vSpace: xml_parser_default.lengthAttr(node, "vSpace"),
+        horizontalAnchor: xml_parser_default.attr(node, "hAnchor"),
+        verticalAnchor: xml_parser_default.attr(node, "vAnchor"),
+        horizontalAlign: xml_parser_default.attr(node, "xAlign"),
+        verticalAlign: xml_parser_default.attr(node, "yAlign"),
+        wrap: xml_parser_default.attr(node, "wrap"),
+        heightRule: xml_parser_default.attr(node, "hRule"),
+        dropCap,
+        lines: xml_parser_default.intAttr(node, "lines")
+      }, dropCap == "drop" && (paragraph.cssStyle.float = "left");
     }
     parseHyperlink(node, parent) {
       var result = { type: "hyperlink" /* Hyperlink */, parent, children: [] };

@@ -9839,8 +9839,13 @@
             c.localName == "mathFont" && (result.mathFont = xml.attr(c, "val")), c.localName == "defJc" && (result.mathDefaultJustification = xml.attr(c, "val"));
           break;
         case "compat":
-          for (let c of xml.elements(el))
+          for (let c of xml.elements(el)) {
+            if (c.localName == "compatSetting" && xml.attr(c, "name") == "compatibilityMode" && xml.attr(c, "uri") == "http://schemas.microsoft.com/office/word") {
+              let mode = Number(xml.attr(c, "val"));
+              Number.isInteger(mode) && mode >= 11 && (result.compatibilityMode = mode);
+            }
             c.localName == "adjustLineHeightInTable" && (result.adjustLineHeightInTable = xml.boolAttr(c, "val", !0)), c.localName == "useFELayout" && (result.useFELayout = xml.boolAttr(c, "val", !0)), c.localName == "balanceSingleByteDoubleByteWidth" && (result.balanceSingleByteDoubleByteWidth = xml.boolAttr(c, "val", !0)), c.localName == "doNotUseEastAsianBreakRules" && (result.doNotUseEastAsianBreakRules = xml.boolAttr(c, "val", !0)), c.localName == "doNotWrapTextWithPunct" && (result.doNotWrapTextWithPunct = xml.boolAttr(c, "val", !0)), c.localName == "lineWrapLikeWord6" && (result.lineWrapLikeWord6 = xml.boolAttr(c, "val", !0)), c.localName == "allowSpaceOfSameStyleInTable" && (result.allowSpaceOfSameStyleInTable = xml.boolAttr(c, "val", !0)), (c.localName == "suppressTopSpacing" || c.localName == "suppressTopSpacingWP" || c.localName == "suppressSpacingAtTopOfPage") && (result.suppressTopSpacingAtPageStart = xml.boolAttr(c, "val", !0)), c.localName == "suppressBottomSpacing" && (result.suppressBottomSpacing = xml.boolAttr(c, "val", !0));
+          }
           break;
       }
     return result;

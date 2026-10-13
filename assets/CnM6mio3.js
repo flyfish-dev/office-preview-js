@@ -1126,18 +1126,18 @@
         64
       ];
       module.exports = function(type, lens, lens_index, codes, table, table_index, work, opts) {
-        var bits = opts.bits, len = 0, sym = 0, min = 0, max = 0, root = 0, curr = 0, drop = 0, left = 0, used = 0, huff = 0, incr, fill, low, mask, next, base = null, base_index = 0, end, count = new utils.Buf16(MAXBITS + 1), offs = new utils.Buf16(MAXBITS + 1), extra = null, extra_index = 0, here_bits, here_op, here_val;
+        var bits = opts.bits, len = 0, sym = 0, min = 0, max = 0, root2 = 0, curr = 0, drop = 0, left = 0, used = 0, huff = 0, incr, fill, low, mask, next, base = null, base_index = 0, end, count = new utils.Buf16(MAXBITS + 1), offs = new utils.Buf16(MAXBITS + 1), extra = null, extra_index = 0, here_bits, here_op, here_val;
         for (len = 0; len <= MAXBITS; len++)
           count[len] = 0;
         for (sym = 0; sym < codes; sym++)
           count[lens[lens_index + sym]]++;
-        for (root = bits, max = MAXBITS; max >= 1 && count[max] === 0; max--)
+        for (root2 = bits, max = MAXBITS; max >= 1 && count[max] === 0; max--)
           ;
-        if (root > max && (root = max), max === 0)
+        if (root2 > max && (root2 = max), max === 0)
           return table[table_index++] = 1 << 24 | 64 << 16 | 0, table[table_index++] = 1 << 24 | 64 << 16 | 0, opts.bits = 1, 0;
         for (min = 1; min < max && count[min] === 0; min++)
           ;
-        for (root < min && (root = min), left = 1, len = 1; len <= MAXBITS; len++)
+        for (root2 < min && (root2 = min), left = 1, len = 1; len <= MAXBITS; len++)
           if (left <<= 1, left -= count[len], left < 0)
             return -1;
         if (left > 0 && (type === CODES || max !== 1))
@@ -1146,7 +1146,7 @@
           offs[len + 1] = offs[len] + count[len];
         for (sym = 0; sym < codes; sym++)
           lens[lens_index + sym] !== 0 && (work[offs[lens[lens_index + sym]]++] = sym);
-        if (type === CODES ? (base = extra = work, end = 19) : type === LENS ? (base = lbase, base_index -= 257, extra = lext, extra_index -= 257, end = 256) : (base = dbase, extra = dext, end = -1), huff = 0, sym = 0, len = min, next = table_index, curr = root, drop = 0, low = -1, used = 1 << root, mask = used - 1, type === LENS && used > ENOUGH_LENS || type === DISTS && used > ENOUGH_DISTS)
+        if (type === CODES ? (base = extra = work, end = 19) : type === LENS ? (base = lbase, base_index -= 257, extra = lext, extra_index -= 257, end = 256) : (base = dbase, extra = dext, end = -1), huff = 0, sym = 0, len = min, next = table_index, curr = root2, drop = 0, low = -1, used = 1 << root2, mask = used - 1, type === LENS && used > ENOUGH_LENS || type === DISTS && used > ENOUGH_DISTS)
           return 1;
         for (; ; ) {
           here_bits = len - drop, work[sym] < end ? (here_op = 0, here_val = work[sym]) : work[sym] > end ? (here_op = extra[extra_index + work[sym]], here_val = base[base_index + work[sym]]) : (here_op = 96, here_val = 0), incr = 1 << len - drop, fill = 1 << curr, min = fill;
@@ -1160,15 +1160,15 @@
               break;
             len = lens[lens_index + work[sym]];
           }
-          if (len > root && (huff & mask) !== low) {
-            for (drop === 0 && (drop = root), next += min, curr = len - drop, left = 1 << curr; curr + drop < max && (left -= count[curr + drop], !(left <= 0)); )
+          if (len > root2 && (huff & mask) !== low) {
+            for (drop === 0 && (drop = root2), next += min, curr = len - drop, left = 1 << curr; curr + drop < max && (left -= count[curr + drop], !(left <= 0)); )
               curr++, left <<= 1;
             if (used += 1 << curr, type === LENS && used > ENOUGH_LENS || type === DISTS && used > ENOUGH_DISTS)
               return 1;
-            low = huff & mask, table[low] = root << 24 | curr << 16 | next - table_index | 0;
+            low = huff & mask, table[low] = root2 << 24 | curr << 16 | next - table_index | 0;
           }
         }
-        return huff !== 0 && (table[next + huff] = len - drop << 24 | 64 << 16 | 0), opts.bits = root, 0;
+        return huff !== 0 && (table[next + huff] = len - drop << 24 | 64 << 16 | 0), opts.bits = root2, 0;
       };
     }
   });
@@ -3535,8 +3535,8 @@
       for (i = 0; i < entries.length; i++)
         key = entries[i][0], DOMException[key] = entries[i][1];
       var key, i;
-      function ParseError(message, locator) {
-        this.message = message, this.locator = locator, Error.captureStackTrace && Error.captureStackTrace(this, ParseError);
+      function ParseError(message, locator, cause) {
+        this.message = message, this.locator = locator, this.cause = cause, Error.captureStackTrace && Error.captureStackTrace(this, ParseError);
       }
       extendError(ParseError);
       exports.DOMException = DOMException;
@@ -3585,7 +3585,7 @@
               throw new Error("use regg instead of reg to wrap expressions with `|`!");
             return isStr ? part : part.source;
           }).join(""),
-          UNICODE_SUPPORT ? "mu" : "m"
+          UNICODE_SUPPORT ? "u" : ""
         );
       }
       function regg(args) {
@@ -3597,11 +3597,11 @@
       UNICODE_SUPPORT && (Char = reg("[", chars(Char), "\\u{10000}-\\u{10FFFF}", "]"));
       var InvalidChar = new RegExp("[^" + chars(Char) + "]", UNICODE_SUPPORT ? "u" : ""), _SChar = /[\x20\x09\x0D\x0A]/, SChar_s = chars(_SChar), S = reg(_SChar, "+"), S_OPT = reg(_SChar, "*"), NameStartChar = /[:_a-zA-Z\xC0-\xD6\xD8-\xF6\xF8-\u02FF\u0370-\u1FFF\u200C-\u200D\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD]/;
       UNICODE_SUPPORT && (NameStartChar = reg("[", chars(NameStartChar), "\\u{10000}-\\u{10FFFF}", "]"));
-      var NameStartChar_s = chars(NameStartChar), NameChar = reg("[", NameStartChar_s, chars(/[-.0-9\xB7]/), chars(/[\u0300-\u036F\u203F-\u2040]/), "]"), Name = reg(NameStartChar, NameChar, "*"), Nmtoken = reg(NameChar, "+"), EntityRef = reg("&", Name, ";"), CharRef = regg(/&#[0-9]+;|&#x[0-9a-fA-F]+;/), Reference = regg(EntityRef, "|", CharRef), PEReference = reg("%", Name, ";"), EntityValue = regg(
+      var NameStartChar_s = chars(NameStartChar), NameChar = reg("[", NameStartChar_s, chars(/[-.0-9\xB7]/), chars(/[\u0300-\u036F\u203F-\u2040]/), "]"), Name = reg(NameStartChar, NameChar, "*"), Name_exact = reg("^", Name, "$"), Nmtoken = reg(NameChar, "+"), EntityRef = reg("&", Name, ";"), CharRef = regg(/&#[0-9]+;|&#x[0-9a-fA-F]+;/), Reference = regg(EntityRef, "|", CharRef), PEReference = reg("%", Name, ";"), EntityValue = regg(
         reg('"', regg(/[^%&"]/, "|", PEReference, "|", Reference), "*", '"'),
         "|",
         reg("'", regg(/[^%&']/, "|", PEReference, "|", Reference), "*", "'")
-      ), AttValue = regg('"', regg(/[^<&"]/, "|", Reference), "*", '"', "|", "'", regg(/[^<&']/, "|", Reference), "*", "'"), NCNameStartChar = chars_without(NameStartChar, ":"), NCNameChar = chars_without(NameChar, ":"), NCName = reg(NCNameStartChar, NCNameChar, "*"), QName = reg(NCName, regg(":", NCName), "?"), QName_exact = reg("^", QName, "$"), QName_group = reg("(", QName, ")"), SystemLiteral = regg(/"[^"]*"|'[^']*'/), PI = reg(/^<\?/, "(", Name, ")", regg(S, "(", Char, "*?)"), "?", /\?>/), PubidChar = /[\x20\x0D\x0Aa-zA-Z0-9-'()+,./:=?;!*#@$_%]/, PubidLiteral = regg('"', PubidChar, '*"', "|", "'", chars_without(PubidChar, "'"), "*'"), COMMENT_START = "<!--", COMMENT_END = "-->", Comment = reg(COMMENT_START, regg(chars_without(Char, "-"), "|", reg("-", chars_without(Char, "-"))), "*", COMMENT_END), PCDATA = "#PCDATA", Mixed = regg(
+      ), AttValue = regg('"', regg(/[^<&"]/, "|", Reference), "*", '"', "|", "'", regg(/[^<&']/, "|", Reference), "*", "'"), NCNameStartChar = chars_without(NameStartChar, ":"), NCNameChar = chars_without(NameChar, ":"), NCName = reg(NCNameStartChar, NCNameChar, "*"), NCName_exact = reg("^", NCName, "$"), QName = reg(NCName, regg(":", NCName), "?"), QName_exact = reg("^", QName, "$"), QName_group = reg("(", QName, ")"), SystemLiteral = regg(/"[^"]*"|'[^']*'/), PI = reg(/^<\?/, "(", Name, ")", regg(S, "(?!", _SChar, ")(", Char, "*?)"), "?", /\?>/), PubidChar = /[\x20\x0D\x0Aa-zA-Z0-9-'()+,./:=?;!*#@$_%]/, PubidLiteral = regg('"', PubidChar, '*"', "|", "'", chars_without(PubidChar, "'"), "*'"), COMMENT_START = "<!--", COMMENT_END = "-->", Comment = reg(COMMENT_START, regg(chars_without(Char, "-"), "|", reg("-", chars_without(Char, "-"))), "*", COMMENT_END), PCDATA = "#PCDATA", Mixed = regg(
         reg(/\(/, S_OPT, PCDATA, regg(S_OPT, /\|/, S_OPT, QName), "*", S_OPT, /\)\*/),
         "|",
         reg(/\(/, S_OPT, PCDATA, S_OPT, /\)/)
@@ -3639,6 +3639,8 @@
       exports.ExternalID = ExternalID;
       exports.ExternalID_match = ExternalID_match;
       exports.Name = Name;
+      exports.Name_exact = Name_exact;
+      exports.NCName_exact = NCName_exact;
       exports.NotationDecl = NotationDecl;
       exports.Reference = Reference;
       exports.PEReference = PEReference;
@@ -3859,6 +3861,7 @@
       };
       _extends(LiveNodeList, NodeList);
       function NamedNodeMap() {
+        this._nsIndex = /* @__PURE__ */ Object.create(null), this._noNsIndex = /* @__PURE__ */ Object.create(null);
       }
       function _findNodeIndex(list, node) {
         for (var i = 0; i < list.length; ) {
@@ -3867,8 +3870,25 @@
           i++;
         }
       }
+      function _nnmBucket(map, namespaceURI, create) {
+        if (!namespaceURI)
+          return map._noNsIndex;
+        var bucket = map._nsIndex[namespaceURI];
+        return !bucket && create && (bucket = map._nsIndex[namespaceURI] = /* @__PURE__ */ Object.create(null)), bucket;
+      }
+      function _nnmIndexFind(map, namespaceURI, localName) {
+        var bucket = _nnmBucket(map, namespaceURI, !1), found = bucket && bucket[localName];
+        return found || null;
+      }
+      function _nnmIndexAdd(map, attr) {
+        _nnmBucket(map, attr.namespaceURI, !0)[attr.localName] = attr;
+      }
+      function _nnmIndexRemove(map, attr) {
+        var bucket = _nnmBucket(map, attr.namespaceURI, !1);
+        bucket && delete bucket[attr.localName];
+      }
       function _addNamedNode(el, list, newAttr, oldAttr) {
-        if (oldAttr ? list[_findNodeIndex(list, oldAttr)] = newAttr : (list[list.length] = newAttr, list.length++), el) {
+        if (oldAttr ? list[_findNodeIndex(list, oldAttr)] = newAttr : (list[list.length] = newAttr, list.length++), _nnmIndexAdd(list, newAttr), el) {
           newAttr.ownerElement = el;
           var doc = el.ownerDocument;
           doc && (oldAttr && _onRemoveAttribute(doc, el, oldAttr), _onAddAttribute(doc, el, newAttr));
@@ -3879,7 +3899,7 @@
         if (i >= 0) {
           for (var lastIndex = list.length - 1; i <= lastIndex; )
             list[i] = list[++i];
-          if (list.length = lastIndex, el) {
+          if (list.length = lastIndex, _nnmIndexRemove(list, attr), el) {
             var doc = el.ownerDocument;
             doc && _onRemoveAttribute(doc, el, attr), attr.ownerElement = null;
           }
@@ -3926,7 +3946,7 @@
           var el = attr.ownerElement;
           if (el && el !== this._ownerElement)
             throw new DOMException(DOMException.INUSE_ATTRIBUTE_ERR);
-          var oldAttr = this.getNamedItemNS(attr.namespaceURI, attr.localName);
+          var oldAttr = _nnmIndexFind(this, attr.namespaceURI, attr.localName);
           return oldAttr === attr ? attr : (_addNamedNode(this._ownerElement, this, attr, oldAttr), oldAttr);
         },
         /**
@@ -4122,8 +4142,8 @@
           namespaceURI === NAMESPACE.HTML ? contentType = MIME_TYPE.XML_XHTML_APPLICATION : namespaceURI === NAMESPACE.SVG && (contentType = MIME_TYPE.XML_SVG_IMAGE);
           var doc = new Document(PDC, { contentType });
           if (doc.implementation = this, doc.childNodes = new NodeList(), doc.doctype = doctype || null, doctype && doc.appendChild(doctype), qualifiedName) {
-            var root = doc.createElementNS(namespaceURI, qualifiedName);
-            doc.appendChild(root);
+            var root2 = doc.createElementNS(namespaceURI, qualifiedName);
+            doc.appendChild(root2);
           }
           return doc;
         },
@@ -4531,7 +4551,16 @@
             enter: function(node) {
               for (var child = node.firstChild; child; ) {
                 var next = child.nextSibling;
-                next !== null && next.nodeType === TEXT_NODE && child.nodeType === TEXT_NODE ? (node.removeChild(next), child.appendData(next.data)) : child = next;
+                if (next !== null && next.nodeType === TEXT_NODE && child.nodeType === TEXT_NODE) {
+                  for (var tail = [], sibling = next; sibling !== null && sibling.nodeType === TEXT_NODE; )
+                    tail.push(sibling.data), sibling = sibling.nextSibling;
+                  for (var removed = child.nextSibling; removed !== sibling; ) {
+                    var following = removed.nextSibling;
+                    removed.parentNode = null, removed.previousSibling = null, removed.nextSibling = null, removed = following;
+                  }
+                  child.nextSibling = sibling, sibling !== null ? sibling.previousSibling = child : node.lastChild = child, child.appendData(tail.join("")), _onUpdateChild(node.ownerDocument, node), child = sibling;
+                } else
+                  child = next;
               }
               return !0;
             }
@@ -5008,10 +5037,10 @@
          * "InvalidCharacterError".
          *
          * Note: When the resulting document is serialized with `requireWellFormed: true`, the
-         * serializer throws `InvalidStateError` if `.target` contains `:` or is an ASCII
-         * case-insensitive match for `"xml"`, or if `.data` contains `?>` or characters outside the
-         * XML Char production (W3C DOM Parsing §3.2.1.7). Without that option the data is emitted
-         * verbatim.
+         * serializer throws `InvalidStateError` if `.target` is not a valid XML `NCName` (a `Name`
+         * with no colon) or is an ASCII case-insensitive match for `"xml"`, or if `.data` contains
+         * `?>` or characters outside the XML Char production (W3C DOM Parsing §3.2.1.7). Without that
+         * option the target and data are emitted verbatim.
          *
          * @param {string} target
          * @param {string} data
@@ -5052,19 +5081,29 @@
          * The current implementation does not fill the `childNodes` with those of the corresponding
          * `Entity`
          *
+         * The `name` is validated against the XML `Name` production at creation time; an invalid name
+         * throws `InvalidCharacterError`. When the resulting node is serialized with
+         * `requireWellFormed: true`, the serializer re-validates `nodeName` against the XML `Name`
+         * production and throws `InvalidStateError` if a later `nodeName` mutation made it invalid;
+         * without that option the name is emitted verbatim.
+         *
+         * __This implementation differs from the specification:__ xmldom does not expand entities —
+         * the parser resolves entity references inline and never constructs `EntityReference` nodes,
+         * so this method is the only producer.
+         *
          * @deprecated
          * In DOM Level 4.
          * @param {string} name
          * The name of the entity to reference. No namespace well-formedness checks are performed.
          * @returns {EntityReference}
          * @throws {DOMException}
-         * With code `INVALID_CHARACTER_ERR` when `name` is not valid.
+         * With code `INVALID_CHARACTER_ERR` when `name` is not a valid XML `Name`.
          * @throws {DOMException}
          * with code `NOT_SUPPORTED_ERR` when the document is of type `html`
          * @see https://www.w3.org/TR/DOM-Level-3-Core/core.html#ID-392B75AE
          */
         createEntityReference: function(name) {
-          if (!g.Name.test(name))
+          if (!g.Name_exact.test(name))
             throw new DOMException(DOMException.INVALID_CHARACTER_ERR, 'not a valid xml name "' + name + '"');
           if (this.type === "html")
             throw new DOMException("document is an html document", DOMExceptionName.NotSupportedError);
@@ -5411,7 +5450,12 @@
         }
         return !0;
       }
-      function addSerializedAttribute(buf, qualifiedName, value) {
+      function addSerializedAttribute(buf, qualifiedName, value, requireWellFormed) {
+        if (requireWellFormed && !g.QName_exact.test(qualifiedName))
+          throw new DOMException(
+            'The attribute name "' + qualifiedName + '" is not a valid XML QName',
+            DOMExceptionName.InvalidStateError
+          );
         buf.push(" ", qualifiedName, '="', value.replace(/[<>&"\t\n\r]/g, _xmlEncoder), '"');
       }
       function serializeToString(node, buf, visibleNamespaces, opts) {
@@ -5455,6 +5499,11 @@
                         }
                       }
                   }
+                  if (requireWellFormed && !g.QName_exact.test(prefixedNodeName))
+                    throw new DOMException(
+                      'The element name "' + prefixedNodeName + '" is not a valid XML QName',
+                      DOMExceptionName.InvalidStateError
+                    );
                   buf.push("<", prefixedNodeName);
                   for (var childNamespaces = namespaces.slice(), i = 0; i < len; i++) {
                     var attr = attrs.item(i);
@@ -5467,14 +5516,14 @@
                     var attr = attrs.item(i);
                     if (needNamespaceDefine(attr, isHTML, childNamespaces)) {
                       var attrPrefix = attr.prefix || "", uri = attr.namespaceURI;
-                      addSerializedAttribute(buf, attrPrefix ? "xmlns:" + attrPrefix : "xmlns", uri), childNamespaces.push({ prefix: attrPrefix, namespace: uri });
+                      addSerializedAttribute(buf, attrPrefix ? "xmlns:" + attrPrefix : "xmlns", uri, requireWellFormed), childNamespaces.push({ prefix: attrPrefix, namespace: uri });
                     }
                     var filteredAttr = nodeFilter ? nodeFilter(attr) : attr;
-                    filteredAttr && (typeof filteredAttr == "string" ? buf.push(filteredAttr) : addSerializedAttribute(buf, filteredAttr.name, filteredAttr.value));
+                    filteredAttr && (typeof filteredAttr == "string" ? buf.push(filteredAttr) : addSerializedAttribute(buf, filteredAttr.name, filteredAttr.value, requireWellFormed));
                   }
                   if (nodeName === prefixedNodeName && needNamespaceDefine(n, isHTML, childNamespaces)) {
                     var nodePrefix = n.prefix || "", uri = n.namespaceURI;
-                    addSerializedAttribute(buf, nodePrefix ? "xmlns:" + nodePrefix : "xmlns", uri), childNamespaces.push({ prefix: nodePrefix, namespace: uri });
+                    addSerializedAttribute(buf, nodePrefix ? "xmlns:" + nodePrefix : "xmlns", uri, requireWellFormed), childNamespaces.push({ prefix: nodePrefix, namespace: uri });
                   }
                   var canCloseTag = !n.firstChild;
                   if (canCloseTag && (isHTML || n.namespaceURI === NAMESPACE.HTML) && (canCloseTag = isHTMLVoidElement(nodeName)), canCloseTag)
@@ -5491,7 +5540,7 @@
                     throw new DOMException("The Document has no documentElement", DOMExceptionName.InvalidStateError);
                   return { ns: namespaces };
                 case ATTRIBUTE_NODE:
-                  return addSerializedAttribute(buf, n.name, n.value), null;
+                  return addSerializedAttribute(buf, n.name, n.value, requireWellFormed), null;
                 case TEXT_NODE:
                   if (requireWellFormed && g.InvalidChar.test(n.data))
                     throw new DOMException(
@@ -5520,6 +5569,11 @@
                 case DOCUMENT_TYPE_NODE:
                   var pubid = n.publicId, sysid = n.systemId;
                   if (requireWellFormed) {
+                    if (!g.Name_exact.test(n.name))
+                      throw new DOMException(
+                        'The doctype name "' + n.name + '" is not a valid XML Name',
+                        DOMExceptionName.InvalidStateError
+                      );
                     if (pubid && !g.PubidLiteral_match.test(pubid))
                       throw new DOMException("DocumentType publicId is not a valid PubidLiteral", DOMExceptionName.InvalidStateError);
                     if (sysid && sysid !== "." && !g.SystemLiteral_match.test(sysid))
@@ -5530,8 +5584,11 @@
                   return buf.push(g.DOCTYPE_DECL_START, " ", n.name), pubid ? (buf.push(" ", g.PUBLIC, " ", pubid), sysid && sysid !== "." && buf.push(" ", sysid)) : sysid && sysid !== "." && buf.push(" ", g.SYSTEM, " ", sysid), n.internalSubset && buf.push(" [", n.internalSubset, "]"), buf.push(">"), null;
                 case PROCESSING_INSTRUCTION_NODE:
                   if (requireWellFormed) {
-                    if (n.target.indexOf(":") !== -1 || n.target.toLowerCase() === "xml")
-                      throw new DOMException("The ProcessingInstruction target is not well-formed", DOMExceptionName.InvalidStateError);
+                    if (!g.NCName_exact.test(n.target) || n.target.toLowerCase() === "xml")
+                      throw new DOMException(
+                        'The processing instruction target "' + n.target + '" is not a valid XML NCName or is reserved',
+                        DOMExceptionName.InvalidStateError
+                      );
                     if (g.InvalidChar.test(n.data))
                       throw new DOMException(
                         "The ProcessingInstruction data contains characters outside the XML Char production",
@@ -5542,6 +5599,11 @@
                   }
                   return buf.push("<?", n.target, " ", n.data, "?>"), null;
                 case ENTITY_REFERENCE_NODE:
+                  if (requireWellFormed && !g.Name_exact.test(n.nodeName))
+                    throw new DOMException(
+                      'The entity reference name "' + n.nodeName + '" is not a valid XML Name',
+                      DOMExceptionName.InvalidStateError
+                    );
                   return buf.push("&", n.nodeName, ";"), null;
                 //case ENTITY_NODE:
                 //case NOTATION_NODE:
@@ -5633,6 +5695,22 @@
                 this.data = data, this.value = data, this.nodeValue = data;
             }
           }
+        }), Object.defineProperty(CharacterData.prototype, "data", {
+          get: function() {
+            return this._data != null ? this._data : "";
+          },
+          set: function(v) {
+            this._data = v, this.length = typeof v == "string" ? v.length : 0;
+          }
+        }), Object.defineProperty(CharacterData.prototype, "nodeValue", {
+          get: function() {
+            return this.data;
+          },
+          set: function(v) {
+            this.data = v;
+          },
+          enumerable: !0,
+          configurable: !0
         }), Object.defineProperty(Element.prototype, "children", {
           get: function() {
             return new LiveNodeList(this, childrenRefresh);
@@ -7888,9 +7966,23 @@
                 var end = source.indexOf(">", tagStart + 2), tagNameRaw = source.substring(tagStart + 2, end > 0 ? end : void 0);
                 if (!tagNameRaw)
                   return errorHandler.fatalError("end tag name missing");
-                var tagNameMatch = end > 0 && g.reg("^", g.QName_group, g.S_OPT, "$").exec(tagNameRaw);
-                if (!tagNameMatch)
-                  return errorHandler.fatalError('end tag name contains invalid characters: "' + tagNameRaw + '"');
+                var endTagNameStrict = g.reg("^", g.QName_group, g.S_OPT, "$"), tagNameMatch = end > 0 && endTagNameStrict.exec(tagNameRaw);
+                if (!tagNameMatch) {
+                  var leadingTagNameMatch = end > 0 && g.reg("^", g.QName_group).exec(tagNameRaw);
+                  if (isHTML && leadingTagNameMatch)
+                    errorHandler.warning('end tag name contains invalid trailing characters: "' + tagNameRaw + '"'), tagNameMatch = leadingTagNameMatch;
+                  else if (
+                    // Backward compatibility, remove this whole `else if` arm in the next breaking release
+                    // (XML then falls through to the `fatalError` below, for a clean mode split: XML fatal,
+                    // HTML warning). A valid end-tag name followed by a line break and trailing content was
+                    // silently accepted while `reg` still used the `m` flag; re-adding `m` here matches exactly
+                    // those inputs, kept recoverable and reported.
+                    leadingTagNameMatch && new RegExp(endTagNameStrict.source, endTagNameStrict.flags + "m").test(tagNameRaw)
+                  )
+                    errorHandler.error('end tag name is followed by a line break and trailing content: "' + tagNameRaw + '"'), tagNameMatch = leadingTagNameMatch;
+                  else
+                    return errorHandler.fatalError('end tag name contains invalid characters: "' + tagNameRaw + '"');
+                }
                 if (!domBuilder.currentElement && !domBuilder.doc.documentElement)
                   return;
                 var currentTagName = unclosedTags[unclosedTags.length - 1] || domBuilder.currentElement.tagName || domBuilder.doc.documentElement.tagName || "";
@@ -7931,7 +8023,7 @@
             if (e instanceof ParseError)
               throw e;
             if (e instanceof DOMException)
-              throw new ParseError(e.name + ": " + e.message, domBuilder.locator, e);
+              return errorHandler.fatalError("Error constructing the DOM: " + e.name + ": " + e.message, e);
             errorHandler.error("element parse error: " + e), end = -1;
           }
           end > start ? start = end : appendText(Math.max(tagStart, start) + 1);
@@ -7958,6 +8050,8 @@
         }
         for (var attrName, value, p = ++start, s = S_TAG; ; ) {
           var c = source.charAt(p);
+          if (s === S_TAG && c === "<")
+            throw new Error("unexpected < in tag name: " + source.slice(start, p));
           switch (c) {
             case "=":
               if (s === S_ATTR)
@@ -8070,7 +8164,7 @@
             var prefix = a.prefix = qName.slice(0, nsp), localName = qName.slice(nsp + 1), nsPrefix = prefix === "xmlns" && localName;
           else
             localName = qName, prefix = null, nsPrefix = qName === "xmlns" && "";
-          a.localName = localName, nsPrefix !== !1 && (localNSMap == null && (localNSMap = /* @__PURE__ */ Object.create(null), _copy(currentNSMap, currentNSMap = /* @__PURE__ */ Object.create(null))), currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value, a.uri = NAMESPACE.XMLNS, domBuilder.startPrefixMapping(nsPrefix, value));
+          a.localName = localName, nsPrefix !== !1 && (localNSMap == null && (localNSMap = /* @__PURE__ */ Object.create(null), currentNSMap = Object.create(currentNSMap)), currentNSMap[nsPrefix] = localNSMap[nsPrefix] = value, a.uri = NAMESPACE.XMLNS, domBuilder.startPrefixMapping(nsPrefix, value));
         }
         for (var i = el.length; i--; )
           a = el[i], a.prefix && (a.prefix === "xml" && (a.uri = NAMESPACE.XML), a.prefix !== "xmlns" && (a.uri = currentNSMap[a.prefix]));
@@ -8087,7 +8181,12 @@
       function parseHtmlSpecialContent(source, elStartEnd, tagName, entityReplacer, domBuilder) {
         var isEscapableRaw = isHTMLEscapableRawTextElement(tagName);
         if (isEscapableRaw || isHTMLRawTextElement(tagName)) {
-          var elEndStart = source.indexOf("</" + tagName + ">", elStartEnd), text = source.substring(elStartEnd + 1, elEndStart);
+          var closeTag = new RegExp("</" + tagName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + ">", "ig");
+          closeTag.lastIndex = elStartEnd;
+          var match = closeTag.exec(source), elEndStart = match ? match.index : -1;
+          if (elEndStart < 0)
+            return elStartEnd + 1;
+          var text = source.substring(elStartEnd + 1, elEndStart);
           return isEscapableRaw && (text = text.replace(ENTITY_REG, entityReplacer)), domBuilder.characters(text, 0, text.length), elEndStart;
         }
         return elStartEnd + 1;
@@ -8428,13 +8527,15 @@
          *
          * @param {string} message
          * - The message to be used for reporting and throwing the error.
+         * @param {Error} [cause]
+         * The error that caused this fatal error, preserved as the thrown `ParseError`'s `cause`.
          * @returns {never}
          * This function always throws an error and never returns a value.
          * @throws {ParseError}
          * Always throws a ParseError with the provided message.
          */
-        fatalError: function(message) {
-          throw this.reportError("fatalError", message), new ParseError(message, this.locator);
+        fatalError: function(message, cause) {
+          throw this.reportError("fatalError", message), new ParseError(message, this.locator, cause);
         }
       };
       function _locator(l) {
@@ -8514,15 +8615,13 @@
     }
   });
 
-  // src/common/relationship.ts
-  function parseRelationships(root, xml) {
-    return xml.elements(root).map((e) => ({
-      id: xml.attr(e, "Id"),
-      type: xml.attr(e, "Type"),
-      target: xml.attr(e, "Target"),
-      targetMode: xml.attr(e, "TargetMode")
-    }));
-  }
+  // src/document/dom.ts
+  var OpenXmlElementBase = class {
+    constructor() {
+      this.children = [];
+      this.cssStyle = {};
+    }
+  };
 
   // src/utils.ts
   function encloseFontFamily(fontFamily) {
@@ -8699,6 +8798,3195 @@
     }
   }, globalXmlParser = new XmlParser(), xml_parser_default = globalXmlParser;
 
+  // src/document/border.ts
+  function parseBorder(elem, xml) {
+    return {
+      type: xml.attr(elem, "val"),
+      color: xml.attr(elem, "color"),
+      size: xml.lengthAttr(elem, "sz", LengthUsage.Border),
+      offset: xml.lengthAttr(elem, "space", LengthUsage.Point),
+      frame: xml.boolAttr(elem, "frame"),
+      shadow: xml.boolAttr(elem, "shadow")
+    };
+  }
+  function parseBorders(elem, xml) {
+    var result = {};
+    for (let e of xml.elements(elem))
+      switch (e.localName) {
+        case "left":
+          result.left = parseBorder(e, xml);
+          break;
+        case "top":
+          result.top = parseBorder(e, xml);
+          break;
+        case "right":
+          result.right = parseBorder(e, xml);
+          break;
+        case "bottom":
+          result.bottom = parseBorder(e, xml);
+          break;
+      }
+    return result;
+  }
+
+  // src/document/section.ts
+  function parseSectionProperties(elem, xml = xml_parser_default) {
+    var section = {};
+    for (let e of xml.elements(elem))
+      switch (e.localName) {
+        case "pgSz":
+          section.pageSize = {
+            width: xml.lengthAttr(e, "w"),
+            height: xml.lengthAttr(e, "h"),
+            orientation: xml.attr(e, "orient")
+          };
+          break;
+        case "type":
+          section.type = xml.attr(e, "val");
+          break;
+        case "pgMar":
+          section.pageMargins = {
+            left: xml.lengthAttr(e, "left"),
+            right: xml.lengthAttr(e, "right"),
+            top: xml.lengthAttr(e, "top"),
+            bottom: xml.lengthAttr(e, "bottom"),
+            header: xml.lengthAttr(e, "header"),
+            footer: xml.lengthAttr(e, "footer"),
+            gutter: xml.lengthAttr(e, "gutter")
+          };
+          break;
+        case "cols":
+          section.columns = parseColumns(e, xml);
+          break;
+        case "headerReference":
+          (section.headerRefs ?? (section.headerRefs = [])).push(parseFooterHeaderReference(e, xml));
+          break;
+        case "footerReference":
+          (section.footerRefs ?? (section.footerRefs = [])).push(parseFooterHeaderReference(e, xml));
+          break;
+        case "titlePg":
+          section.titlePage = xml.boolAttr(e, "val", !0);
+          break;
+        case "pgBorders":
+          section.pageBorders = parseBorders(e, xml);
+          break;
+        case "pgNumType":
+          section.pageNumber = parsePageNumber(e, xml);
+          break;
+        case "docGrid":
+          section.docGrid = parseDocumentGrid(e, xml);
+          break;
+      }
+    return section;
+  }
+  function parseColumns(elem, xml) {
+    return {
+      numberOfColumns: xml.intAttr(elem, "num"),
+      space: xml.lengthAttr(elem, "space"),
+      separator: xml.boolAttr(elem, "sep"),
+      equalWidth: xml.boolAttr(elem, "equalWidth", !0),
+      columns: xml.elements(elem, "col").map((e) => ({
+        width: xml.lengthAttr(e, "w"),
+        space: xml.lengthAttr(e, "space")
+      }))
+    };
+  }
+  function parsePageNumber(elem, xml) {
+    return {
+      chapSep: xml.attr(elem, "chapSep"),
+      chapStyle: xml.attr(elem, "chapStyle"),
+      format: xml.attr(elem, "fmt"),
+      start: xml.intAttr(elem, "start")
+    };
+  }
+  function parseDocumentGrid(elem, xml) {
+    let charSpaceRaw = xml.intAttr(elem, "charSpace", null);
+    return {
+      type: xml.attr(elem, "type"),
+      linePitch: xml.lengthAttr(elem, "linePitch"),
+      charSpace: charSpaceRaw == null ? null : `${(charSpaceRaw / 4096).toFixed(4)}em`,
+      charSpaceRaw
+    };
+  }
+  function parseFooterHeaderReference(elem, xml) {
+    return {
+      id: xml.attr(elem, "id"),
+      type: xml.attr(elem, "type") || "default"
+    };
+  }
+
+  // src/document/line-spacing.ts
+  function normalizeLineRule(value) {
+    return value === "exact" ? "exactly" : value;
+  }
+  function parseLineSpacing(elem, xml) {
+    return {
+      before: xml.lengthAttr(elem, "before"),
+      after: xml.lengthAttr(elem, "after"),
+      beforeLines: xml.intAttr(elem, "beforeLines"),
+      afterLines: xml.intAttr(elem, "afterLines"),
+      beforeAutoSpacing: xml.boolAttr(elem, "beforeAutospacing"),
+      afterAutoSpacing: xml.boolAttr(elem, "afterAutospacing"),
+      line: xml.intAttr(elem, "line"),
+      lineRule: normalizeLineRule(xml.attr(elem, "lineRule"))
+    };
+  }
+
+  // src/document/run.ts
+  function parseRunProperties(elem, xml) {
+    let result = {};
+    for (let el of xml.elements(elem))
+      parseRunProperty(el, result, xml);
+    return result;
+  }
+  function parseRunProperty(elem, props, xml) {
+    return !!parseCommonProperty(elem, props, xml);
+  }
+
+  // src/document/paragraph.ts
+  function parseParagraphProperties(elem, xml) {
+    let result = {};
+    for (let el of xml.elements(elem))
+      parseParagraphProperty(el, result, xml);
+    return result;
+  }
+  function parseParagraphProperty(elem, props, xml) {
+    if (elem.namespaceURI != ns.wordml)
+      return !1;
+    if (parseCommonProperty(elem, props, xml))
+      return !0;
+    switch (elem.localName) {
+      case "tabs":
+        props.tabs = parseTabs(elem, xml);
+        break;
+      case "sectPr":
+        props.sectionProps = parseSectionProperties(elem, xml);
+        break;
+      case "numPr":
+        props.numbering = parseNumbering(elem, xml);
+        break;
+      case "spacing":
+        return props.lineSpacing = parseLineSpacing(elem, xml), !1;
+        break;
+      case "textAlignment":
+        return props.textAlignment = xml.attr(elem, "val"), !1;
+        break;
+      case "keepLines":
+        props.keepLines = xml.boolAttr(elem, "val", !0);
+        break;
+      case "keepNext":
+        props.keepNext = xml.boolAttr(elem, "val", !0);
+        break;
+      case "pageBreakBefore":
+        props.pageBreakBefore = xml.boolAttr(elem, "val", !0);
+        break;
+      case "widowControl":
+        props.widowControl = xml.boolAttr(elem, "val", !0);
+        break;
+      case "contextualSpacing":
+        props.contextualSpacing = xml.boolAttr(elem, "val", !0);
+        break;
+      case "outlineLvl":
+        props.outlineLevel = xml.intAttr(elem, "val");
+        break;
+      case "pStyle":
+        props.styleName = xml.attr(elem, "val");
+        break;
+      case "rPr":
+        props.runProps = parseRunProperties(elem, xml);
+        break;
+      default:
+        return !1;
+    }
+    return !0;
+  }
+  function parseTabs(elem, xml) {
+    return xml.elements(elem, "tab").map((e) => ({
+      position: xml.lengthAttr(e, "pos"),
+      leader: xml.attr(e, "leader"),
+      style: xml.attr(e, "val")
+    }));
+  }
+  function parseNumbering(elem, xml) {
+    var result = {};
+    for (let e of xml.elements(elem))
+      switch (e.localName) {
+        case "numId":
+          result.id = xml.attr(e, "val");
+          break;
+        case "ilvl":
+          result.level = xml.intAttr(e, "val");
+          break;
+      }
+    return result;
+  }
+
+  // src/parser/trace-source.ts
+  function traceSourceKey(source) {
+    if (source.sdtBodyIndex != null)
+      return `docx:sdt:${source.sdtBodyIndex}:p:${source.sdtParagraphIndex ?? 0}`;
+    if (source.paragraphIndex != null)
+      return `docx:body:${source.bodyIndex}:p:${source.paragraphIndex}`;
+    if (source.tableIndex != null && source.cellParagraphIndex != null) {
+      let nested = source.nestedTablePath?.map((item) => `:r:${item.parentRowIndex}:c:${item.parentCellIndex}:nt:${item.nestedIndex}`).join("") ?? (source.nestedTableIndex == null ? "" : `:nt:${source.nestedTableIndex}`);
+      return `docx:body:${source.bodyIndex}:tbl:${source.tableIndex}${nested}:r:${source.rowIndex}:c:${source.cellIndex}:p:${source.cellParagraphIndex}`;
+    }
+    return "";
+  }
+  function assignTraceParagraph(paragraph, source, xml, resolveAlternate) {
+    let sourceKey = traceSourceKey(source);
+    if (!sourceKey) return;
+    let counters = /* @__PURE__ */ new Map(), objects = [], controls = [], descriptor = (kind, resourceKey) => {
+      let index2 = counters.get(kind) ?? 0;
+      return counters.set(kind, index2 + 1), { objectKey: `${sourceKey}:${kind}:${index2}`, objectKind: kind, resourceKey };
+    }, descend = (node) => Array.from(node.getElementsByTagName("*")), walkXml = (raw) => {
+      let node = resolveAlternate(raw);
+      if (!(!node || node.localName === "del" || node.localName === "moveFrom")) {
+        if (node.localName === "sdt") {
+          let control = descriptor("contentControl");
+          descend(node).some((item) => item.localName.toLowerCase() === "checkbox") && (control.objectKind = "checkbox"), controls.push(control);
+        }
+        if (node.localName === "oMath" || node.localName === "oMathPara") {
+          objects.push(descriptor("formula"));
+          return;
+        }
+        if (node.localName === "drawing" || node.localName === "pict" || node.localName === "object") {
+          let children = descend(node), image = children.find((item) => item.localName === "blip" || item.localName === "imagedata"), chart = children.find((item) => item.localName === "chart"), relationship = image ?? chart, rel = relationship && Array.from(relationship.attributes).find((attr) => ["embed", "link", "id", "relid"].includes(attr.localName))?.value, kind = image ? "image" : chart ? "chart" : children.some((item) => ["txbx", "txbxContent", "textbox"].includes(item.localName)) ? "textbox" : "drawing";
+          objects.push(descriptor(kind, rel));
+          return;
+        }
+        for (let child of Array.from(node.childNodes)) child.nodeType === 1 && walkXml(child);
+      }
+    };
+    for (let child of Array.from(xml.childNodes)) child.nodeType === 1 && walkXml(child);
+    let index = 0, walkModel = (node) => {
+      if (node.type !== "deleted" /* Deleted */) {
+        if (["drawing" /* Drawing */, "vmlPicture" /* VmlPicture */, "mmlMath" /* MmlMath */, "mmlMathParagraph" /* MmlMathParagraph */].includes(node.type)) {
+          let locator = objects[index++];
+          locator && (node.props = { ...node.props, objectLocator: locator });
+          return;
+        }
+        for (let child of node.children ?? []) walkModel(child);
+      }
+    };
+    for (let child of paragraph.children ?? []) walkModel(child);
+    controls.length && (paragraph.props = { ...paragraph.props, traceControls: controls });
+  }
+
+  // src/document/bookmarks.ts
+  function parseBookmarkStart(elem, xml) {
+    return {
+      type: "bookmarkStart" /* BookmarkStart */,
+      id: xml.attr(elem, "id"),
+      name: xml.attr(elem, "name"),
+      colFirst: xml.intAttr(elem, "colFirst"),
+      colLast: xml.intAttr(elem, "colLast")
+    };
+  }
+  function parseBookmarkEnd(elem, xml) {
+    return {
+      type: "bookmarkEnd" /* BookmarkEnd */,
+      id: xml.attr(elem, "id")
+    };
+  }
+
+  // src/security/links.ts
+  function normalizeHref(value) {
+    return value?.trim().replace(/[\u0000-\u0020\u007f-\u009f]+/g, "") || void 0;
+  }
+  function sanitizeExternalResourceHref(value, policy = "block", allowInternalBlob = !1) {
+    let compact = normalizeHref(value);
+    if (compact) {
+      if (/^data:image\//i.test(compact)) return compact;
+      if (/^blob:/i.test(compact)) return allowInternalBlob ? compact : void 0;
+      if (!(policy !== "allow" || compact.startsWith("//") || compact.includes("\\")))
+        return /^https?:/i.test(compact) ? compact : void 0;
+    }
+  }
+  function sanitizeDocumentStyleText(value) {
+    return String(value ?? "").split(";").filter((entry) => /^\s*-?[a-z][a-z0-9-]*\s*:/i.test(entry) && !/(?:url|image-set|expression)\s*\(|@import|(?:java|vb)script\s*:|behavior\s*:|-moz-binding/i.test(entry)).join(";");
+  }
+  function sanitizeSvgPaint(value) {
+    let paint = String(value ?? "").trim();
+    return /^(?:none|transparent|currentcolor|#[0-9a-f]{3,8}|[a-z]{1,32}|(?:rgb|hsl)a?\([0-9%.,+\-\s]+\))$/i.test(paint) ? paint : void 0;
+  }
+
+  // src/vml/vml.ts
+  var VmlElement = class extends OpenXmlElementBase {
+    constructor() {
+      super(...arguments);
+      this.type = "vmlElement" /* VmlElement */;
+      this.attrs = {};
+    }
+  }, vmlShapeTypes = /* @__PURE__ */ new WeakMap();
+  function referencedVmlShapeType(elem) {
+    let ref = xml_parser_default.attr(elem, "type"), document2 = elem.ownerDocument;
+    if (!ref?.startsWith("#") || !document2)
+      return;
+    let types = vmlShapeTypes.get(document2);
+    if (!types) {
+      types = /* @__PURE__ */ new Map();
+      for (let type of Array.from(document2.getElementsByTagNameNS("urn:schemas-microsoft-com:vml", "shapetype"))) {
+        let id = xml_parser_default.attr(type, "id");
+        id && !types.has(id) && types.set(id, type);
+      }
+      vmlShapeTypes.set(document2, types);
+    }
+    return types.get(ref.slice(1));
+  }
+  function parseVmlElement(elem, parser) {
+    var result = new VmlElement();
+    switch (elem.localName) {
+      case "group":
+        result.tagName = "g";
+        break;
+      case "rect":
+        result.tagName = "rect", Object.assign(result.attrs, { width: "100%", height: "100%" });
+        break;
+      case "oval":
+        result.tagName = "ellipse", Object.assign(result.attrs, { cx: "50%", cy: "50%", rx: "50%", ry: "50%" });
+        break;
+      case "line":
+        result.tagName = "line";
+        break;
+      case "shape":
+        result.tagName = "g";
+        break;
+      case "textbox":
+        result.tagName = "foreignObject", Object.assign(result.attrs, { width: "100%", height: "100%" });
+        break;
+      default:
+        return null;
+    }
+    if (elem.localName === "shape" && !xml_parser_default.attr(elem, "path")) {
+      let type = referencedVmlShapeType(elem);
+      type && xml_parser_default.attr(type, "spt") === "32" && (result.tagName = "line", result.attrs.stroke = "#000000", result.attrs.fill = "none");
+    }
+    for (let at of xml_parser_default.attrs(elem))
+      switch (at.localName) {
+        case "coordorigin":
+          result.attrs["data-vml-coordorigin"] = at.value;
+          break;
+        case "coordsize":
+          result.attrs["data-vml-coordsize"] = at.value;
+          break;
+        case "inset":
+          result.attrs["data-vml-inset"] = at.value;
+          break;
+        case "style":
+          result.cssStyleText = sanitizeDocumentStyleText(at.value);
+          break;
+        case "fillcolor":
+          let fill = sanitizeSvgPaint(at.value);
+          fill && (result.attrs.fill = fill);
+          break;
+        case "strokecolor":
+          let stroke = sanitizeSvgPaint(at.value);
+          stroke && (result.attrs.stroke = stroke);
+          break;
+        case "strokeweight":
+          let strokeWidth = convertLength(at.value, LengthUsage.Point);
+          strokeWidth && (result.attrs["stroke-width"] = strokeWidth);
+          break;
+        case "filled":
+          (at.value == "f" || at.value == "false") && (result.attrs.fill = "none");
+          break;
+        case "stroked":
+          (at.value == "f" || at.value == "false") && (result.attrs.stroke = "none");
+          break;
+        case "path":
+          result.tagName = "path", result.attrs.d = convertPath(at.value);
+          break;
+        case "from":
+          let [x1, y1] = parsePoint(at.value);
+          Object.assign(result.attrs, { x1, y1 });
+          break;
+        case "to":
+          let [x2, y2] = parsePoint(at.value);
+          Object.assign(result.attrs, { x2, y2 });
+          break;
+      }
+    for (let el of xml_parser_default.elements(elem))
+      switch (el.localName) {
+        case "stroke":
+          Object.assign(result.attrs, parseStroke(el));
+          break;
+        case "fill":
+          Object.assign(result.attrs, parseFill(el));
+          break;
+        case "imagedata":
+          result.tagName = "image", Object.assign(result.attrs, vmlImageAttrs(el)), result.imageHref = {
+            id: xml_parser_default.attr(el, "id") ?? xml_parser_default.attr(el, "relid") ?? xml_parser_default.attr(el, "pict"),
+            title: xml_parser_default.attr(el, "title")
+          };
+          break;
+        case "txbxContent":
+          result.children.push(...parser.parseBodyElements(el));
+          break;
+        default:
+          let child = parseVmlElement(el, parser);
+          child && result.children.push(child);
+          break;
+      }
+    return result;
+  }
+  function vmlImageAttrs(el) {
+    let cropLeft = parseVmlFraction(xml_parser_default.attr(el, "cropleft")), cropTop = parseVmlFraction(xml_parser_default.attr(el, "croptop")), cropRight = parseVmlFraction(xml_parser_default.attr(el, "cropright")), cropBottom = parseVmlFraction(xml_parser_default.attr(el, "cropbottom")), cropWidth = Math.max(1e-4, 1 - cropLeft - cropRight), cropHeight = Math.max(1e-4, 1 - cropTop - cropBottom), attrs = {
+      x: percent(-cropLeft / cropWidth),
+      y: percent(-cropTop / cropHeight),
+      width: percent(1 / cropWidth),
+      height: percent(1 / cropHeight)
+    };
+    (cropLeft || cropTop || cropRight || cropBottom) && (attrs.preserveAspectRatio = "none");
+    let gain = parseVmlNumber(xml_parser_default.attr(el, "gain")), blackLevel = parseVmlNumber(xml_parser_default.attr(el, "blacklevel"));
+    return Number.isFinite(gain) && (attrs["data-vml-gain"] = String(gain)), Number.isFinite(blackLevel) && (attrs["data-vml-blacklevel"] = String(blackLevel)), attrs;
+  }
+  function parseVmlNumber(value) {
+    if (value == null)
+      return Number.NaN;
+    let raw = String(value).trim();
+    return raw ? /^-?\d+(?:\.\d+)?f$/i.test(raw) ? parseFloat(raw.slice(0, -1)) / 65536 : raw.endsWith("%") ? parseFloat(raw) / 100 : Number(raw) : Number.NaN;
+  }
+  function parseVmlFraction(value) {
+    if (!value)
+      return 0;
+    let raw = String(value).trim();
+    if (!raw)
+      return 0;
+    let result;
+    return /^-?\d+(\.\d+)?f$/i.test(raw) ? result = parseFloat(raw.slice(0, -1)) / 65536 : raw.endsWith("%") ? result = parseFloat(raw) / 100 : result = parseFloat(raw), Number.isFinite(result) ? Math.max(0, Math.min(0.9999, result)) : 0;
+  }
+  function percent(value) {
+    return `${Math.round(value * 1e5) / 1e3}%`;
+  }
+  function parseStroke(el) {
+    let result = {}, color = xml_parser_default.attr(el, "color"), weight = xml_parser_default.attr(el, "weight"), on = xml_parser_default.attr(el, "on");
+    if (on == "f" || on == "false")
+      result.stroke = "none";
+    else if (color) {
+      let safeColor = sanitizeSvgPaint(color);
+      safeColor && (result.stroke = safeColor);
+    }
+    if (weight) {
+      let safeWeight = convertLength(weight, LengthUsage.Point);
+      safeWeight && (result["stroke-width"] = safeWeight);
+    } else
+      result["stroke-width"] = "1px";
+    return result;
+  }
+  function parseFill(el) {
+    let result = {}, color = xml_parser_default.attr(el, "color") ?? xml_parser_default.attr(el, "color2"), on = xml_parser_default.attr(el, "on"), opacity = xml_parser_default.attr(el, "opacity");
+    if (on == "f" || on == "false")
+      result.fill = "none";
+    else if (color) {
+      let safeColor = sanitizeSvgPaint(color);
+      safeColor && (result.fill = safeColor);
+    }
+    if (opacity) {
+      let normalizedOpacity = opacity.endsWith("%") ? parseFloat(opacity) / 100 : Number(opacity);
+      Number.isFinite(normalizedOpacity) && (result["fill-opacity"] = String(Math.max(0, Math.min(1, normalizedOpacity))));
+    }
+    return result;
+  }
+  function parsePoint(val) {
+    return val.split(",");
+  }
+  function convertPath(path) {
+    if (!/^\s*[mt]/i.test(path) || /[^mlctrvxe\d+.,\-\s]/i.test(path)) return "";
+    let commands = {
+      m: ["M", 2],
+      l: ["L", 2],
+      c: ["C", 6],
+      t: ["m", 2],
+      r: ["l", 2],
+      v: ["c", 6],
+      x: ["Z", 0],
+      e: ["", 0]
+    }, output = [];
+    for (let match of path.matchAll(/([mlctrvxe])([^mlctrvxe]*)/gi)) {
+      let [command, arity] = commands[match[1].toLowerCase()], argumentsText = match[2].trim();
+      if (!arity) {
+        if (argumentsText.replace(/[,\s]/g, "")) return "";
+        command && output.push(command);
+        continue;
+      }
+      let values2 = argumentsText.split(",").flatMap((part) => part.trim() ? part.trim().split(/\s+/).map(Number) : [0]);
+      if (values2.some((value) => !Number.isFinite(value))) return "";
+      for (; values2.length % arity; ) values2.push(0);
+      output.push(`${command}${values2.join(" ")}`);
+    }
+    return output.join(" ");
+  }
+
+  // src/comments/elements.ts
+  var WmlComment = class extends OpenXmlElementBase {
+    constructor() {
+      super(...arguments);
+      this.type = "comment" /* Comment */;
+    }
+  }, WmlCommentReference = class extends OpenXmlElementBase {
+    constructor(id) {
+      super();
+      this.id = id;
+      this.type = "commentReference" /* CommentReference */;
+    }
+  }, WmlCommentRangeStart = class extends OpenXmlElementBase {
+    constructor(id) {
+      super();
+      this.id = id;
+      this.type = "commentRangeStart" /* CommentRangeStart */;
+    }
+  }, WmlCommentRangeEnd = class extends OpenXmlElementBase {
+    constructor(id) {
+      super();
+      this.id = id;
+      this.type = "commentRangeEnd" /* CommentRangeEnd */;
+    }
+  };
+
+  // src/parser/style-values.ts
+  var autos = {
+    shd: "inherit",
+    color: "black",
+    borderColor: "black",
+    highlight: "transparent"
+  }, automaticTextColorCss = "var(--docx-auto-text-color, black)", supportedNamespaceURIs = [
+    ns.wordprocessingShape,
+    ns.wordprocessingCanvas,
+    ns.wordprocessingGroup,
+    ns.drawingml,
+    ns.picture
+  ], mmlTagMap = {
+    oMath: "mmlMath" /* MmlMath */,
+    oMathPara: "mmlMathParagraph" /* MmlMathParagraph */,
+    f: "mmlFraction" /* MmlFraction */,
+    func: "mmlFunction" /* MmlFunction */,
+    fName: "mmlFunctionName" /* MmlFunctionName */,
+    num: "mmlNumerator" /* MmlNumerator */,
+    den: "mmlDenominator" /* MmlDenominator */,
+    rad: "mmlRadical" /* MmlRadical */,
+    deg: "mmlDegree" /* MmlDegree */,
+    e: "mmlBase" /* MmlBase */,
+    sSup: "mmlSuperscript" /* MmlSuperscript */,
+    sSub: "mmlSubscript" /* MmlSubscript */,
+    sPre: "mmlPreSubSuper" /* MmlPreSubSuper */,
+    sup: "mmlSuperArgument" /* MmlSuperArgument */,
+    sub: "mmlSubArgument" /* MmlSubArgument */,
+    d: "mmlDelimiter" /* MmlDelimiter */,
+    nary: "mmlNary" /* MmlNary */,
+    eqArr: "mmlEquationArray" /* MmlEquationArray */,
+    lim: "mmlLimit" /* MmlLimit */,
+    limLow: "mmlLimitLower" /* MmlLimitLower */,
+    limUpp: "mmlLimitUpper" /* MmlLimitUpper */,
+    sSubSup: "mmlSubSuperscript" /* MmlSubSuperscript */,
+    phant: "mmlPhantom" /* MmlPhantom */,
+    borderBox: "mmlBorderBox" /* MmlBorderBox */,
+    acc: "mmlAccent" /* MmlAccent */,
+    m: "mmlMatrix" /* MmlMatrix */,
+    mr: "mmlMatrixRow" /* MmlMatrixRow */,
+    box: "mmlBox" /* MmlBox */,
+    bar: "mmlBar" /* MmlBar */,
+    groupChr: "mmlGroupChar" /* MmlGroupChar */
+  }, knownColors = ["black", "blue", "cyan", "darkBlue", "darkCyan", "darkGray", "darkGreen", "darkMagenta", "darkRed", "darkYellow", "green", "lightGray", "magenta", "none", "red", "white", "yellow"], xmlUtil = class {
+    static colorAttr(node, attrName, defValue = null, autoColor = "black") {
+      var v = xml_parser_default.attr(node, attrName);
+      if (v)
+        return v == "auto" ? autoColor : knownColors.includes(v) ? v : `#${v}`;
+      var themeColor = xml_parser_default.attr(node, "themeColor");
+      return themeColor ? `var(--docx-${themeColor}-color)` : defValue;
+    }
+  }, values = class _values {
+    static themeValue(c, attr) {
+      var val = xml_parser_default.attr(c, attr);
+      return val ? `var(--docx-${val}-font)` : null;
+    }
+    static valueOfSize(c, attr) {
+      var type = LengthUsage.Dxa;
+      switch (xml_parser_default.attr(c, "type")) {
+        case "dxa":
+          break;
+        case "pct":
+          type = LengthUsage.Percent;
+          break;
+        case "auto":
+          return "auto";
+      }
+      return xml_parser_default.lengthAttr(c, attr, type);
+    }
+    static valueOfMargin(c) {
+      return xml_parser_default.lengthAttr(c, "w");
+    }
+    static valueOfBorder(c) {
+      var type = _values.parseBorderType(xml_parser_default.attr(c, "val"));
+      if (type == "none")
+        return "none";
+      var color = xmlUtil.colorAttr(c, "color", autos.borderColor, autos.borderColor), size = xml_parser_default.lengthAttr(c, "sz", LengthUsage.Border) ?? "1pt";
+      return `${size} ${type} ${color == "auto" ? autos.borderColor : color}`;
+    }
+    static parseBorderType(type) {
+      switch (type) {
+        case "single":
+          return "solid";
+        case "dashDotStroked":
+          return "solid";
+        case "dashed":
+          return "dashed";
+        case "dashSmallGap":
+          return "dashed";
+        case "dotDash":
+          return "dotted";
+        case "dotDotDash":
+          return "dotted";
+        case "dotted":
+          return "dotted";
+        case "double":
+          return "double";
+        case "doubleWave":
+          return "double";
+        case "inset":
+          return "inset";
+        case "nil":
+          return "none";
+        case "none":
+          return "none";
+        case "outset":
+          return "outset";
+        case "thick":
+          return "solid";
+        case "thickThinLargeGap":
+          return "solid";
+        case "thickThinMediumGap":
+          return "solid";
+        case "thickThinSmallGap":
+          return "solid";
+        case "thinThickLargeGap":
+          return "solid";
+        case "thinThickMediumGap":
+          return "solid";
+        case "thinThickSmallGap":
+          return "solid";
+        case "thinThickThinLargeGap":
+          return "solid";
+        case "thinThickThinMediumGap":
+          return "solid";
+        case "thinThickThinSmallGap":
+          return "solid";
+        case "threeDEmboss":
+          return "solid";
+        case "threeDEngrave":
+          return "solid";
+        case "triple":
+          return "double";
+        case "wave":
+          return "solid";
+      }
+      return "solid";
+    }
+    static valueOfTblLayout(c) {
+      var type = xml_parser_default.attr(c, "type") ?? xml_parser_default.attr(c, "val");
+      return type == "fixed" ? "fixed" : "auto";
+    }
+    static tableConditionalFormatOfCnfStyle(c) {
+      let val = xml_parser_default.attr(c, "val") ?? "", attrFlag = (names, fallback) => {
+        let name = names.find((n) => xml_parser_default.attr(c, n) != null);
+        return name ? xml_parser_default.boolAttr(c, name, !1) : fallback;
+      }, flags = [
+        ["firstRow", "first-row", ["firstRow"]],
+        ["lastRow", "last-row", ["lastRow"]],
+        ["firstColumn", "first-col", ["firstColumn", "firstCol"]],
+        ["lastColumn", "last-col", ["lastColumn", "lastCol"]],
+        ["oddVBand", "odd-col", ["oddVBand"]],
+        ["evenVBand", "even-col", ["evenVBand"]],
+        ["oddHBand", "odd-row", ["oddHBand"]],
+        ["evenHBand", "even-row", ["evenHBand"]],
+        ["firstRowLastColumn", "ne-cell", ["firstRowLastColumn"]],
+        ["firstRowFirstColumn", "nw-cell", ["firstRowFirstColumn"]],
+        ["lastRowLastColumn", "se-cell", ["lastRowLastColumn"]],
+        ["lastRowFirstColumn", "sw-cell", ["lastRowFirstColumn"]]
+      ], result = {};
+      return flags.forEach(([key, , names], i) => {
+        attrFlag(names, val[i] == "1") && (result[key] = !0);
+      }), result;
+    }
+    static classNameOfCnfStyle(c) {
+      let format = _values.tableConditionalFormatOfCnfStyle(c);
+      return [
+        ["firstRow", "first-row"],
+        ["lastRow", "last-row"],
+        ["firstColumn", "first-col"],
+        ["lastColumn", "last-col"],
+        ["oddVBand", "odd-col"],
+        ["evenVBand", "even-col"],
+        ["oddHBand", "odd-row"],
+        ["evenHBand", "even-row"],
+        ["firstRowLastColumn", "ne-cell"],
+        ["firstRowFirstColumn", "nw-cell"],
+        ["lastRowLastColumn", "se-cell"],
+        ["lastRowFirstColumn", "sw-cell"]
+      ].filter(([key]) => format[key]).map(([, className]) => className).join(" ");
+    }
+    static valueOfJc(c) {
+      var type = xml_parser_default.attr(c, "val");
+      switch (type) {
+        case "start":
+        case "left":
+          return "left";
+        case "center":
+          return "center";
+        case "end":
+        case "right":
+          return "right";
+        case "both":
+          return "justify";
+      }
+      return type;
+    }
+    static valueOfVertAlign(c, asTagName = !1) {
+      var type = xml_parser_default.attr(c, "val");
+      switch (type) {
+        case "subscript":
+          return "sub";
+        case "superscript":
+          return asTagName ? "sup" : "super";
+      }
+      return asTagName ? null : type;
+    }
+    static valueOfEmphasisMark(c) {
+      var type = xml_parser_default.attr(c, "val");
+      switch (type) {
+        case "none":
+          return "none";
+        case "comma":
+          return '"﹐"';
+        case "circle":
+          return "circle";
+        default:
+          return "dot";
+      }
+    }
+    static valueOfTextAlignment(c) {
+      var type = xml_parser_default.attr(c, "val");
+      switch (type) {
+        case "auto":
+        case "baseline":
+          return "baseline";
+        case "top":
+          return "top";
+        case "center":
+          return "middle";
+        case "bottom":
+          return "bottom";
+      }
+      return type;
+    }
+    static addSize(a, b) {
+      return a == null ? b : b == null ? a : `calc(${a} + ${b})`;
+    }
+    static classNameOftblLook(c) {
+      let look = _values.tableLookOfTblLook(c), className = "";
+      return look.firstRow && (className += " first-row"), look.lastRow && (className += " last-row"), look.firstColumn && (className += " first-col"), look.lastColumn && (className += " last-col"), look.horizontalBanding || (className += " no-hband"), look.verticalBanding || (className += " no-vband"), className.trim();
+    }
+    static tableLookOfTblLook(c) {
+      let hasVal = xml_parser_default.attr(c, "val") != null, val = xml_parser_default.hexAttr(c, "val", 0), enabled = (attr, mask, defaultValue) => xml_parser_default.attr(c, attr) != null ? xml_parser_default.boolAttr(c, attr, defaultValue) : hasVal ? !!(val & mask) : defaultValue;
+      return {
+        firstRow: enabled("firstRow", 32, !1),
+        lastRow: enabled("lastRow", 64, !1),
+        firstColumn: enabled("firstColumn", 128, !1),
+        lastColumn: enabled("lastColumn", 256, !1),
+        horizontalBanding: !enabled("noHBand", 512, !1),
+        verticalBanding: !enabled("noVBand", 1024, !1)
+      };
+    }
+  };
+
+  // src/parser/document-parser.ts
+  var namedShadingColors = {
+    black: "#000000",
+    blue: "#0000ff",
+    cyan: "#00ffff",
+    darkBlue: "#000080",
+    darkCyan: "#008080",
+    darkGray: "#808080",
+    darkGreen: "#008000",
+    darkMagenta: "#800080",
+    darkRed: "#800000",
+    darkYellow: "#808000",
+    green: "#008000",
+    lightGray: "#c0c0c0",
+    magenta: "#ff00ff",
+    red: "#ff0000",
+    white: "#ffffff",
+    yellow: "#ffff00"
+  }, defaultDmlThemeLineStyles = [
+    { width: 9525, cap: "flat", dash: "solid" },
+    { width: 25400, cap: "flat", dash: "solid" },
+    { width: 38100, cap: "flat", dash: "solid" }
+  ];
+  function normalizeShadingHexColor(value) {
+    if (!value)
+      return null;
+    let named = namedShadingColors[value];
+    if (named)
+      return named;
+    let hex = String(value).replace(/^#/, "");
+    return /^[0-9a-f]{6}$/i.test(hex) ? `#${hex.toLowerCase()}` : null;
+  }
+  function mixShadingChannel(background, foreground, opacity) {
+    return Math.max(0, Math.min(255, Math.floor(background * (1 - opacity) + foreground * opacity)));
+  }
+  function mixShadingColors(background, foreground, opacity) {
+    let bg = normalizeShadingHexColor(background), fg = normalizeShadingHexColor(foreground);
+    if (!bg || !fg)
+      return null;
+    let rb = parseInt(bg.slice(1, 3), 16), gb = parseInt(bg.slice(3, 5), 16), bb = parseInt(bg.slice(5, 7), 16), rf = parseInt(fg.slice(1, 3), 16), gf = parseInt(fg.slice(3, 5), 16), bf = parseInt(fg.slice(5, 7), 16), r = mixShadingChannel(rb, rf, opacity).toString(16).padStart(2, "0"), g = mixShadingChannel(gb, gf, opacity).toString(16).padStart(2, "0"), b = mixShadingChannel(bb, bf, opacity).toString(16).padStart(2, "0");
+    return `#${r}${g}${b}`;
+  }
+  function resolveShadingBackground(c) {
+    let val = xml_parser_default.attr(c, "val") || "clear";
+    if (val === "nil")
+      return null;
+    let fillAttr = xml_parser_default.attr(c, "fill"), colorAttr = xml_parser_default.attr(c, "color"), background = fillAttr && fillAttr !== "auto" ? xmlUtil.colorAttr(c, "fill", null, autos.shd) : "white", foreground = colorAttr && colorAttr !== "auto" ? xmlUtil.colorAttr(c, "color", null, autos.color) : autos.color;
+    if (/^pct/i.test(val)) {
+      let pct = Math.max(0, Math.min(100, parseFloat(val.replace(/[^0-9.]/g, "")) || 0)) / 100;
+      return mixShadingColors(background, foreground, pct) || xmlUtil.colorAttr(c, "fill", null, autos.shd);
+    }
+    return val === "solid" ? foreground || xmlUtil.colorAttr(c, "fill", null, autos.shd) : xmlUtil.colorAttr(c, "fill", null, autos.shd);
+  }
+  var DocumentParser = class {
+    constructor(options) {
+      this.options = {
+        ignoreWidth: !1,
+        debug: !1,
+        hideWebHiddenContent: !1,
+        ...options
+      };
+    }
+    setTheme(theme) {
+      this.theme = theme;
+    }
+    parseNotes(xmlDoc, elemName, elemClass) {
+      var result = [];
+      for (let el of xml_parser_default.elements(xmlDoc, elemName)) {
+        let node = new elemClass();
+        node.id = xml_parser_default.attr(el, "id"), node.noteType = xml_parser_default.attr(el, "type"), node.children = this.parseBodyElements(el), result.push(node);
+      }
+      return result;
+    }
+    parseComments(xmlDoc) {
+      var result = [];
+      for (let el of xml_parser_default.elements(xmlDoc, "comment")) {
+        let item = new WmlComment();
+        item.id = xml_parser_default.attr(el, "id"), item.author = xml_parser_default.attr(el, "author"), item.initials = xml_parser_default.attr(el, "initials"), item.date = xml_parser_default.attr(el, "date"), item.children = this.parseBodyElements(el), result.push(item);
+      }
+      return result;
+    }
+    parseDocumentFile(xmlDoc) {
+      var xbody = xml_parser_default.element(xmlDoc, "body"), background = xml_parser_default.element(xmlDoc, "background"), sectPr = xml_parser_default.element(xbody, "sectPr");
+      return {
+        type: "document" /* Document */,
+        children: this.parseBodyElements(xbody, { trackBodySource: !0 }),
+        props: sectPr ? parseSectionProperties(sectPr, xml_parser_default) : {},
+        cssStyle: background ? this.parseBackground(background) : {}
+      };
+    }
+    parseBackground(elem) {
+      var result = {}, color = xmlUtil.colorAttr(elem, "color");
+      return color && (result["background-color"] = color), result;
+    }
+    parseBodyElements(element, context = {}) {
+      var children = [];
+      let bodyIndex = 0, paragraphIndex = 0, tableIndex = 0, sourceBase = () => context.trackBodySource ? { bodyIndex } : void 0;
+      for (let elem of xml_parser_default.elements(element))
+        switch (elem.localName) {
+          case "p": {
+            let source = sourceBase();
+            children.push(this.parseParagraph(elem, source ? { ...source, paragraphIndex: paragraphIndex++ } : void 0)), context.trackBodySource && bodyIndex++;
+            break;
+          }
+          case "altChunk":
+            children.push(this.parseAltChunk(elem)), context.trackBodySource && bodyIndex++;
+            break;
+          case "tbl": {
+            let source = sourceBase();
+            children.push(this.parseTable(elem, source ? { ...source, tableIndex: tableIndex++ } : void 0)), context.trackBodySource && bodyIndex++;
+            break;
+          }
+          case "sdt": {
+            let nested = this.parseSdt(elem, (e) => this.parseBodyElements(e));
+            if (context.trackBodySource) {
+              let xmlParagraphs = Array.from(elem.getElementsByTagNameNS(elem.namespaceURI, "p")), index = 0, annotate = (node) => {
+                if (node.type === "paragraph" /* Paragraph */) {
+                  let source = { sdtBodyIndex: bodyIndex, sdtParagraphIndex: index };
+                  node.source = source, xmlParagraphs[index] && assignTraceParagraph(node, source, xmlParagraphs[index], (item) => this.checkAlternateContent(item)), index === 0 && (node.props = { ...node.props, traceBlockControl: Array.from(elem.getElementsByTagName("*")).some((item) => item.localName.toLowerCase() === "checkbox") ? "checkbox" : "contentControl" }), index++;
+                  return;
+                }
+                for (let child of node.children ?? []) annotate(child);
+              };
+              for (let node of nested) annotate(node);
+            }
+            children.push(...nested), context.trackBodySource && bodyIndex++;
+            break;
+          }
+        }
+      return children;
+    }
+    parseStylesFile(xstyles) {
+      var result = [];
+      for (let n of xml_parser_default.elements(xstyles))
+        switch (n.localName) {
+          case "style":
+            result.push(this.parseStyle(n));
+            break;
+          case "docDefaults":
+            result.push(this.parseDefaultStyles(n));
+            break;
+        }
+      return result;
+    }
+    parseDefaultStyles(node) {
+      var result = {
+        id: null,
+        name: null,
+        target: null,
+        basedOn: null,
+        styles: [],
+        hasParagraphDefaults: !1
+      };
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "rPrDefault":
+            var rPr = xml_parser_default.element(c, "rPr");
+            rPr && (result.styles.push({
+              target: "span",
+              values: this.parseDefaultProperties(rPr, {})
+            }), result.runProps = parseRunProperties(rPr, xml_parser_default));
+            break;
+          case "pPrDefault":
+            result.hasParagraphDefaults = !0;
+            var pPr = xml_parser_default.element(c, "pPr");
+            pPr && (result.styles.push({
+              target: "p",
+              values: this.parseDefaultProperties(pPr, {})
+            }), result.paragraphProps = parseParagraphProperties(pPr, xml_parser_default));
+            break;
+        }
+      return result;
+    }
+    parseStyle(node) {
+      var result = {
+        id: xml_parser_default.attr(node, "styleId"),
+        isDefault: xml_parser_default.boolAttr(node, "default"),
+        name: null,
+        target: null,
+        basedOn: null,
+        styles: [],
+        linked: null,
+        hasParagraphProperties: !1
+      };
+      switch (xml_parser_default.attr(node, "type")) {
+        case "paragraph":
+          result.target = "p";
+          break;
+        case "table":
+          result.target = "table";
+          break;
+        case "character":
+          result.target = "span";
+          break;
+      }
+      for (let n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "basedOn":
+            result.basedOn = xml_parser_default.attr(n, "val");
+            break;
+          case "name":
+            result.name = xml_parser_default.attr(n, "val");
+            break;
+          case "link":
+            result.linked = xml_parser_default.attr(n, "val");
+            break;
+          case "next":
+            result.next = xml_parser_default.attr(n, "val");
+            break;
+          case "aliases":
+            result.aliases = xml_parser_default.attr(n, "val").split(",");
+            break;
+          case "pPr":
+            result.hasParagraphProperties = !0, result.styles.push({
+              target: "p",
+              values: this.parseDefaultProperties(n, {})
+            }), result.paragraphProps = parseParagraphProperties(n, xml_parser_default);
+            break;
+          case "rPr":
+            result.styles.push({
+              target: "span",
+              values: this.parseDefaultProperties(n, {})
+            }), result.runProps = parseRunProperties(n, xml_parser_default);
+            break;
+          case "tblPr":
+            result.tableProps = {
+              ...result.tableProps ?? {},
+              ...this.parseTableStyleProperties(n)
+            }, this.appendTableStyleDefaultProperties(result, n);
+            break;
+          case "tcPr":
+            result.styles.push({
+              target: "td",
+              //TODO: maybe move to processor
+              values: this.parseDefaultProperties(n, {})
+            });
+            break;
+          case "tblStylePr":
+            for (let s of this.parseTableStyle(n))
+              result.styles.push(s);
+            break;
+          case "rsid":
+          case "qFormat":
+          case "hidden":
+          case "semiHidden":
+          case "unhideWhenUsed":
+          case "autoRedefine":
+          case "uiPriority":
+            break;
+          default:
+            this.options.debug && console.warn(`DOCX: Unknown style element: ${n.localName}`);
+        }
+      return result;
+    }
+    parseTableStyleProperties(node) {
+      let result = {};
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "tblStyleColBandSize": {
+            let value = xml_parser_default.intAttr(c, "val");
+            value != null && (result.colBandSize = value);
+            break;
+          }
+          case "tblStyleRowBandSize": {
+            let value = xml_parser_default.intAttr(c, "val");
+            value != null && (result.rowBandSize = value);
+            break;
+          }
+        }
+      return result;
+    }
+    appendTableStyleDefaultProperties(style, node) {
+      let tableValues = {}, cellValues = {};
+      this.parseDefaultProperties(node, tableValues, cellValues), Object.keys(tableValues).length && style.styles.push({
+        target: "table",
+        values: tableValues
+      }), Object.keys(cellValues).length && style.styles.push({
+        target: "td",
+        values: cellValues
+      });
+    }
+    parseTableStyle(node) {
+      let result = [], cellProperties;
+      var type = xml_parser_default.attr(node, "type"), selector = "", modificator = "";
+      switch (type) {
+        case "firstRow":
+          modificator = ".first-row", selector = "tr.first-row td";
+          break;
+        case "lastRow":
+          modificator = ".last-row", selector = "tr.last-row td";
+          break;
+        case "firstCol":
+          modificator = ".first-col", selector = "td.first-col";
+          break;
+        case "lastCol":
+          modificator = ".last-col", selector = "td.last-col";
+          break;
+        case "band1Vert":
+          modificator = ":not(.no-vband)", selector = "td.odd-col";
+          break;
+        case "band2Vert":
+          modificator = ":not(.no-vband)", selector = "td.even-col";
+          break;
+        case "band1Horz":
+          modificator = ":not(.no-hband)", selector = "tr.odd-row";
+          break;
+        case "band2Horz":
+          modificator = ":not(.no-hband)", selector = "tr.even-row";
+          break;
+        case "neCell":
+          modificator = ".ne-cell", selector = "td.ne-cell";
+          break;
+        case "nwCell":
+          modificator = ".nw-cell", selector = "td.nw-cell";
+          break;
+        case "seCell":
+          modificator = ".se-cell", selector = "td.se-cell";
+          break;
+        case "swCell":
+          modificator = ".sw-cell", selector = "td.sw-cell";
+          break;
+        default:
+          return [];
+      }
+      for (let n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "pPr":
+            result.push({
+              target: `${selector} p`,
+              mod: modificator,
+              values: this.parseDefaultProperties(n, {})
+            });
+            break;
+          case "rPr":
+            result.push({
+              target: `${selector} span`,
+              mod: modificator,
+              values: this.parseDefaultProperties(n, {})
+            });
+            break;
+          case "tblPr":
+          case "tcPr":
+            cellProperties || (cellProperties = { target: selector, mod: modificator, values: {} }, result.push(cellProperties)), this.parseDefaultProperties(n, cellProperties.values);
+            break;
+        }
+      return result;
+    }
+    parseNumberingFile(node) {
+      let result = [], bullets = [], abstractLevels = {}, abstractNodes = [], numberNodes = [];
+      for (let n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "numPicBullet":
+            bullets.push(this.parseNumberingPicBullet(n));
+            break;
+          case "abstractNum":
+            abstractNodes.push(n);
+            break;
+          case "num":
+            numberNodes.push(n);
+            break;
+        }
+      for (let n of abstractNodes)
+        abstractLevels[xml_parser_default.attr(n, "abstractNumId")] = this.parseAbstractNumbering(n, bullets);
+      for (let n of numberNodes) {
+        let numId = xml_parser_default.attr(n, "numId"), abstractNumId = xml_parser_default.elementAttr(n, "abstractNumId", "val"), levels = (abstractLevels[abstractNumId] ?? []).map((x) => this.cloneNumberingLevel(x, numId));
+        for (let override of xml_parser_default.elements(n, "lvlOverride")) {
+          let level = xml_parser_default.intAttr(override, "ilvl"), levelNode = xml_parser_default.element(override, "lvl"), startOverride = xml_parser_default.element(override, "startOverride"), target = levels.find((x) => x.level == level);
+          if (levelNode) {
+            target = {
+              ...this.parseNumberingLevel(numId, levelNode, bullets),
+              start: target?.start ?? 1,
+              restart: target?.restart
+            };
+            let index = levels.findIndex((x) => x.level == level);
+            index >= 0 ? levels[index] = target : levels.push(target);
+          }
+          startOverride && target && (target.start = target.startOverride = xml_parser_default.intAttr(startOverride, "val", target.start));
+        }
+        for (let level of levels)
+          level.abstractId = abstractNumId;
+        result.push(...levels);
+      }
+      return result;
+    }
+    cloneNumberingLevel(level, id) {
+      return {
+        ...level,
+        id,
+        pStyle: { ...level.pStyle },
+        rStyle: { ...level.rStyle },
+        tabs: level.tabs ? [...level.tabs] : void 0,
+        bullet: level.bullet ? { ...level.bullet } : null
+      };
+    }
+    parseNumberingPicBullet(elem) {
+      let id = xml_parser_default.intAttr(elem, "numPicBulletId"), pict = xml_parser_default.element(elem, "pict"), shape = pict && xml_parser_default.element(pict, "shape"), imagedata = shape && xml_parser_default.element(shape, "imagedata");
+      if (imagedata)
+        return {
+          id,
+          src: xml_parser_default.attr(imagedata, "id"),
+          style: xml_parser_default.attr(shape, "style")
+        };
+      let drawing = xml_parser_default.element(elem, "drawing"), blip = drawing ? this.findDescendant(drawing, "blip") : null;
+      if (blip) {
+        let extent = drawing ? this.findDescendant(drawing, "extent") : null, style = [];
+        if (extent) {
+          let width = xml_parser_default.lengthAttr(extent, "cx", LengthUsage.Emu), height = xml_parser_default.lengthAttr(extent, "cy", LengthUsage.Emu);
+          width && style.push(`width:${width};`), height && style.push(`height:${height};`);
+        }
+        return {
+          id,
+          src: xml_parser_default.attr(blip, "embed") ?? xml_parser_default.attr(blip, "link"),
+          style: style.join("") || void 0
+        };
+      }
+      return null;
+    }
+    parseAbstractNumbering(node, bullets) {
+      var result = [], id = xml_parser_default.attr(node, "abstractNumId");
+      for (let n of xml_parser_default.elements(node))
+        n.localName === "lvl" && result.push(this.parseNumberingLevel(id, n, bullets));
+      return result;
+    }
+    parseNumberingLevel(id, node, bullets) {
+      var result = {
+        id,
+        level: xml_parser_default.intAttr(node, "ilvl"),
+        start: 1,
+        pStyleName: void 0,
+        pStyle: {},
+        rStyle: {},
+        suff: "tab"
+      };
+      for (let n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "start":
+            result.start = xml_parser_default.intAttr(n, "val");
+            break;
+          case "pPr":
+            this.parseDefaultProperties(n, result.pStyle), result.tabs = parseParagraphProperties(n, xml_parser_default).tabs ?? result.tabs;
+            break;
+          case "rPr":
+            this.parseDefaultProperties(n, result.rStyle);
+            break;
+          case "lvlPicBulletId":
+            var bulletId = xml_parser_default.intAttr(n, "val");
+            result.bullet = bullets.find((x) => x?.id == bulletId);
+            break;
+          case "lvlText":
+            result.levelText = xml_parser_default.attr(n, "val");
+            break;
+          case "pStyle":
+            result.pStyleName = xml_parser_default.attr(n, "val");
+            break;
+          case "numFmt":
+            result.format = xml_parser_default.attr(n, "val");
+            break;
+          case "lvlRestart":
+            result.restart = xml_parser_default.intAttr(n, "val");
+            break;
+          case "suff":
+            result.suff = xml_parser_default.attr(n, "val");
+            break;
+        }
+      return result;
+    }
+    parseSdt(node, parser) {
+      let sdtContent = xml_parser_default.element(node, "sdtContent");
+      return sdtContent ? parser(sdtContent) : [];
+    }
+    parseInserted(node, parentParser) {
+      return {
+        type: "inserted" /* Inserted */,
+        children: parentParser(node)?.children ?? []
+      };
+    }
+    parseDeleted(node, parentParser) {
+      return {
+        type: "deleted" /* Deleted */,
+        children: parentParser(node)?.children ?? []
+      };
+    }
+    parseAltChunk(node) {
+      return { type: "altChunk" /* AltChunk */, children: [], id: xml_parser_default.attr(node, "id") };
+    }
+    parseParagraph(node, source) {
+      var result = { type: "paragraph" /* Paragraph */, children: [], ...source ? { source } : {} };
+      for (let el of xml_parser_default.elements(node))
+        switch (el.localName) {
+          case "pPr":
+            this.parseParagraphProperties(el, result);
+            break;
+          case "r":
+            result.children.push(this.parseRun(el, result));
+            break;
+          case "fldSimple":
+            result.children.push(this.parseSimpleField(el, result));
+            break;
+          case "hyperlink":
+            result.children.push(this.parseHyperlink(el, result));
+            break;
+          case "smartTag":
+            result.children.push(this.parseSmartTag(el, result));
+            break;
+          case "bookmarkStart":
+            result.children.push(parseBookmarkStart(el, xml_parser_default));
+            break;
+          case "bookmarkEnd":
+            result.children.push(parseBookmarkEnd(el, xml_parser_default));
+            break;
+          case "commentRangeStart":
+            result.children.push(new WmlCommentRangeStart(xml_parser_default.attr(el, "id")));
+            break;
+          case "commentRangeEnd":
+            result.children.push(new WmlCommentRangeEnd(xml_parser_default.attr(el, "id")));
+            break;
+          case "oMath":
+          case "oMathPara": {
+            let math = this.parseMathElement(el);
+            math && result.children.push(math);
+            break;
+          }
+          case "sdt":
+            result.children.push(...this.parseSdt(el, (e) => this.parseParagraph(e).children));
+            break;
+          case "ins":
+            result.children.push(this.parseInserted(el, (e) => this.parseParagraph(e)));
+            break;
+          case "del":
+            result.children.push(this.parseDeleted(el, (e) => this.parseParagraph(e)));
+            break;
+        }
+      return source && assignTraceParagraph(result, source, node, (item) => this.checkAlternateContent(item)), result;
+    }
+    parseParagraphProperties(elem, paragraph) {
+      this.parseDefaultProperties(elem, paragraph.cssStyle = {}, null, (c) => {
+        if (c.localName == "rPr") {
+          xml_parser_default.element(c, "del") && (paragraph.props = { ...paragraph.props ?? {}, deletedParagraphMark: !0 });
+          let markStyle = {};
+          return this.parseDefaultProperties(c, markStyle), paragraph.props = { ...paragraph.props ?? {}, paragraphMarkCssStyle: markStyle }, parseParagraphProperty(c, paragraph, xml_parser_default), !0;
+        }
+        if (parseParagraphProperty(c, paragraph, xml_parser_default))
+          return !0;
+        switch (c.localName) {
+          case "pStyle":
+            paragraph.styleName = xml_parser_default.attr(c, "val");
+            break;
+          case "cnfStyle":
+            paragraph.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), paragraph.className = values.classNameOfCnfStyle(c);
+            break;
+          case "framePr":
+            this.parseFrame(c, paragraph);
+            break;
+          default:
+            return !1;
+        }
+        return !0;
+      });
+    }
+    parseFrame(node, paragraph) {
+      let dropCap = xml_parser_default.attr(node, "dropCap");
+      paragraph.frame = {
+        width: xml_parser_default.lengthAttr(node, "w"),
+        height: xml_parser_default.lengthAttr(node, "h"),
+        x: xml_parser_default.lengthAttr(node, "x", LengthUsage.SignedDxa),
+        y: xml_parser_default.lengthAttr(node, "y", LengthUsage.SignedDxa),
+        hSpace: xml_parser_default.lengthAttr(node, "hSpace"),
+        vSpace: xml_parser_default.lengthAttr(node, "vSpace"),
+        horizontalAnchor: xml_parser_default.attr(node, "hAnchor"),
+        verticalAnchor: xml_parser_default.attr(node, "vAnchor"),
+        horizontalAlign: xml_parser_default.attr(node, "xAlign"),
+        verticalAlign: xml_parser_default.attr(node, "yAlign"),
+        wrap: xml_parser_default.attr(node, "wrap"),
+        heightRule: xml_parser_default.attr(node, "hRule"),
+        dropCap,
+        lines: xml_parser_default.intAttr(node, "lines")
+      }, dropCap == "drop" && (paragraph.cssStyle.float = "left");
+    }
+    parseHyperlink(node, parent) {
+      var result = { type: "hyperlink" /* Hyperlink */, parent, children: [] };
+      result.anchor = xml_parser_default.attr(node, "anchor"), result.id = xml_parser_default.attr(node, "id");
+      for (let c of xml_parser_default.elements(node))
+        c.localName === "r" && result.children.push(this.parseRun(c, result));
+      return result;
+    }
+    parseSmartTag(node, parent) {
+      var result = { type: "smartTag" /* SmartTag */, parent, children: [] }, uri = xml_parser_default.attr(node, "uri"), element = xml_parser_default.attr(node, "element");
+      uri && (result.uri = uri), element && (result.element = element);
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "r":
+            result.children.push(this.parseRun(c, result));
+            break;
+          case "smartTag":
+            result.children.push(this.parseSmartTag(c, result));
+            break;
+        }
+      return result;
+    }
+    parseSimpleField(node, parent) {
+      let result = {
+        type: "simpleField" /* SimpleField */,
+        parent,
+        children: [],
+        instruction: xml_parser_default.attr(node, "instr"),
+        lock: xml_parser_default.boolAttr(node, "lock", !1),
+        dirty: xml_parser_default.boolAttr(node, "dirty", !1)
+      };
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "r":
+            result.children.push(this.parseRun(c, result));
+            break;
+          case "hyperlink":
+            result.children.push(this.parseHyperlink(c, result));
+            break;
+          case "smartTag":
+            result.children.push(this.parseSmartTag(c, result));
+            break;
+          case "bookmarkStart":
+            result.children.push(parseBookmarkStart(c, xml_parser_default));
+            break;
+          case "bookmarkEnd":
+            result.children.push(parseBookmarkEnd(c, xml_parser_default));
+            break;
+          case "commentRangeStart":
+            result.children.push(new WmlCommentRangeStart(xml_parser_default.attr(c, "id")));
+            break;
+          case "commentRangeEnd":
+            result.children.push(new WmlCommentRangeEnd(xml_parser_default.attr(c, "id")));
+            break;
+          case "sdt":
+            result.children.push(...this.parseSdt(c, (e) => this.parseParagraph(e).children));
+            break;
+          case "ins":
+            result.children.push(this.parseInserted(c, (e) => this.parseParagraph(e)));
+            break;
+          case "del":
+            result.children.push(this.parseDeleted(c, (e) => this.parseParagraph(e)));
+            break;
+        }
+      return result;
+    }
+    parseRun(node, parent) {
+      var result = { type: "run" /* Run */, parent, children: [] };
+      for (let c of xml_parser_default.elements(node))
+        if (c = this.checkAlternateContent(c), !!c)
+          switch (c.localName) {
+            case "t":
+              result.children.push({
+                type: "text" /* Text */,
+                text: c.textContent
+              });
+              break;
+            case "delText":
+              result.children.push({
+                type: "deletedText" /* DeletedText */,
+                text: c.textContent
+              });
+              break;
+            case "commentReference":
+              result.children.push(new WmlCommentReference(xml_parser_default.attr(c, "id")));
+              break;
+            case "fldSimple":
+              result.children.push(this.parseSimpleField(c, result));
+              break;
+            case "instrText":
+              result.fieldRun = !0, result.children.push({
+                type: "instruction" /* Instruction */,
+                text: c.textContent
+              });
+              break;
+            case "fldChar":
+              result.fieldRun = !0, result.children.push({
+                type: "complexField" /* ComplexField */,
+                charType: xml_parser_default.attr(c, "fldCharType"),
+                lock: xml_parser_default.boolAttr(c, "lock", !1),
+                dirty: xml_parser_default.boolAttr(c, "dirty", !1)
+              });
+              break;
+            case "noBreakHyphen":
+              result.children.push({ type: "noBreakHyphen" /* NoBreakHyphen */ });
+              break;
+            case "softHyphen":
+              result.children.push({ type: "softHyphen" /* SoftHyphen */ });
+              break;
+            case "cr":
+              result.children.push({
+                type: "break" /* Break */,
+                break: "line"
+              });
+              break;
+            case "ptab":
+              result.children.push({
+                type: "positionalTab" /* PositionalTab */,
+                alignment: xml_parser_default.attr(c, "alignment") || "left",
+                relativeTo: xml_parser_default.attr(c, "relativeTo") || "margin",
+                leader: xml_parser_default.attr(c, "leader") || "none"
+              });
+              break;
+            case "br":
+              result.children.push({
+                type: "break" /* Break */,
+                break: xml_parser_default.attr(c, "type") || "textWrapping"
+              });
+              break;
+            case "lastRenderedPageBreak":
+              result.children.push({
+                type: "break" /* Break */,
+                break: "lastRenderedPageBreak"
+              });
+              break;
+            case "sym":
+              result.children.push({
+                type: "symbol" /* Symbol */,
+                font: encloseFontFamily(xml_parser_default.attr(c, "font")),
+                char: xml_parser_default.hexAttr(c, "char")
+              });
+              break;
+            case "tab":
+              result.children.push({ type: "tab" /* Tab */ });
+              break;
+            case "footnoteReference":
+              result.children.push({
+                type: "footnoteReference" /* FootnoteReference */,
+                id: xml_parser_default.attr(c, "id"),
+                customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
+              });
+              break;
+            case "endnoteReference":
+              result.children.push({
+                type: "endnoteReference" /* EndnoteReference */,
+                id: xml_parser_default.attr(c, "id"),
+                customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
+              });
+              break;
+            case "drawing":
+              let d = this.parseDrawing(c, this.findAncestorParagraph(parent));
+              d && result.children.push(d);
+              break;
+            case "pict":
+              result.children.push(this.parseVmlPicture(c));
+              break;
+            case "object":
+              result.children.push(this.parseVmlPicture(c));
+              break;
+            case "ruby":
+              result.children.push(this.parseRuby(c));
+              break;
+            case "rPr":
+              this.parseRunProperties(c, result);
+              break;
+          }
+      return result;
+    }
+    parseRuby(elem) {
+      let result = { type: "ruby" /* Ruby */, children: [] };
+      for (let child of xml_parser_default.elements(elem))
+        switch (child.localName) {
+          case "rubyPr":
+            for (let prop of xml_parser_default.elements(child))
+              prop.localName === "rubyAlign" && (result.align = xml_parser_default.attr(prop, "val"));
+            break;
+          case "rt":
+            result.children.push(this.parseRubyContent(child, "rubyText" /* RubyText */));
+            break;
+          case "rubyBase":
+            result.children.push(this.parseRubyContent(child, "rubyBase" /* RubyBase */));
+            break;
+        }
+      return result;
+    }
+    parseRubyContent(elem, type) {
+      let result = { type, children: [] };
+      for (let child of xml_parser_default.elements(elem))
+        if (child.localName == "r")
+          result.children.push(this.parseRun(child, result));
+        else if (type == "rubyText" /* RubyText */ && child.localName == "rPr") {
+          let hps = xml_parser_default.element(child, "hps"), hpsVal = hps ? xml_parser_default.intAttr(hps, "val", null) : null;
+          hpsVal != null && (result.cssStyle = { ...result.cssStyle ?? {}, fontSize: `${hpsVal / 2}pt` });
+        }
+      return result;
+    }
+    parseMathElement(elem) {
+      let propsTag = `${elem.localName}Pr`, result = { type: mmlTagMap[elem.localName], children: [] }, hiddenRevision = !1, appendChild = (el) => {
+        if (mmlTagMap[el.localName]) {
+          let child = this.parseMathElement(el);
+          child ? (child.parent = result, result.children.push(child)) : hiddenRevision = !0;
+        } else if (el.localName == "r") {
+          var run = this.parseRun(el, result);
+          run.type = "mmlRun" /* MmlRun */, result.children.push(run);
+        } else if (el.localName == propsTag)
+          result.props = this.parseMathProperies(el);
+        else if (el.localName == "ins")
+          for (let child of xml_parser_default.elements(el))
+            appendChild(child);
+        else if (el.localName == "del")
+          if (this.options.renderChanges)
+            for (let child of xml_parser_default.elements(el))
+              appendChild(child);
+          else
+            hiddenRevision = !0;
+      };
+      for (let el of xml_parser_default.elements(elem))
+        appendChild(el);
+      return hiddenRevision && !this.hasVisibleMathContent(result) ? null : result;
+    }
+    hasVisibleMathContent(elem) {
+      for (let child of elem.children ?? []) {
+        switch (child.type) {
+          case "text" /* Text */:
+            if (child.text?.length)
+              return !0;
+            break;
+          case "deletedText" /* DeletedText */:
+            if (this.options.renderChanges && child.text?.length)
+              return !0;
+            break;
+          case "symbol" /* Symbol */:
+          case "tab" /* Tab */:
+          case "positionalTab" /* PositionalTab */:
+          case "noBreakHyphen" /* NoBreakHyphen */:
+          case "break" /* Break */:
+            return !0;
+        }
+        if (this.hasVisibleMathContent(child))
+          return !0;
+      }
+      return !1;
+    }
+    parseMathProperies(elem) {
+      let result = {};
+      for (let el of xml_parser_default.elements(elem))
+        switch (el.localName) {
+          case "chr":
+            result.char = xml_parser_default.attr(el, "val");
+            break;
+          case "type":
+            result.type = xml_parser_default.attr(el, "val");
+            break;
+          case "jc":
+            result.justification = xml_parser_default.attr(el, "val");
+            break;
+          case "vertJc":
+            result.verticalJustification = xml_parser_default.attr(el, "val");
+            break;
+          case "pos":
+            result.position = xml_parser_default.attr(el, "val");
+            break;
+          case "degHide":
+            result.hideDegree = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "subHide":
+            result.hideSubscript = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "supHide":
+            result.hideSuperscript = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "begChr":
+            result.beginChar = xml_parser_default.attr(el, "val");
+            break;
+          case "endChr":
+            result.endChar = xml_parser_default.attr(el, "val");
+            break;
+          case "limLoc":
+            result.limitLocation = xml_parser_default.attr(el, "val");
+            break;
+          case "grow":
+            result.grow = xml_parser_default.boolAttr(el, "val");
+            break;
+          case "sepChr":
+            result.separatorChar = xml_parser_default.attr(el, "val");
+            break;
+        }
+      return result;
+    }
+    parseRunProperties(elem, run) {
+      this.parseDefaultProperties(elem, run.cssStyle = {}, null, (c) => {
+        switch (c.localName) {
+          case "rStyle":
+            run.styleName = xml_parser_default.attr(c, "val");
+            break;
+          case "vertAlign":
+            run.verticalAlign = values.valueOfVertAlign(c, !0);
+            break;
+          default:
+            return !1;
+        }
+        return !0;
+      });
+    }
+    parseVmlPicture(elem) {
+      let result = { type: "vmlPicture" /* VmlPicture */, children: [] };
+      for (let el of xml_parser_default.elements(elem)) {
+        let child = parseVmlElement(el, this);
+        child && result.children.push(child);
+      }
+      return result;
+    }
+    checkAlternateContent(elem) {
+      if (elem.localName != "AlternateContent")
+        return elem;
+      for (let choice of xml_parser_default.elements(elem).filter((x) => x.localName == "Choice")) {
+        let requires = (xml_parser_default.attr(choice, "Requires") ?? "").split(/\s+/).filter(Boolean);
+        if (requires.length > 0 && requires.every((prefix) => supportedNamespaceURIs.includes(elem.lookupNamespaceURI(prefix)))) {
+          let selected = xml_parser_default.elements(choice)[0];
+          if (selected)
+            return selected;
+        }
+      }
+      let fallback = xml_parser_default.element(elem, "Fallback");
+      return fallback ? xml_parser_default.elements(fallback)[0] : null;
+    }
+    findAncestorParagraph(elem) {
+      let current = elem;
+      for (; current; ) {
+        if (current.type === "paragraph" /* Paragraph */)
+          return current;
+        current = current.parent;
+      }
+      return null;
+    }
+    parseDrawing(node, inheritedParagraph) {
+      for (var n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "inline":
+          case "anchor":
+            return this.parseDrawingWrapper(n, inheritedParagraph);
+        }
+    }
+    parseDrawingWrapper(node, inheritedParagraph) {
+      var _a;
+      var result = { type: "drawing" /* Drawing */, children: [], cssStyle: {}, props: {} }, isAnchor = node.localName == "anchor";
+      let drawingMeta = {
+        wrapper: isAnchor ? "wp-anchor" : "wp-inline",
+        hasPositiveEffectExtent: !1,
+        effectExtentEmu: { l: 0, t: 0, r: 0, b: 0 },
+        extentEmu: { cx: 0, cy: 0 },
+        relativeHeight: null
+      };
+      result.props.drawingMeta = drawingMeta;
+      let addMargin = (prop, value) => {
+        value && (result.cssStyle[prop] = values.addSize(result.cssStyle[prop], value));
+      };
+      addMargin("margin-left", xml_parser_default.lengthAttr(node, "distL", LengthUsage.Emu)), addMargin("margin-top", xml_parser_default.lengthAttr(node, "distT", LengthUsage.Emu)), addMargin("margin-right", xml_parser_default.lengthAttr(node, "distR", LengthUsage.Emu)), addMargin("margin-bottom", xml_parser_default.lengthAttr(node, "distB", LengthUsage.Emu));
+      let wrapType = null, wrapText = null, wrapPolygon = null, simplePos = xml_parser_default.boolAttr(node, "simplePos", !1), behindDoc = xml_parser_default.boolAttr(node, "behindDoc", !1), relativeHeight = xml_parser_default.intAttr(node, "relativeHeight", null);
+      relativeHeight != null && (result.cssStyle["z-index"] = `${Math.max(1, Math.round(relativeHeight / 1e3))}`), drawingMeta.relativeHeight = relativeHeight, behindDoc && (result.cssStyle["z-index"] = "0");
+      let posX = { relative: "page", align: "left", offset: null }, posY = { relative: "page", align: "top", offset: null };
+      for (var n of xml_parser_default.elements(node))
+        switch (n.localName) {
+          case "simplePos":
+            simplePos && (posX.offset = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), posY.offset = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu));
+            break;
+          case "extent":
+            drawingMeta.extentEmu = {
+              cx: xml_parser_default.intAttr(n, "cx", 0) ?? 0,
+              cy: xml_parser_default.intAttr(n, "cy", 0) ?? 0
+            }, result.cssStyle.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), result.cssStyle.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
+            break;
+          case "effectExtent":
+            drawingMeta.effectExtentEmu = {
+              l: xml_parser_default.intAttr(n, "l", 0) ?? 0,
+              t: xml_parser_default.intAttr(n, "t", 0) ?? 0,
+              r: xml_parser_default.intAttr(n, "r", 0) ?? 0,
+              b: xml_parser_default.intAttr(n, "b", 0) ?? 0
+            }, drawingMeta.hasPositiveEffectExtent = Object.values(drawingMeta.effectExtentEmu).some((v) => v > 0), addMargin("margin-left", xml_parser_default.lengthAttr(n, "l", LengthUsage.Emu)), addMargin("margin-top", xml_parser_default.lengthAttr(n, "t", LengthUsage.Emu)), addMargin("margin-right", xml_parser_default.lengthAttr(n, "r", LengthUsage.Emu)), addMargin("margin-bottom", xml_parser_default.lengthAttr(n, "b", LengthUsage.Emu));
+            break;
+          case "docPr":
+            result.props.title = xml_parser_default.attr(n, "title") ?? xml_parser_default.attr(n, "name"), result.props.alt = xml_parser_default.attr(n, "descr") ?? result.props.title;
+            break;
+          case "positionH":
+          case "positionV":
+            if (!simplePos) {
+              let pos = n.localName == "positionH" ? posX : posY;
+              var alignNode = xml_parser_default.element(n, "align"), offsetNode = xml_parser_default.element(n, "posOffset");
+              pos.relative = xml_parser_default.attr(n, "relativeFrom") ?? pos.relative, alignNode && (pos.align = alignNode.textContent, offsetNode || (pos.offset = null)), offsetNode && (pos.offset = convertLength(offsetNode.textContent, LengthUsage.Emu));
+            }
+            break;
+          case "wrapTopAndBottom":
+            wrapType = "wrapTopAndBottom";
+            break;
+          case "wrapNone":
+            wrapType = "wrapNone";
+            break;
+          case "wrapSquare":
+            wrapType = "wrapSquare", wrapText = xml_parser_default.attr(n, "wrapText");
+            break;
+          case "wrapTight":
+            wrapType = "wrapTight", wrapText = xml_parser_default.attr(n, "wrapText"), wrapPolygon = this.parseWrapPolygon(n);
+            break;
+          case "wrapThrough":
+            wrapType = "wrapThrough", wrapText = xml_parser_default.attr(n, "wrapText"), wrapPolygon = this.parseWrapPolygon(n);
+            break;
+          case "graphic":
+            var g = this.parseGraphic(n);
+            g && (this.applyDrawingTextContext(g, inheritedParagraph), (g.type == "image" /* Image */ || g.type == "shape" /* Shape */ || g.type == "chart" /* Chart */ || g.type == "smartArt" /* SmartArt */ || g.type == "ink" /* Ink */) && (g.alt ?? (g.alt = result.props.alt), g.title ?? (g.title = result.props.title)), result.children.push(g));
+            break;
+        }
+      result.props.anchorPosition = {
+        horizontal: { ...posX },
+        vertical: { ...posY },
+        wrapType,
+        behindDoc,
+        layoutInCell: xml_parser_default.boolAttr(node, "layoutInCell", !0),
+        simplePos
+      };
+      let applyHorizontalAlignment = () => {
+        switch (posX.align) {
+          case "center":
+            result.cssStyle["margin-left"] = "auto", result.cssStyle["margin-right"] = "auto";
+            break;
+          case "right":
+            result.cssStyle["margin-left"] = "auto";
+            break;
+        }
+      };
+      return wrapType == "wrapTopAndBottom" ? (result.cssStyle.display = "block", result.cssStyle.clear = "both", applyHorizontalAlignment()) : wrapType == "wrapNone" ? (result.cssStyle.display = "block", result.cssStyle.position = isAnchor ? "absolute" : "relative", posX.offset && (result.cssStyle.left = posX.offset), posY.offset && (result.cssStyle.top = posY.offset)) : wrapType == "wrapSquare" || wrapType == "wrapTight" || wrapType == "wrapThrough" ? (wrapPolygon && (result.cssStyle["shape-outside"] = wrapPolygon, (_a = result.cssStyle)["clip-path"] ?? (_a["clip-path"] = wrapPolygon)), wrapText == "left" ? result.cssStyle.float = "right" : wrapText == "right" ? result.cssStyle.float = "left" : posX.align == "left" || posX.align == "right" ? result.cssStyle.float = posX.align : (result.cssStyle.display = "block", applyHorizontalAlignment())) : isAnchor && (posX.align == "left" || posX.align == "right") ? result.cssStyle.float = posX.align : result.cssStyle["vertical-align"] = "text-bottom", result;
+    }
+    parseWrapPolygon(elem) {
+      let polygon = xml_parser_default.element(elem, "wrapPolygon");
+      if (!polygon)
+        return null;
+      let points = [], addPoint = (pt) => {
+        let x = xml_parser_default.lengthAttr(pt, "x", LengthUsage.Emu), y = xml_parser_default.lengthAttr(pt, "y", LengthUsage.Emu);
+        x && y && points.push(`${x} ${y}`);
+      };
+      for (let n of xml_parser_default.elements(polygon))
+        (n.localName == "start" || n.localName == "lineTo") && addPoint(n);
+      return points.length >= 3 ? `polygon(${points.join(", ")})` : null;
+    }
+    parseGraphic(elem) {
+      var graphicData = xml_parser_default.element(elem, "graphicData");
+      if (!graphicData)
+        return null;
+      for (let n of xml_parser_default.elements(graphicData))
+        switch (n.localName) {
+          case "pic":
+            return this.parsePicture(n);
+          case "wpc":
+          case "wgp":
+          case "grpSp":
+            return this.parseDrawingContainer(n);
+          case "wsp":
+          case "sp":
+          case "cxnSp":
+            return this.parseDmlPositionedShape(n) ?? this.parseWordprocessingShape(n);
+          case "chart":
+            return this.parseChartReference(n);
+          case "relIds":
+            return this.parseSmartArtReference(n);
+          case "diagram":
+            return this.parseSmartArtReference(n);
+          case "contentPart":
+          case "ink":
+            return this.parseInkReference(n);
+        }
+      let contentPart = this.findDescendant(graphicData, "contentPart");
+      return contentPart ? this.parseInkReference(contentPart) : null;
+    }
+    parseDrawingContainer(elem, parentTransform) {
+      let result = {
+        type: "shape" /* Shape */,
+        children: [],
+        cssStyle: {
+          display: "inline-block",
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          overflow: "visible",
+          "box-sizing": "border-box"
+        },
+        props: { dmlContainer: !0 }
+      }, transform = this.parseDmlGroupTransform(elem, parentTransform);
+      for (let child of xml_parser_default.elements(elem))
+        switch (child.localName) {
+          case "pic":
+            let image = this.parseDmlPositionedPicture(child, transform);
+            image && result.children.push(image);
+            break;
+          case "wsp":
+          case "sp":
+          case "cxnSp":
+            let shape = this.parseDmlPositionedShape(child, transform);
+            shape && result.children.push(shape);
+            break;
+          case "grpSp":
+          case "wgp":
+            let group = this.parseDrawingContainer(child, transform);
+            group && result.children.push(group);
+            break;
+        }
+      return result;
+    }
+    /** Reuse the DrawingML shape path for Office's saved SmartArt layout. */
+    parseDiagramDrawing(root2) {
+      if (root2?.localName !== "drawing" || root2.namespaceURI !== "http://schemas.microsoft.com/office/drawing/2008/diagram")
+        return null;
+      let tree = xml_parser_default.element(root2, "spTree");
+      if (!tree)
+        return null;
+      let result = this.parseDrawingContainer(tree);
+      return result.children.length ? result : null;
+    }
+    applyDrawingTextContext(elem, inheritedParagraph) {
+      if (!elem || !inheritedParagraph?.cssStyle)
+        return;
+      let inheritedAlign = inheritedParagraph.cssStyle["text-align"];
+      if (!inheritedAlign)
+        return;
+      let visit = (node) => {
+        if (!node)
+          return;
+        let props = node?.props ?? {};
+        if (props.dmlShape || props.dmlSvg) {
+          for (let child of node.children ?? [])
+            if (child.type === "paragraph" /* Paragraph */) {
+              let css = child.cssStyle ?? {};
+              !css["text-align"] && !css.textAlign && (child.cssStyle = { ...css, "text-align": inheritedAlign });
+            }
+        }
+        for (let child of node.children ?? [])
+          visit(child);
+      };
+      visit(elem);
+    }
+    parseDmlPositionedPicture(elem, transform) {
+      let image = this.parsePicture(elem), spPr = xml_parser_default.element(elem, "spPr");
+      if (!spPr)
+        return image;
+      let bounds = this.parseDmlShapeBounds(spPr, transform);
+      return image.cssStyle.position = "absolute", image.cssStyle.left = this.pt(bounds.left), image.cssStyle.top = this.pt(bounds.top), image.cssStyle.width = this.pt(bounds.width), image.cssStyle.height = this.pt(bounds.height), image.props = {
+        ...image.props ?? {},
+        dmlPicture: !0,
+        ...this.parseDmlShapeTransform(spPr)
+      }, image;
+    }
+    parseDmlGroupTransform(elem, parentTransform) {
+      let groupProps = xml_parser_default.element(elem, "grpSpPr"), xfrm = groupProps ? xml_parser_default.element(groupProps, "xfrm") : xml_parser_default.element(elem, "xfrm"), off = xfrm ? xml_parser_default.element(xfrm, "off") : null, ext = xfrm ? xml_parser_default.element(xfrm, "ext") : null, chOff = xfrm ? xml_parser_default.element(xfrm, "chOff") : null, chExt = xfrm ? xml_parser_default.element(xfrm, "chExt") : null, extCx = ext ? xml_parser_default.floatAttr(ext, "cx", null) : null, extCy = ext ? xml_parser_default.floatAttr(ext, "cy", null) : null, chExtCx = chExt ? xml_parser_default.floatAttr(chExt, "cx", null) : null, chExtCy = chExt ? xml_parser_default.floatAttr(chExt, "cy", null) : null, local = {
+        offsetX: chOff ? xml_parser_default.floatAttr(chOff, "x", 0) : 0,
+        offsetY: chOff ? xml_parser_default.floatAttr(chOff, "y", 0) : 0,
+        left: off ? xml_parser_default.floatAttr(off, "x", 0) : 0,
+        top: off ? xml_parser_default.floatAttr(off, "y", 0) : 0,
+        scaleX: extCx && chExtCx ? extCx / chExtCx : 1,
+        scaleY: extCy && chExtCy ? extCy / chExtCy : 1
+      };
+      return parentTransform ? {
+        offsetX: local.offsetX,
+        offsetY: local.offsetY,
+        left: parentTransform.left + (local.left - parentTransform.offsetX) * parentTransform.scaleX,
+        top: parentTransform.top + (local.top - parentTransform.offsetY) * parentTransform.scaleY,
+        scaleX: parentTransform.scaleX * local.scaleX,
+        scaleY: parentTransform.scaleY * local.scaleY
+      } : local;
+    }
+    parseDmlPositionedShape(elem, transform) {
+      let spPr = xml_parser_default.element(elem, "spPr");
+      if (!spPr)
+        return null;
+      let bounds = this.parseDmlShapeBounds(spPr, transform), textChildren = [], bodyPr = null, hasWmlTextBody = !1, hasDrawingTextBody = !1;
+      for (let n of xml_parser_default.elements(elem))
+        switch (n.localName) {
+          case "txbx":
+          case "textBox":
+            hasWmlTextBody = !0;
+            for (let txbxContent of xml_parser_default.elements(n, "txbxContent"))
+              textChildren.push(...this.parseBodyElements(txbxContent));
+            break;
+          case "bodyPr":
+            bodyPr = n;
+            break;
+          case "txBody":
+            hasDrawingTextBody = !0, bodyPr = xml_parser_default.element(n, "bodyPr") ?? bodyPr, textChildren.push(...this.parseDmlDrawingTextBody(n));
+            break;
+        }
+      bodyPr ?? (bodyPr = xml_parser_default.element(elem, "bodyPr"));
+      let cssStyle = {
+        position: "absolute",
+        left: this.pt(bounds.left),
+        top: this.pt(bounds.top),
+        width: this.pt(bounds.width),
+        height: this.pt(bounds.height),
+        "box-sizing": "border-box",
+        overflow: "hidden"
+      }, cNvPr = xml_parser_default.element(elem, "cNvPr"), geom = xml_parser_default.element(spPr, "custGeom"), prstGeom = xml_parser_default.element(spPr, "prstGeom"), geometryAdjustments = this.parseDmlPresetGeometryAdjustments(prstGeom), transformProps = this.parseDmlShapeTransform(spPr), explicitFillStyle = this.parseDmlFillStyle(spPr), fillStyle = (explicitFillStyle.explicit ? null : this.parseDmlShapeStyleFill(elem)) ?? explicitFillStyle, explicitLine = xml_parser_default.element(spPr, "ln"), lineStyle = explicitLine ? this.parseDmlLineStyle(explicitLine) : this.parseDmlShapeStyleLine(elem) ?? this.parseDmlLineStyle(null);
+      if (textChildren.length && (cssStyle.display = "flex", cssStyle["flex-direction"] = "column", cssStyle["justify-content"] = this.dmlVerticalAlign(bodyPr), cssStyle["align-items"] = "stretch"), this.applyDmlTextInsets(bodyPr, cssStyle), xml_parser_default.element(elem, "txBody")) {
+        let style = xml_parser_default.element(elem, "style"), fontRef = style ? xml_parser_default.element(style, "fontRef") : null, color = fontRef ? this.parseDmlColor(fontRef) : null;
+        color && (cssStyle.color = color);
+      }
+      let textAutoFitProps = this.parseDmlTextAutoFit(bodyPr), textBody = hasWmlTextBody !== hasDrawingTextBody ? {
+        kind: hasWmlTextBody ? "wml" : "drawing",
+        vertical: bodyPr ? xml_parser_default.attr(bodyPr, "vert") ?? "horz" : "horz",
+        rotation: bodyPr ? xml_parser_default.floatAttr(bodyPr, "rot", 0) / 6e4 : 0,
+        compatibleLineSpacing: bodyPr ? xml_parser_default.boolAttr(bodyPr, "compatLnSpc", !1) : !1
+      } : void 0;
+      if (geom) {
+        let path = this.parseDmlCustomGeometry(geom);
+        return {
+          type: "shape" /* Shape */,
+          children: textChildren,
+          cssStyle: { ...cssStyle, overflow: "visible" },
+          props: {
+            dmlSvg: !0,
+            viewBox: path?.viewBox ?? "0 0 1 1",
+            pathD: path?.d ?? "",
+            geometryAdjustments,
+            fill: fillStyle.fill ?? "none",
+            gradient: fillStyle.gradient,
+            stroke: lineStyle.stroke ?? "none",
+            strokeWidth: lineStyle.strokeWidth ?? "0",
+            strokeLinecap: lineStyle.strokeLinecap,
+            strokeDasharray: lineStyle.strokeDasharray,
+            markerStart: lineStyle.markerStart,
+            markerEnd: lineStyle.markerEnd,
+            ...transformProps,
+            textWrap: bodyPr ? xml_parser_default.attr(bodyPr, "wrap") : null,
+            ...textBody ? { textBody } : {},
+            ...textAutoFitProps
+          },
+          title: cNvPr ? xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name") : null,
+          alt: cNvPr ? xml_parser_default.attr(cNvPr, "descr") : null
+        };
+      }
+      return fillStyle.backgroundColor && (cssStyle["background-color"] = fillStyle.backgroundColor), fillStyle.backgroundImage && (cssStyle["background-image"] = fillStyle.backgroundImage), lineStyle.stroke && lineStyle.stroke != "none" ? cssStyle.border = `${lineStyle.strokeWidth || "0.75pt"} ${lineStyle.borderType || "solid"} ${lineStyle.stroke}` : cssStyle.border = "none", {
+        type: "shape" /* Shape */,
+        children: textChildren,
+        cssStyle,
+        props: {
+          dmlShape: !0,
+          presetGeometry: prstGeom ? xml_parser_default.attr(prstGeom, "prst") : null,
+          geometryAdjustments,
+          fill: fillStyle.fill ?? "none",
+          gradient: fillStyle.gradient,
+          stroke: lineStyle.stroke ?? "none",
+          strokeWidth: lineStyle.strokeWidth ?? "0",
+          strokeLinecap: lineStyle.strokeLinecap,
+          strokeDasharray: lineStyle.strokeDasharray,
+          markerStart: lineStyle.markerStart,
+          markerEnd: lineStyle.markerEnd,
+          ...transformProps,
+          textWrap: bodyPr ? xml_parser_default.attr(bodyPr, "wrap") : null,
+          ...textBody ? { textBody } : {},
+          ...textAutoFitProps
+        },
+        title: cNvPr ? xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name") : null,
+        alt: cNvPr ? xml_parser_default.attr(cNvPr, "descr") : null
+      };
+    }
+    parseDmlDrawingTextBody(body) {
+      return xml_parser_default.elements(body, "p").map((node) => {
+        let pPr = xml_parser_default.element(node, "pPr"), cssStyle = {};
+        if (pPr) {
+          let align = xml_parser_default.attr(pPr, "algn");
+          align && (cssStyle["text-align"] = { ctr: "center", r: "right", just: "justify" }[align] ?? "left");
+          let lineSpacing = xml_parser_default.element(pPr, "lnSpc"), percent2 = lineSpacing ? xml_parser_default.element(lineSpacing, "spcPct") : null;
+          percent2 && (cssStyle["line-height"] = String(xml_parser_default.floatAttr(percent2, "val", 1e5) / 1e5));
+        }
+        let paragraph = { type: "paragraph" /* Paragraph */, children: [], cssStyle };
+        for (let child of xml_parser_default.elements(node)) {
+          if (child.localName !== "r" && child.localName !== "fld")
+            continue;
+          let text = xml_parser_default.elements(child, "t").map((part) => part.textContent ?? "").join("");
+          if (!text)
+            continue;
+          let rPr = xml_parser_default.element(child, "rPr"), runCss = {};
+          if (rPr) {
+            let size = xml_parser_default.floatAttr(rPr, "sz", null);
+            size && size > 0 && (runCss["font-size"] = `${size / 100}pt`);
+            let font = xml_parser_default.element(rPr, "ea") ?? xml_parser_default.element(rPr, "latin") ?? xml_parser_default.element(rPr, "cs"), family = font ? this.resolveDmlDrawingFont(xml_parser_default.attr(font, "typeface"), xml_parser_default.attr(rPr, "lang")) : null;
+            family && (runCss["font-family"] = encloseFontFamily(family)), xml_parser_default.boolAttr(rPr, "b", !1) && (runCss["font-weight"] = "bold"), xml_parser_default.boolAttr(rPr, "i", !1) && (runCss["font-style"] = "italic");
+            let fill = xml_parser_default.element(rPr, "solidFill"), color = fill ? this.parseDmlColor(fill) : null;
+            color && (runCss.color = color);
+          }
+          paragraph.children.push({
+            type: "run" /* Run */,
+            cssStyle: runCss,
+            children: [{ type: "text" /* Text */, text }]
+          });
+        }
+        return paragraph;
+      }).filter((paragraph) => paragraph.children.length > 0);
+    }
+    resolveDmlDrawingFont(typeface, language) {
+      let token = /^\+(mj|mn)-(lt|ea|cs)$/.exec(typeface ?? "");
+      if (!token)
+        return typeface || null;
+      let font = token[1] === "mj" ? this.theme?.fontScheme?.majorFont : this.theme?.fontScheme?.minorFont;
+      if (!font)
+        return null;
+      if (token[2] === "lt")
+        return font.latinTypeface || null;
+      if (token[2] === "cs")
+        return font.csTypeface || font.latinTypeface || null;
+      let script = /^zh-(?:TW|HK|MO)/i.test(language ?? "") ? "Hant" : /^zh/i.test(language ?? "") ? "Hans" : /^ja/i.test(language ?? "") ? "Jpan" : /^ko/i.test(language ?? "") ? "Hang" : null;
+      return (script ? font.scriptTypefaces?.[script] : null) || font.eaTypeface || font.latinTypeface || null;
+    }
+    parseDmlShapeBounds(spPr, transform) {
+      let xfrm = xml_parser_default.element(spPr, "xfrm"), off = xfrm ? xml_parser_default.element(xfrm, "off") : null, ext = xfrm ? xml_parser_default.element(xfrm, "ext") : null, scaleX = transform?.scaleX ?? 1, scaleY = transform?.scaleY ?? 1, baseX = transform?.offsetX ?? 0, baseY = transform?.offsetY ?? 0, parentLeft = transform?.left ?? 0, parentTop = transform?.top ?? 0, x = off ? xml_parser_default.floatAttr(off, "x", 0) : 0, y = off ? xml_parser_default.floatAttr(off, "y", 0) : 0, cx = ext ? xml_parser_default.floatAttr(ext, "cx", 0) : 0, cy = ext ? xml_parser_default.floatAttr(ext, "cy", 0) : 0;
+      return {
+        left: this.emuToPt(parentLeft + (x - baseX) * scaleX),
+        top: this.emuToPt(parentTop + (y - baseY) * scaleY),
+        width: Math.max(0, this.emuToPt(cx * scaleX)),
+        height: Math.max(0, this.emuToPt(cy * scaleY))
+      };
+    }
+    parseDmlPresetGeometryAdjustments(prstGeom) {
+      let result = {};
+      if (!prstGeom)
+        return result;
+      let avLst = xml_parser_default.element(prstGeom, "avLst");
+      if (!avLst)
+        return result;
+      for (let gd of xml_parser_default.elements(avLst, "gd")) {
+        let name = xml_parser_default.attr(gd, "name"), match = String(xml_parser_default.attr(gd, "fmla") ?? "").trim().match(/^val\s+(-?\d+(?:\.\d+)?)$/i);
+        name && match && (result[name] = parseFloat(match[1]));
+      }
+      return result;
+    }
+    parseDmlShapeTransform(spPr) {
+      let xfrm = xml_parser_default.element(spPr, "xfrm");
+      if (!xfrm)
+        return {};
+      let rot = xml_parser_default.floatAttr(xfrm, "rot", 0), props = {};
+      return rot && (props.rotation = rot / 6e4), xml_parser_default.boolAttr(xfrm, "flipH", !1) && (props.flipH = !0), xml_parser_default.boolAttr(xfrm, "flipV", !1) && (props.flipV = !0), props;
+    }
+    parseDmlFillStyle(spPr) {
+      if (xml_parser_default.element(spPr, "noFill"))
+        return { fill: "none", backgroundColor: "transparent", explicit: !0 };
+      let solidFill = xml_parser_default.element(spPr, "solidFill");
+      if (solidFill) {
+        let color = this.parseDmlColor(solidFill) ?? "transparent";
+        return { fill: color, backgroundColor: color, explicit: !0 };
+      }
+      let gradFill = xml_parser_default.element(spPr, "gradFill");
+      if (gradFill) {
+        let stopList = xml_parser_default.element(gradFill, "gsLst"), linear = xml_parser_default.element(gradFill, "lin"), stops = (stopList ? xml_parser_default.elements(stopList, "gs") : []).map((stop) => ({ offset: Math.max(0, Math.min(1, xml_parser_default.floatAttr(stop, "pos", 0) / 1e5)), color: this.parseDmlColor(stop) })).filter((stop) => !!stop.color);
+        if (linear && stops.length >= 2) {
+          let angle = xml_parser_default.floatAttr(linear, "ang", 0) / 6e4, backgroundImage = `linear-gradient(${90 + angle}deg, ${stops.map((stop) => `${stop.color} ${stop.offset * 100}%`).join(", ")})`;
+          return {
+            fill: stops[0].color,
+            backgroundColor: stops[0].color,
+            backgroundImage,
+            gradient: { angle, scaled: xml_parser_default.boolAttr(linear, "scaled", !1), stops },
+            explicit: !0
+          };
+        }
+      }
+      let pattFill = xml_parser_default.element(spPr, "pattFill");
+      if (pattFill) {
+        let fg = this.parseDmlColor(xml_parser_default.element(pattFill, "fgClr")) ?? "currentColor", bg = this.parseDmlColor(xml_parser_default.element(pattFill, "bgClr")) ?? "transparent", prst = xml_parser_default.attr(pattFill, "prst"), angle = prst && prst.toLowerCase().includes("horz") ? "0deg" : "90deg";
+        return {
+          fill: bg,
+          backgroundColor: bg,
+          backgroundImage: `repeating-linear-gradient(${angle}, ${fg} 0, ${fg} 0.75pt, ${bg} 0.75pt, ${bg} 3pt)`,
+          explicit: !0
+        };
+      }
+      return { fill: "none", backgroundColor: "transparent", explicit: !1 };
+    }
+    parseDmlShapeStyleFill(shape) {
+      let style = xml_parser_default.element(shape, "style"), fillRef = style ? xml_parser_default.element(style, "fillRef") : null, color = this.parseDmlColor(fillRef);
+      return color ? {
+        fill: color,
+        backgroundColor: color,
+        explicit: !1
+      } : null;
+    }
+    parseDmlShapeStyleLine(shape) {
+      let style = xml_parser_default.element(shape, "style"), lineRef = style ? xml_parser_default.element(style, "lnRef") : null;
+      if (!lineRef)
+        return null;
+      let themeLine = this.resolveDmlThemeLineStyle(xml_parser_default.intAttr(lineRef, "idx", null)), dash = themeLine?.dash, strokeDasharray = dash && dash != "solid" ? dash == "dot" ? "1 2" : "4 3" : null;
+      return {
+        stroke: this.parseDmlColor(lineRef) ?? "black",
+        strokeWidth: themeLine?.width != null ? this.pt(this.emuToPt(themeLine.width)) : "0.75pt",
+        borderType: strokeDasharray ? "dashed" : "solid",
+        strokeDasharray,
+        strokeLinecap: this.parseDmlLineCap(themeLine?.cap),
+        strokeAlignment: themeLine?.alignment,
+        strokeCompound: themeLine?.compound
+      };
+    }
+    resolveDmlThemeLineStyle(idx) {
+      return idx == null || idx <= 0 ? null : this.theme?.formatScheme?.lineStyles?.[idx - 1] ?? defaultDmlThemeLineStyles[idx - 1] ?? null;
+    }
+    parseDmlLineStyle(line, defaultWidth = "0.75pt") {
+      if (!line || xml_parser_default.element(line, "noFill"))
+        return { stroke: "none", strokeWidth: "0", borderType: "none" };
+      let stroke = this.parseDmlColor(xml_parser_default.element(line, "solidFill")) ?? "black", width = xml_parser_default.attr(line, "w") ? this.pt(this.emuToPt(xml_parser_default.floatAttr(line, "w", 0))) : defaultWidth, dash = xml_parser_default.elementAttr(line, "prstDash", "val"), strokeLinecap = this.parseDmlLineCap(xml_parser_default.attr(line, "cap")), strokeDasharray = null, borderType = "solid";
+      dash && dash != "solid" && (borderType = "dashed", strokeDasharray = dash == "dot" ? "1 2" : "4 3");
+      let markerStart = this.parseDmlLineEndMarker(xml_parser_default.element(line, "headEnd")), markerEnd = this.parseDmlLineEndMarker(xml_parser_default.element(line, "tailEnd"));
+      return { stroke, strokeWidth: width, borderType, strokeDasharray, markerStart, markerEnd, strokeLinecap };
+    }
+    parseDmlLineCap(value) {
+      switch (String(value ?? "").toLowerCase()) {
+        case "flat":
+          return "butt";
+        case "rnd":
+          return "round";
+        case "sq":
+          return "square";
+        default:
+          return null;
+      }
+    }
+    parseDmlLineEndMarker(elem) {
+      let type = elem ? xml_parser_default.attr(elem, "type") : null;
+      return type && type != "none" ? type : null;
+    }
+    parseDmlCustomGeometry(geom) {
+      let pathList = xml_parser_default.element(geom, "pathLst"), paths = pathList ? xml_parser_default.elements(pathList, "path") : [], d = "", viewWidth = 1, viewHeight = 1;
+      for (let path of paths) {
+        let width = xml_parser_default.floatAttr(path, "w", viewWidth), height = xml_parser_default.floatAttr(path, "h", viewHeight);
+        viewWidth = Math.max(viewWidth, width || 1), viewHeight = Math.max(viewHeight, height || 1), d += this.parseDmlPathData(path, width || 1, height || 1);
+      }
+      return { d: d.trim(), viewBox: `0 0 ${viewWidth} ${viewHeight}` };
+    }
+    parseDmlPathData(path, width, height) {
+      let parts = [], point = (el) => {
+        let pt = xml_parser_default.element(el, "pt");
+        return pt ? `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}` : "0 0";
+      };
+      for (let child of xml_parser_default.elements(path))
+        switch (child.localName) {
+          case "moveTo":
+            parts.push(`M ${point(child)}`);
+            break;
+          case "lnTo":
+            parts.push(`L ${point(child)}`);
+            break;
+          case "cubicBezTo":
+            let cubic = xml_parser_default.elements(child, "pt").map((pt) => `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}`);
+            cubic.length == 3 && parts.push(`C ${cubic.join(" ")}`);
+            break;
+          case "quadBezTo":
+            let quad = xml_parser_default.elements(child, "pt").map((pt) => `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}`);
+            quad.length == 2 && parts.push(`Q ${quad.join(" ")}`);
+            break;
+          case "close":
+            parts.push("Z");
+            break;
+        }
+      return parts.join(" ") + " ";
+    }
+    dmlCoord(value, width, height) {
+      if (value == "w" || value == "r")
+        return width;
+      if (value == "h" || value == "b")
+        return height;
+      if (value == "l" || value == "t")
+        return 0;
+      let parsed = parseFloat(value);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+    dmlVerticalAlign(bodyPr) {
+      switch (bodyPr ? xml_parser_default.attr(bodyPr, "anchor") : null) {
+        case "ctr":
+          return "center";
+        case "b":
+          return "flex-end";
+        default:
+          return "flex-start";
+      }
+    }
+    parseDmlTextAutoFit(bodyPr) {
+      if (!bodyPr)
+        return {};
+      if (xml_parser_default.element(bodyPr, "noAutofit"))
+        return { textAutoFit: "none" };
+      let norm = xml_parser_default.element(bodyPr, "normAutofit");
+      if (norm) {
+        let fontScale = this.parseDmlPercentage(xml_parser_default.attr(norm, "fontScale"), 1), lineSpaceReduction = this.parseDmlPercentage(xml_parser_default.attr(norm, "lnSpcReduction"), 0);
+        return {
+          textAutoFit: "normal",
+          textAutoFitFontScale: fontScale,
+          textAutoFitLineSpaceReduction: lineSpaceReduction
+        };
+      }
+      return xml_parser_default.element(bodyPr, "spAutoFit") ? { textAutoFit: "shape" } : {};
+    }
+    parseDmlPercentage(value, fallback) {
+      if (value == null || value === "")
+        return fallback;
+      let raw = String(value).trim();
+      if (!raw)
+        return fallback;
+      let parsed = parseFloat(raw);
+      if (!Number.isFinite(parsed))
+        return fallback;
+      let result = raw.endsWith("%") ? parsed / 100 : parsed / 1e5;
+      return Number.isFinite(result) ? result : fallback;
+    }
+    applyDmlTextInsets(bodyPr, cssStyle) {
+      if (!bodyPr)
+        return;
+      let map = { lIns: "padding-left", tIns: "padding-top", rIns: "padding-right", bIns: "padding-bottom" };
+      for (let [attr, prop] of Object.entries(map)) {
+        let value = xml_parser_default.attr(bodyPr, attr);
+        value != null && (cssStyle[prop] = this.pt(this.emuToPt(parseFloat(value))));
+      }
+    }
+    emuToPt(value) {
+      return (Number.isFinite(value) ? value : 0) / 12700;
+    }
+    pt(value) {
+      return `${Math.round(value * 100) / 100}pt`;
+    }
+    parseChartReference(elem) {
+      return {
+        type: "chart" /* Chart */,
+        id: xml_parser_default.attr(elem, "id"),
+        cssStyle: {
+          width: "100%",
+          height: "100%"
+        }
+      };
+    }
+    parseSmartArtReference(elem) {
+      let relIds = elem.localName == "relIds" ? elem : this.findDescendant(elem, "relIds");
+      return {
+        type: "smartArt" /* SmartArt */,
+        dataId: relIds ? xml_parser_default.attr(relIds, "dm") : xml_parser_default.attr(elem, "dm"),
+        layoutId: relIds ? xml_parser_default.attr(relIds, "lo") : xml_parser_default.attr(elem, "lo"),
+        styleId: relIds ? xml_parser_default.attr(relIds, "qs") : xml_parser_default.attr(elem, "qs"),
+        colorId: relIds ? xml_parser_default.attr(relIds, "cs") : xml_parser_default.attr(elem, "cs"),
+        cssStyle: {
+          width: "100%",
+          height: "100%"
+        }
+      };
+    }
+    parseInkReference(elem) {
+      return {
+        type: "ink" /* Ink */,
+        id: xml_parser_default.attr(elem, "id"),
+        cssStyle: {
+          width: "100%",
+          height: "100%"
+        }
+      };
+    }
+    parseWordprocessingShape(elem) {
+      let result = {
+        type: "shape" /* Shape */,
+        children: [],
+        cssStyle: {
+          display: "inline-block",
+          position: "relative",
+          "box-sizing": "border-box",
+          overflow: "hidden"
+        }
+      }, cNvPr = this.findDescendant(elem, "cNvPr");
+      cNvPr && (result.title = xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name"), result.alt = xml_parser_default.attr(cNvPr, "descr") ?? result.title);
+      for (let n of xml_parser_default.elements(elem))
+        switch (n.localName) {
+          case "spPr":
+            this.parseDmlShapeProperties(n, result.cssStyle, elem);
+            break;
+          case "txbx":
+          case "textBox":
+            for (let txbxContent of xml_parser_default.elements(n, "txbxContent"))
+              result.children.push(...this.parseBodyElements(txbxContent));
+            break;
+        }
+      return result;
+    }
+    parseDmlShapeProperties(elem, style, owner) {
+      let xfrm = xml_parser_default.element(elem, "xfrm");
+      if (xfrm)
+        for (let n of xml_parser_default.elements(xfrm))
+          switch (n.localName) {
+            case "ext":
+              style.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), style.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
+              break;
+            case "off":
+              style.left = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), style.top = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu);
+              break;
+          }
+      let explicitFillStyle = this.parseDmlFillStyle(elem), fillStyle = (!explicitFillStyle.explicit && owner ? this.parseDmlShapeStyleFill(owner) : null) ?? explicitFillStyle, line = xml_parser_default.element(elem, "ln"), lineStyle = line ? this.parseDmlLineStyle(line) : owner ? this.parseDmlShapeStyleLine(owner) : null;
+      fillStyle.backgroundColor && (style["background-color"] = fillStyle.backgroundColor), fillStyle.backgroundImage && (style["background-image"] = fillStyle.backgroundImage), lineStyle?.stroke && lineStyle.stroke != "none" && (style.border = `${lineStyle.strokeWidth || "0.75pt"} ${lineStyle.borderType || "solid"} ${lineStyle.stroke}`);
+    }
+    parseDmlColor(elem) {
+      if (!elem)
+        return null;
+      let srgbClr = xml_parser_default.element(elem, "srgbClr"), schemeClr = xml_parser_default.element(elem, "schemeClr"), prstClr = xml_parser_default.element(elem, "prstClr"), sysClr = xml_parser_default.element(elem, "sysClr");
+      if (srgbClr)
+        return this.applyDmlColorTransforms(srgbClr, `#${xml_parser_default.attr(srgbClr, "val")}`);
+      if (schemeClr) {
+        let scheme = this.resolveDmlSchemeColor(xml_parser_default.attr(schemeClr, "val")), fallback = this.dmlSchemeColorFallback(scheme);
+        return this.applyDmlColorTransforms(schemeClr, `var(--docx-${scheme}-color${fallback ? `, ${fallback}` : ""})`);
+      }
+      return sysClr ? this.applyDmlColorTransforms(sysClr, `#${xml_parser_default.attr(sysClr, "lastClr") ?? xml_parser_default.attr(sysClr, "val")}`) : prstClr ? this.applyDmlColorTransforms(prstClr, xml_parser_default.attr(prstClr, "val")) : null;
+    }
+    resolveDmlSchemeColor(value) {
+      switch (value) {
+        case "bg1":
+          return "lt1";
+        case "tx1":
+          return "dk1";
+        case "bg2":
+          return "lt2";
+        case "tx2":
+          return "dk2";
+        default:
+          return value;
+      }
+    }
+    dmlSchemeColorFallback(value) {
+      switch (value) {
+        case "dk1":
+          return "#000000";
+        case "lt1":
+          return "#FFFFFF";
+        case "dk2":
+          return "#44546A";
+        case "lt2":
+          return "#E7E6E6";
+        case "accent1":
+          return "#4472C4";
+        case "accent2":
+          return "#ED7D31";
+        case "accent3":
+          return "#A5A5A5";
+        case "accent4":
+          return "#FFC000";
+        case "accent5":
+          return "#5B9BD5";
+        case "accent6":
+          return "#70AD47";
+        case "hlink":
+          return "#0563C1";
+        case "folHlink":
+          return "#954F72";
+        default:
+          return null;
+      }
+    }
+    applyDmlColorTransforms(elem, color) {
+      let shade = xml_parser_default.elementAttr(elem, "shade", "val"), tint = xml_parser_default.elementAttr(elem, "tint", "val"), lumMod = xml_parser_default.elementAttr(elem, "lumMod", "val"), lumOff = xml_parser_default.elementAttr(elem, "lumOff", "val");
+      if (shade != null) {
+        let percent2 = Math.max(0, Math.min(100, parseFloat(shade) / 1e3));
+        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, black)`);
+      }
+      if (tint != null) {
+        let percent2 = Math.max(0, Math.min(100, parseFloat(tint) / 1e3));
+        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, white)`);
+      }
+      if (lumMod != null) {
+        let percent2 = Math.max(0, Math.min(100, parseFloat(lumMod) / 1e3));
+        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, black)`);
+      }
+      if (lumOff != null) {
+        let percent2 = Math.max(0, Math.min(100, parseFloat(lumOff) / 1e3));
+        Number.isFinite(percent2) && percent2 > 0 && (color = `color-mix(in srgb, ${color} ${100 - percent2}%, white)`);
+      }
+      return color;
+    }
+    findDescendant(elem, localName) {
+      for (let child of xml_parser_default.elements(elem)) {
+        if (child.localName == localName)
+          return child;
+        let nested = this.findDescendant(child, localName);
+        if (nested)
+          return nested;
+      }
+      return null;
+    }
+    parsePicture(elem) {
+      var result = { type: "image" /* Image */, src: "", cssStyle: {} }, blipFill = xml_parser_default.element(elem, "blipFill"), blip = blipFill ? xml_parser_default.element(blipFill, "blip") : null, srcRect = blipFill ? xml_parser_default.element(blipFill, "srcRect") : null, spPr = xml_parser_default.element(elem, "spPr"), prstGeom = spPr ? xml_parser_default.element(spPr, "prstGeom") : null;
+      let line = spPr ? xml_parser_default.element(spPr, "ln") : null, inheritedLine = line ? this.parseDmlShapeStyleLine(elem) : null, outerShadow = this.parseDmlPictureOuterShadow(spPr);
+      result.src = blip ? xml_parser_default.attr(blip, "embed") ?? xml_parser_default.attr(blip, "link") : "", result.props = {
+        ...result.props ?? {},
+        presetGeometry: prstGeom ? xml_parser_default.attr(prstGeom, "prst") : null,
+        geometryAdjustments: this.parseDmlPresetGeometryAdjustments(prstGeom),
+        ...outerShadow ? { outerShadow } : {},
+        // An authored outline's omitted width inherits its style link, then
+        // DrawingML's .75pt default. It is NOT an explicit zero/no-fill line;
+        // absence of the outline itself retains the independent no-line path.
+        ...this.parseDmlLineStyle(line, inheritedLine?.strokeWidth),
+        ...line ? {
+          strokeAlignment: xml_parser_default.attr(line, "algn") ?? inheritedLine?.strokeAlignment,
+          strokeCompound: xml_parser_default.attr(line, "cmpd") ?? inheritedLine?.strokeCompound
+        } : {}
+      };
+      let cNvPr = this.findDescendant(elem, "cNvPr");
+      cNvPr && (result.title = xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name"), result.alt = xml_parser_default.attr(cNvPr, "descr") ?? result.title), srcRect && (result.srcRect = [
+        xml_parser_default.intAttr(srcRect, "l", 0) / 1e5,
+        xml_parser_default.intAttr(srcRect, "t", 0) / 1e5,
+        xml_parser_default.intAttr(srcRect, "r", 0) / 1e5,
+        xml_parser_default.intAttr(srcRect, "b", 0) / 1e5
+      ]);
+      var xfrm = spPr ? xml_parser_default.element(spPr, "xfrm") : null, transforms = [];
+      if (result.cssStyle.display = "block", result.cssStyle.position = "relative", result.cssStyle["object-fit"] = "contain", xfrm) {
+        result.rotation = xml_parser_default.intAttr(xfrm, "rot", 0) / 6e4, result.flipH = xml_parser_default.boolAttr(xfrm, "flipH", !1), result.flipV = xml_parser_default.boolAttr(xfrm, "flipV", !1), result.flipH && transforms.push("scaleX(-1)"), result.flipV && transforms.push("scaleY(-1)");
+        for (var n of xml_parser_default.elements(xfrm))
+          switch (n.localName) {
+            case "ext":
+              result.cssStyle.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), result.cssStyle.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
+              break;
+            case "off":
+              result.cssStyle.left = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), result.cssStyle.top = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu);
+              break;
+          }
+      }
+      return transforms.length > 0 && (result.cssStyle.transform = transforms.join(" ")), result.cssStyle.width || (result.cssStyle.width = "100%"), result.cssStyle.height || (result.cssStyle.height = "100%"), result;
+    }
+    parseDmlPictureOuterShadow(spPr) {
+      let effects = spPr ? xml_parser_default.element(spPr, "effectLst") : null, children = effects ? xml_parser_default.elements(effects) : [];
+      if (children.length !== 1 || children[0].localName !== "outerShdw")
+        return null;
+      let shadow = children[0], color = this.parseDmlColor(shadow);
+      if (!color)
+        return null;
+      let colorNode = xml_parser_default.elements(shadow).find((child) => /Clr$/.test(child.localName)), opacity = 1;
+      for (let transform of colorNode ? xml_parser_default.elements(colorNode) : []) {
+        let value = xml_parser_default.floatAttr(transform, "val", NaN) / 1e5;
+        transform.localName === "alpha" ? opacity = value : transform.localName === "alphaMod" ? opacity *= value : transform.localName === "alphaOff" && (opacity += value), opacity = Math.max(0, Math.min(1, opacity));
+      }
+      let result = {
+        color,
+        opacity: Math.max(0, Math.min(1, opacity)),
+        distanceEmu: xml_parser_default.floatAttr(shadow, "dist", 0),
+        blurRadiusEmu: xml_parser_default.floatAttr(shadow, "blurRad", 0),
+        direction: xml_parser_default.floatAttr(shadow, "dir", 0) / 6e4,
+        scaleX: xml_parser_default.floatAttr(shadow, "sx", 1e5) / 1e5,
+        scaleY: xml_parser_default.floatAttr(shadow, "sy", 1e5) / 1e5,
+        skewX: xml_parser_default.floatAttr(shadow, "kx", 0) / 6e4,
+        skewY: xml_parser_default.floatAttr(shadow, "ky", 0) / 6e4,
+        rotateWithShape: xml_parser_default.boolAttr(shadow, "rotWithShape", !0)
+      };
+      return [
+        result.opacity,
+        result.distanceEmu,
+        result.blurRadiusEmu,
+        result.direction,
+        result.scaleX,
+        result.scaleY,
+        result.skewX,
+        result.skewY
+      ].every(Number.isFinite) && result.distanceEmu >= 0 && result.blurRadiusEmu >= 0 ? result : null;
+    }
+    parseTable(node, source) {
+      var result = { type: "table" /* Table */, children: [], ...source ? { source } : {} };
+      let rowIndex = 0;
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "tr":
+            result.children.push(this.parseTableRow(c, source ? { ...source, rowIndex: rowIndex++ } : void 0));
+            break;
+          case "tblGrid":
+            result.columns = this.parseTableColumns(c);
+            break;
+          case "tblPr":
+            this.parseTableProperties(c, result);
+            break;
+        }
+      return result;
+    }
+    parseTableColumns(node) {
+      var result = [];
+      for (let n of xml_parser_default.elements(node))
+        n.localName === "gridCol" && result.push({ width: xml_parser_default.lengthAttr(n, "w") });
+      return result;
+    }
+    parseTableProperties(elem, table) {
+      switch (table.cssStyle = {}, table.cellStyle = {}, this.parseDefaultProperties(elem, table.cssStyle, table.cellStyle, (c) => {
+        switch (c.localName) {
+          case "tblStyle":
+            table.styleName = xml_parser_default.attr(c, "val");
+            break;
+          case "tblLook":
+            table.look = values.tableLookOfTblLook(c), table.className = values.classNameOftblLook(c);
+            break;
+          case "tblpPr":
+            this.parseTablePosition(c, table);
+            break;
+          case "tblStyleColBandSize":
+            table.colBandSize = xml_parser_default.intAttr(c, "val");
+            break;
+          case "tblStyleRowBandSize":
+            table.rowBandSize = xml_parser_default.intAttr(c, "val");
+            break;
+          case "hidden":
+            table.cssStyle.display = "none";
+            break;
+          default:
+            return !1;
+        }
+        return !0;
+      }), table.cssStyle["text-align"]) {
+        case "center":
+          delete table.cssStyle["text-align"], table.cssStyle["margin-left"] = "auto", table.cssStyle["margin-right"] = "auto";
+          break;
+        case "right":
+          delete table.cssStyle["text-align"], table.cssStyle["margin-left"] = "auto";
+          break;
+      }
+    }
+    parseTablePosition(node, table) {
+      var topFromText = xml_parser_default.lengthAttr(node, "topFromText"), bottomFromText = xml_parser_default.lengthAttr(node, "bottomFromText"), rightFromText = xml_parser_default.lengthAttr(node, "rightFromText"), leftFromText = xml_parser_default.lengthAttr(node, "leftFromText"), tblpX = xml_parser_default.lengthAttr(node, "tblpX"), tblpY = xml_parser_default.lengthAttr(node, "tblpY"), tblpXSpec = xml_parser_default.attr(node, "tblpXSpec"), tblpYSpec = xml_parser_default.attr(node, "tblpYSpec"), horzAnchor = xml_parser_default.attr(node, "horzAnchor"), vertAnchor = xml_parser_default.attr(node, "vertAnchor");
+      table.cssStyle.float = "left", table.cssStyle["--docx-table-positioned"] = "1", topFromText != null && (table.cssStyle["--docx-tblp-top-from-text"] = topFromText), bottomFromText != null && (table.cssStyle["--docx-tblp-bottom-from-text"] = bottomFromText), leftFromText != null && (table.cssStyle["--docx-tblp-left-from-text"] = leftFromText), rightFromText != null && (table.cssStyle["--docx-tblp-right-from-text"] = rightFromText), tblpX != null && (table.cssStyle["--docx-tblp-x"] = tblpX), tblpY != null && (table.cssStyle["--docx-tblp-y"] = tblpY), tblpXSpec && (table.cssStyle["--docx-tblp-x-spec"] = tblpXSpec), tblpYSpec && (table.cssStyle["--docx-tblp-y-spec"] = tblpYSpec), horzAnchor && (table.cssStyle["--docx-tblp-horz-anchor"] = horzAnchor), vertAnchor && (table.cssStyle["--docx-tblp-vert-anchor"] = vertAnchor), table.cssStyle["margin-bottom"] = values.addSize(table.cssStyle["margin-bottom"], bottomFromText), table.cssStyle["margin-left"] = values.addSize(table.cssStyle["margin-left"], leftFromText), table.cssStyle["margin-right"] = values.addSize(table.cssStyle["margin-right"], rightFromText), table.cssStyle["margin-top"] = values.addSize(table.cssStyle["margin-top"], topFromText);
+    }
+    parseTableRow(node, source) {
+      var result = { type: "row" /* Row */, children: [], ...source ? { source } : {} };
+      let cellIndex = 0;
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "tc":
+            result.children.push(this.parseTableCell(c, source ? { ...source, cellIndex: cellIndex++ } : void 0));
+            break;
+          case "trPr":
+          case "tblPrEx":
+            this.parseTableRowProperties(c, result);
+            break;
+        }
+      return result;
+    }
+    parseTableRowProperties(elem, row) {
+      let rowStyle = {};
+      row.cssStyle = this.parseDefaultProperties(elem, rowStyle, null, (c) => {
+        switch (c.localName) {
+          case "cnfStyle":
+            row.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), row.className = values.classNameOfCnfStyle(c);
+            break;
+          case "tblHeader":
+            row.isHeader = xml_parser_default.boolAttr(c, "val", !0);
+            break;
+          case "gridBefore":
+            row.gridBefore = xml_parser_default.intAttr(c, "val");
+            break;
+          case "gridAfter":
+            row.gridAfter = xml_parser_default.intAttr(c, "val");
+            break;
+          case "cantSplit":
+            xml_parser_default.boolAttr(c, "val", !0) && (rowStyle["break-inside"] = "avoid");
+            break;
+          default:
+            return !1;
+        }
+        return !0;
+      });
+    }
+    parseTableCell(node, source) {
+      var result = { type: "cell" /* Cell */, children: [], ...source ? { source } : {} };
+      let nestedTableIndex = 0, cellParagraphIndex = 0;
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "tbl":
+            result.children.push(this.parseTable(c, source ? {
+              ...source,
+              nestedTablePath: [...source.nestedTablePath ?? [], {
+                parentRowIndex: source.rowIndex ?? 0,
+                parentCellIndex: source.cellIndex ?? 0,
+                nestedIndex: nestedTableIndex++
+              }]
+            } : void 0));
+            break;
+          case "p":
+            result.children.push(this.parseParagraph(c, source ? { ...source, cellParagraphIndex: cellParagraphIndex++ } : void 0));
+            break;
+          case "tcPr":
+            this.parseTableCellProperties(c, result);
+            break;
+        }
+      return result;
+    }
+    parseTableCellProperties(elem, cell) {
+      cell.cssStyle = this.parseDefaultProperties(elem, {}, null, (c) => {
+        switch (c.localName) {
+          case "gridSpan":
+            cell.span = xml_parser_default.intAttr(c, "val", null);
+            break;
+          case "vMerge":
+            cell.verticalMerge = xml_parser_default.attr(c, "val") ?? "continue";
+            break;
+          case "hideMark":
+            cell.hideMark = xml_parser_default.boolAttr(c, "val", !0);
+            break;
+          case "cnfStyle":
+            cell.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), cell.className = values.classNameOfCnfStyle(c);
+            break;
+          default:
+            return !1;
+        }
+        return !0;
+      }), this.parseTableCellVerticalText(elem, cell);
+    }
+    parseTableCellVerticalText(elem, cell) {
+      let directionMap = {
+        btLr: {
+          writingMode: "vertical-rl",
+          transform: "rotate(180deg)"
+        },
+        lrTb: {
+          writingMode: "vertical-lr",
+          transform: "none"
+        },
+        tbRl: {
+          writingMode: "vertical-rl",
+          transform: "none"
+        }
+      };
+      for (let c of xml_parser_default.elements(elem))
+        if (c.localName === "textDirection") {
+          let direction = xml_parser_default.attr(c, "val"), style = directionMap[direction] || { writingMode: "horizontal-tb" };
+          cell.cssStyle["writing-mode"] = style.writingMode, cell.cssStyle.transform = style.transform;
+        }
+    }
+    parseDefaultProperties(elem, style = null, childStyle = null, handler = null) {
+      style = style || {};
+      for (let c of xml_parser_default.elements(elem))
+        if (!handler?.(c))
+          switch (c.localName) {
+            case "jc":
+              style["--docx-jc"] = xml_parser_default.attr(c, "val"), style["text-align"] = values.valueOfJc(c);
+              break;
+            case "adjustRightInd":
+              style["--docx-adjust-right-indent"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "kinsoku":
+              style["--docx-kinsoku"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "overflowPunct":
+              style["--docx-overflow-punctuation"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "topLinePunct":
+              style["--docx-top-line-punctuation"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "textAlignment":
+              style["--docx-text-alignment"] = xml_parser_default.attr(c, "val"), style["vertical-align"] = values.valueOfTextAlignment(c);
+              break;
+            case "color": {
+              let themeColor = xml_parser_default.attr(c, "themeColor");
+              style.color = themeColor && xml_parser_default.attr(c, "val") === "auto" ? `var(--docx-${themeColor}-color)` : xmlUtil.colorAttr(c, "val", null, automaticTextColorCss);
+              break;
+            }
+            case "sz":
+              style["font-size"] = style["min-height"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.FontSize);
+              break;
+            case "szCs":
+              style["--docx-cs-font-size"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.FontSize);
+              break;
+            case "shd": {
+              let shading = resolveShadingBackground(c);
+              shading && (style["background-color"] = shading);
+              break;
+            }
+            case "highlight":
+              style["background-color"] = xml_parser_default.attr(c, "val") === "none" ? "transparent" : xmlUtil.colorAttr(c, "val", null, autos.highlight);
+              break;
+            case "vertAlign":
+              style["vertical-align"] = values.valueOfVertAlign(c);
+              break;
+            case "position":
+              style["vertical-align"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.SignedHalfPoint);
+              break;
+            case "scale":
+            case "w":
+              style["font-stretch"] = `${xml_parser_default.intAttr(c, "val", 100)}%`;
+              break;
+            case "tcW":
+              if (this.options.ignoreWidth)
+                break;
+            case "tblW":
+              style.width = values.valueOfSize(c, "w");
+              break;
+            case "trHeight":
+              this.parseTrHeight(c, style);
+              break;
+            case "strike":
+              style["text-decoration"] = xml_parser_default.boolAttr(c, "val", !0) ? "line-through" : "none";
+              break;
+            case "dstrike":
+              xml_parser_default.boolAttr(c, "val", !0) ? (style["text-decoration-line"] = "line-through", style["text-decoration-style"] = "double") : style["text-decoration"] = "none";
+              break;
+            case "b":
+              style["font-weight"] = xml_parser_default.boolAttr(c, "val", !0) ? "bold" : "normal";
+              break;
+            case "i":
+              style["font-style"] = xml_parser_default.boolAttr(c, "val", !0) ? "italic" : "normal";
+              break;
+            case "bCs":
+              style["--docx-bidi-font-weight"] = xml_parser_default.boolAttr(c, "val", !0) ? "bold" : "normal", style.direction == "rtl" && (style["font-weight"] = style["--docx-bidi-font-weight"]);
+              break;
+            case "iCs":
+              style["--docx-bidi-font-style"] = xml_parser_default.boolAttr(c, "val", !0) ? "italic" : "normal", style.direction == "rtl" && (style["font-style"] = style["--docx-bidi-font-style"]);
+              break;
+            case "caps":
+              style["text-transform"] = xml_parser_default.boolAttr(c, "val", !0) ? "uppercase" : "none";
+              break;
+            case "smallCaps":
+              style["font-variant"] = xml_parser_default.boolAttr(c, "val", !0) ? "small-caps" : "none";
+              break;
+            case "rtl":
+              xml_parser_default.boolAttr(c, "val", !0) && (style.direction = "rtl", style["unicode-bidi"] = "embed", style["--docx-bidi-font-weight"] && (style["font-weight"] = style["--docx-bidi-font-weight"]), style["--docx-bidi-font-style"] && (style["font-style"] = style["--docx-bidi-font-style"]));
+              break;
+            case "outline":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["-webkit-text-stroke"] = "0.5px currentColor");
+              break;
+            case "shadow":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "1px 1px 0 currentColor");
+              break;
+            case "emboss":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "-1px -1px 0 rgba(255,255,255,.75), 1px 1px 0 rgba(0,0,0,.35)");
+              break;
+            case "imprint":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "1px 1px 0 rgba(255,255,255,.75), -1px -1px 0 rgba(0,0,0,.35)");
+              break;
+            case "em":
+              style["text-emphasis-style"] = values.valueOfEmphasisMark(c);
+              break;
+            case "u":
+              this.parseUnderline(c, style);
+              break;
+            case "ind":
+            case "tblInd":
+              this.parseIndentation(c, style);
+              break;
+            case "rFonts":
+              this.parseFont(c, style);
+              break;
+            case "tblBorders":
+              childStyle ? this.parseTableBorderProperties(c, style) : this.parseBorderProperties(c, style);
+              break;
+            case "tblCellSpacing":
+              style["border-spacing"] = values.valueOfMargin(c), style["border-collapse"] = "separate";
+              break;
+            case "pBdr":
+              this.parseBorderProperties(c, style);
+              break;
+            case "bdr":
+              style.border = values.valueOfBorder(c), style["--docx-border-space"] = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point);
+              break;
+            case "tcBorders":
+              this.parseBorderProperties(c, style);
+              break;
+            case "vanish":
+              xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
+              break;
+            case "kern": {
+              let minimum = Math.max(0, xml_parser_default.intAttr(c, "val", 0));
+              style["font-kerning"] = minimum > 0 ? "normal" : "none", style["--docx-font-kerning-min-size"] = `${minimum / 2}pt`;
+              break;
+            }
+            case "noWrap":
+              style["white-space"] = xml_parser_default.boolAttr(c, "val", !0) ? "nowrap" : "normal";
+              break;
+            case "snapToGrid":
+              style["--docx-snap-to-grid"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "autoSpaceDE":
+              style["--docx-auto-space-de"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "autoSpaceDN":
+              style["--docx-auto-space-dn"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "contextualSpacing":
+              style["--docx-contextual-spacing"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
+              break;
+            case "fitText":
+              this.parseFitText(c, style);
+              break;
+            case "eastAsianLayout":
+              this.parseEastAsianLayout(c, style);
+              break;
+            case "tblCellMar": {
+              let target = childStyle || style;
+              this.parseMarginProperties(c, target), this.markMarginProperties(c, target, "--docx-table-cell-margin");
+              break;
+            }
+            case "tcMar": {
+              let target = childStyle || style;
+              this.parseMarginProperties(c, target), this.markMarginProperties(c, target, "--docx-tc-margin");
+              break;
+            }
+            case "tblLayout":
+              style["table-layout"] = values.valueOfTblLayout(c);
+              break;
+            case "vAlign":
+              style["vertical-align"] = values.valueOfTextAlignment(c);
+              break;
+            case "spacing":
+              elem.localName == "pPr" ? this.parseSpacing(c, style) : elem.localName == "rPr" && (style["letter-spacing"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.SignedDxa));
+              break;
+            case "wordWrap":
+              xml_parser_default.boolAttr(c, "val", !0) || (style["overflow-wrap"] = "break-word");
+              break;
+            case "suppressAutoHyphens":
+              style.hyphens = xml_parser_default.boolAttr(c, "val", !0) ? "none" : "auto";
+              break;
+            case "lang":
+              style.$lang = xml_parser_default.attr(c, "val"), style.$eastAsiaLang = xml_parser_default.attr(c, "eastAsia");
+              break;
+            case "bidi":
+              xml_parser_default.boolAttr(c, "val", !0) && (style.direction = "rtl");
+              break;
+            case "pageBreakBefore":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["break-before"] = "page");
+              break;
+            case "keepLines":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["break-inside"] = "avoid");
+              break;
+            case "keepNext":
+              xml_parser_default.boolAttr(c, "val", !0) && (style["break-after"] = "avoid");
+              break;
+            case "widowControl":
+              xml_parser_default.boolAttr(c, "val", !0) && (style.orphans = "2", style.widows = "2");
+              break;
+            case "webHidden":
+              this.options.hideWebHiddenContent && xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
+              break;
+            case "specVanish":
+              xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
+              break;
+            case "tabs":
+            //ignore - tabs is parsed by other parser
+            case "outlineLvl": {
+              let outlineLevel = xml_parser_default.intAttr(c, "val");
+              outlineLevel != null && (style["--docx-outline-level"] = `${outlineLevel}`);
+              break;
+            }
+            case "tblStyleColBandSize":
+            //TODO
+            case "tblStyleRowBandSize":
+            //TODO
+            case "suppressLineNumbers":
+            //TODO - maybe ignore
+            case "noProof":
+              break;
+            default:
+              this.options.debug && console.warn(`DOCX: Unknown document element: ${elem.localName}.${c.localName}`);
+              break;
+          }
+      return style;
+    }
+    parseFitText(node, style) {
+      let width = xml_parser_default.lengthAttr(node, "val");
+      width && (style.display = "inline-block", style.width = width, style["text-align"] = "justify", style["text-align-last"] = "justify");
+    }
+    parseEastAsianLayout(node, style) {
+      xml_parser_default.boolAttr(node, "combine", !1) && (style["text-combine-upright"] = "all"), xml_parser_default.boolAttr(node, "vert", !1) && (style["writing-mode"] = "vertical-rl"), xml_parser_default.boolAttr(node, "vertCompress", !1) && (style["font-stretch"] = "condensed");
+    }
+    parseUnderline(node, style) {
+      var val = xml_parser_default.attr(node, "val");
+      if (val != null) {
+        switch (val) {
+          case "dash":
+          case "dashDotDotHeavy":
+          case "dashDotHeavy":
+          case "dashedHeavy":
+          case "dashLong":
+          case "dashLongHeavy":
+          case "dotDash":
+          case "dotDotDash":
+            style["text-decoration"] = "underline dashed";
+            break;
+          case "dotted":
+          case "dottedHeavy":
+            style["text-decoration"] = "underline dotted";
+            break;
+          case "double":
+            style["text-decoration"] = "underline double";
+            break;
+          case "single":
+          case "thick":
+            style["text-decoration"] = "underline";
+            break;
+          case "wave":
+          case "wavyDouble":
+          case "wavyHeavy":
+            style["text-decoration"] = "underline wavy";
+            break;
+          case "words":
+            style["text-decoration"] = "underline";
+            break;
+          case "none":
+            style["text-decoration"] = "none";
+            break;
+        }
+        var col = xmlUtil.colorAttr(node, "color");
+        col && (style["text-decoration-color"] = col);
+      }
+    }
+    parseFont(node, style) {
+      var ascii = xml_parser_default.attr(node, "ascii"), hAnsi = xml_parser_default.attr(node, "hAnsi"), eastAsia = xml_parser_default.attr(node, "eastAsia"), cs = xml_parser_default.attr(node, "cs"), hint = xml_parser_default.attr(node, "hint"), asciiTheme = values.themeValue(node, "asciiTheme"), hAnsiTheme = values.themeValue(node, "hAnsiTheme"), eastAsiaTheme = values.themeValue(node, "eastAsiaTheme");
+      let csThemeAttr = xml_parser_default.attr(node, "cstheme") ?? xml_parser_default.attr(node, "csTheme");
+      var csTheme = csThemeAttr ? `var(--docx-${csThemeAttr}-font)` : null;
+      csTheme && /HAnsi$/i.test(csThemeAttr) ? (asciiTheme ?? (asciiTheme = csTheme), hAnsiTheme ?? (hAnsiTheme = csTheme)) : csTheme && /EastAsia$/i.test(csThemeAttr) && (eastAsiaTheme ?? (eastAsiaTheme = csTheme));
+      let explicitSlots = [
+        ascii || asciiTheme ? "ascii" : "",
+        hAnsi || hAnsiTheme ? "hAnsi" : "",
+        eastAsia || eastAsiaTheme ? "eastAsia" : "",
+        cs || csTheme ? "cs" : ""
+      ].filter((x) => x);
+      explicitSlots.length && (style["--docx-rfonts-explicit-slots"] = explicitSlots.join(",")), hint && (style["--docx-font-hint"] = hint);
+      var fonts = [ascii, hAnsi, asciiTheme, hAnsiTheme, eastAsia, eastAsiaTheme, cs, csTheme].filter((x) => x).flatMap((x) => this.wordCompatibleFontStack(x));
+      let setFontSlot = (name, value) => {
+        if (!value)
+          return;
+        let stack = this.wordCompatibleFontStack(value);
+        stack.length && (style[name] = stack.join(", "));
+      };
+      setFontSlot("--docx-ascii-font-family", ascii || asciiTheme), setFontSlot("--docx-hansi-font-family", hAnsi || hAnsiTheme || ascii || asciiTheme), setFontSlot("--docx-eastasia-font-family", eastAsia || eastAsiaTheme), setFontSlot("--docx-cs-font-family", cs || csTheme);
+      let hasEastAsiaSlot = !!(eastAsia || eastAsiaTheme);
+      if (fonts.length > 0 && hasEastAsiaSlot) {
+        let currentFonts = (style["font-family"] ?? "").split(",").map((x) => x.trim()).filter((x) => x);
+        style["font-family"] = [.../* @__PURE__ */ new Set([...currentFonts, ...fonts])].join(", ");
+      }
+    }
+    wordCompatibleFontStack(fontFamily) {
+      let raw = `${fontFamily ?? ""}`.trim();
+      if (!raw)
+        return [];
+      if (/^var\(/i.test(raw))
+        return [raw];
+      let normalized = raw.replace(/^['"]|['"]$/g, "").toLowerCase(), baseCompact = normalized.replace(/[－—–]/g, "-").replace(/\s+/g, "").replace(/(?:[_-]?(?:gb2312|gbk|gb18030|gb0))$/i, ""), emit = (items) => items.map((x) => /^(serif|sans-serif|monospace)$/i.test(x) ? x : encloseFontFamily(x)), emitUnique = (items) => emit([...new Set(items.filter(Boolean))]), founderSong = /^fz(?:xiao|da)?biaosong|^fzshusong|^fzsongyi|^fzcusong|^fangzheng(?:xiao|da)?biaosong|^fangzhengshusong|方正(?:小标宋|大标宋|书宋|宋一|粗宋)/.test(baseCompact), cesiFangSong = /^cesi.*仿宋|^cesifangsong/.test(baseCompact);
+      return normalized == "microsoft yahei" || normalized == "微软雅黑" || normalized == "ms yahei" ? emit(["Microsoft YaHei", "微软雅黑", "Microsoft YaHei UI", "Noto Sans CJK SC", "Noto Sans SC", "SimHei", "sans-serif"]) : normalized == "times new roman" || normalized == "timesnewroman" ? emit(["Times New Roman", "Tinos", "Liberation Serif", "Nimbus Roman", "Noto Serif", "serif"]) : normalized == "nsimsun" || normalized == "新宋体" ? emit(["NSimSun", "新宋体", "SimSun", "宋体", "Songti SC", "serif"]) : normalized == "simsun" || normalized == "宋体" ? emit(["SimSun", "宋体", "Songti SC", "Noto Serif CJK SC", "AR PL SungtiL GB", "serif"]) : /^(songti sc|songtisc|stsongti-sc|stsongtisc|宋体-简|宋體-簡)$/i.test(normalized) ? emit(["Songti SC", "STSong", "SimSun", "宋体", "serif"]) : /^fzhei|^fangzhenghei|方正黑体/.test(baseCompact) ? emitUnique([raw, "FZHei-B01S", "FZHei-B01", "SimHei", "黑体", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]) : normalized == "simhei" || normalized == "黑体" ? emit(["SimHei", "黑体", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]) : /^fzkai|^fangzhengkai|方正楷体/.test(baseCompact) ? emitUnique([raw, "FZKai-Z03S", "FZKai-Z03", "STKaiti", "华文楷体", "Kaiti SC", "KaiTi", "楷体", "serif"]) : /^(stkaiti|kaiti|kaiti[-_]?sc|kaiti[-_]?tc|楷[体體]|楷[体體][-－]?简|楷[体體][-－]?繁|华文楷体|華文楷體)/.test(baseCompact) ? emitUnique([raw, "STKaiti", "华文楷体", "Kaiti SC", "KaiTi", "楷体", "serif"]) : /^fzfangsong|^fangzhengfangsong|方正仿宋/.test(baseCompact) ? emitUnique([raw, "FZFangSong-Z02S", "FZFangSong-Z02", "FangSong", "仿宋", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : cesiFangSong ? emitUnique([raw, "CESI仿宋-GB2312", "CESI仿宋", "FangSong", "仿宋", "FangSong_GB2312", "仿宋_GB2312", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : baseCompact == "fangsong" || baseCompact == "仿宋" || baseCompact == "stfangsong" || baseCompact == "华文仿宋" || baseCompact == "華文仿宋" ? emitUnique([raw, "FangSong", "仿宋", "FangSong_GB2312", "仿宋_GB2312", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : /^fzxiaobiaosong|^fangzhengxiaobiaosong|方正小标宋/.test(baseCompact) ? emitUnique([raw, "FZXiaoBiaoSong-B05S", "方正小标宋简体", "FZXiaoBiaoSong-B05", "方正小标宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : /^fzdabiaosong|^fangzhengdabiaosong|方正大标宋/.test(baseCompact) ? emitUnique([raw, "FZDaBiaoSong-B06S", "方正大标宋简体", "FZDaBiaoSong-B06", "方正大标宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : founderSong ? emitUnique([raw, "FZShuSong-Z01S", "FZShuSong-Z01", "方正书宋简体", "方正书宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : normalized == "arial" ? emit(["Arial", "Arimo", "Liberation Sans", "Noto Sans", "sans-serif"]) : [encloseFontFamily(raw)];
+    }
+    parseIndentation(node, style) {
+      for (let name of ["firstLineChars", "hangingChars", "leftChars", "rightChars", "startChars", "endChars"]) {
+        let value = xml_parser_default.intAttr(node, name);
+        value != null && Number.isFinite(value) && (style[`--docx-${name.replace(/[A-Z]/g, (c) => `-${c.toLowerCase()}`)}`] = String(value));
+      }
+      var firstLine = xml_parser_default.lengthAttr(node, "firstLine"), hanging = xml_parser_default.lengthAttr(node, "hanging"), left = xml_parser_default.lengthAttr(node, "left"), start = xml_parser_default.lengthAttr(node, "start"), tableIndent = node.localName == "tblInd" ? values.valueOfMargin(node) : null, right = xml_parser_default.lengthAttr(node, "right"), end = xml_parser_default.lengthAttr(node, "end");
+      firstLine && (style["text-indent"] = firstLine, style["--docx-text-indent"] = firstLine), hanging && (style["text-indent"] = `-${hanging}`, style["--docx-text-indent"] = `-${hanging}`, style["--docx-hanging-indent"] = hanging), (left || start || tableIndent) && (style["margin-inline-start"] = left || start || tableIndent, style["--docx-margin-inline-start"] = left || start || tableIndent), (right || end) && (style["margin-inline-end"] = right || end, style["--docx-margin-inline-end"] = right || end);
+    }
+    parseSpacing(node, style) {
+      var before = xml_parser_default.lengthAttr(node, "before"), after = xml_parser_default.lengthAttr(node, "after"), beforeLines = xml_parser_default.intAttr(node, "beforeLines", null), afterLines = xml_parser_default.intAttr(node, "afterLines", null), beforeAuto = xml_parser_default.boolAttr(node, "beforeAutospacing", !1), afterAuto = xml_parser_default.boolAttr(node, "afterAutospacing", !1), line = xml_parser_default.intAttr(node, "line", null), lineRule = xml_parser_default.attr(node, "lineRule");
+      if (beforeAuto ? style["margin-top"] = "auto" : beforeLines != null ? style["margin-top"] = `${(beforeLines / 100).toFixed(2)}em` : before && (style["margin-top"] = before), afterAuto ? style["margin-bottom"] = "auto" : afterLines != null ? style["margin-bottom"] = `${(afterLines / 100).toFixed(2)}em` : after && (style["margin-bottom"] = after), line !== null)
+        switch (lineRule ?? "auto") {
+          case "auto":
+            style["line-height"] = `${(line / 240).toFixed(2)}`;
+            break;
+          case "atLeast":
+            style["line-height"] = `max(1em, ${(line / 20).toFixed(2)}pt)`, style["min-height"] = `${(line / 20).toFixed(2)}pt`;
+            break;
+          case "exact":
+          case "exactly":
+            style["line-height"] = style["min-height"] = `${(line / 20).toFixed(2)}pt`;
+            break;
+          default:
+            style["line-height"] = `${(line / 240).toFixed(2)}`;
+            break;
+        }
+    }
+    parseMarginProperties(node, output) {
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "left":
+          case "start":
+            output["padding-left"] = values.valueOfMargin(c);
+            break;
+          case "right":
+          case "end":
+            output["padding-right"] = values.valueOfMargin(c);
+            break;
+          case "top":
+            output["padding-top"] = values.valueOfMargin(c);
+            break;
+          case "bottom":
+            output["padding-bottom"] = values.valueOfMargin(c);
+            break;
+        }
+    }
+    markMarginProperties(node, output, prefix) {
+      output[prefix] = "1";
+      for (let c of xml_parser_default.elements(node))
+        switch (c.localName) {
+          case "left":
+          case "start":
+            output[`${prefix}-left`] = "1";
+            break;
+          case "right":
+          case "end":
+            output[`${prefix}-right`] = "1";
+            break;
+          case "top":
+            output[`${prefix}-top`] = "1";
+            break;
+          case "bottom":
+            output[`${prefix}-bottom`] = "1";
+            break;
+        }
+    }
+    parseTrHeight(node, output) {
+      let rule = xml_parser_default.attr(node, "hRule") ?? "atLeast";
+      switch (output["--docx-tr-height-rule"] = rule == "exact" ? "exact" : rule == "auto" ? "auto" : "atLeast", rule) {
+        case "exact":
+          output.height = xml_parser_default.lengthAttr(node, "val");
+          break;
+        case "auto":
+          break;
+        default:
+          output.height = xml_parser_default.lengthAttr(node, "val");
+          break;
+      }
+    }
+    parseBorderProperties(node, output) {
+      for (let c of xml_parser_default.elements(node)) {
+        let border = values.valueOfBorder(c), space = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point), setBorder = (side2, fallback = !1) => {
+          let key = `${side2 === "between" || side2 === "bar" ? "--docx-" : ""}border-${side2}`;
+          if ((!fallback || output[key] == null) && (output[key] = border, output[`--docx-border-${side2}-nil`] = xml_parser_default.attr(c, "val") === "nil" ? "1" : "0"), space) {
+            let spaceKey = `--docx-border-${side2}-space`;
+            fallback ? output[spaceKey] ?? (output[spaceKey] = space) : output[spaceKey] = space;
+          }
+        }, side = c.localName === "start" ? "left" : c.localName === "end" ? "right" : c.localName;
+        if (["left", "right", "top", "bottom", "between", "bar"].includes(side)) {
+          setBorder(side);
+          continue;
+        }
+        switch (c.localName) {
+          case "insideH":
+            setBorder("top", !0), setBorder("bottom", !0);
+            break;
+          case "insideV":
+            setBorder("left", !0), setBorder("right", !0);
+            break;
+        }
+      }
+    }
+    parseTableBorderProperties(node, output) {
+      for (let c of xml_parser_default.elements(node)) {
+        let border = values.valueOfBorder(c), space = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point), setBorder = (name) => {
+          output[`--docx-table-border-${name}`] = border, space && (output[`--docx-table-border-${name}-space`] = space);
+        };
+        switch (c.localName) {
+          case "start":
+          case "left":
+            setBorder("left");
+            break;
+          case "end":
+          case "right":
+            setBorder("right");
+            break;
+          case "top":
+            setBorder("top");
+            break;
+          case "bottom":
+            setBorder("bottom");
+            break;
+          case "insideH":
+            setBorder("inside-h");
+            break;
+          case "insideV":
+            setBorder("inside-v");
+            break;
+        }
+      }
+    }
+  };
+
+  // src/common/raster-header.ts
+  var ownedRasterHeader = /* @__PURE__ */ Symbol("docx-owned-raster-header");
+  function inspectRasterHeader(bytes) {
+    if (bytes[0] === 255 && bytes[1] === 216 && bytes[2] === 255) return "jpeg";
+    if (bytes.byteLength < 8) return "native";
+    let view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    if (view.getUint32(0) !== 2303741511 || view.getUint32(4) !== 218765834) return "native";
+    let limit = Math.min(bytes.byteLength, 16384);
+    for (let at = 8, chunks = 0; at + 8 <= limit && chunks < 512; chunks++) {
+      let length = view.getUint32(at), tag = view.getUint32(at + 4);
+      if (length > 2147483647 || at + 12 + length > bytes.byteLength || chunks === 0 && (tag !== 1229472850 || length !== 13) || tag === 1633899596 || tag === 1717785676 || tag === 1717846356 || tag === 1229278788) return "native";
+      if (tag === 1229209940) return chunks > 0 ? "static-png" : "native";
+      at += 12 + length;
+    }
+    return "native";
+  }
+  function createZipBlob(buffer) {
+    let blob = new Blob([buffer]);
+    try {
+      Object.defineProperty(blob, ownedRasterHeader, { value: inspectRasterHeader(new Uint8Array(buffer)) });
+    } catch {
+    }
+    return blob;
+  }
+  function zipBlobRasterHeader(blob) {
+    return blob?.[ownedRasterHeader];
+  }
+
+  // src/common/relationship.ts
+  function parseRelationships(root2, xml) {
+    return xml.elements(root2).map((e) => ({
+      id: xml.attr(e, "Id"),
+      type: xml.attr(e, "Type"),
+      target: xml.attr(e, "Target"),
+      targetMode: xml.attr(e, "TargetMode")
+    }));
+  }
+
   // src/common/part.ts
   var Part = class {
     constructor(_package, path) {
@@ -8717,7 +12005,7 @@
     save() {
       this._package.update(this.path, serializeXmlString(this._xmlDocument));
     }
-    parseXml(root) {
+    parseXml(root2) {
     }
   };
 
@@ -8728,8 +12016,8 @@
     embedItalic: "italic",
     embedBoldItalic: "boldItalic"
   };
-  function parseFonts(root, xml) {
-    return xml.elements(root).map((el) => parseFont(el, xml));
+  function parseFonts(root2, xml) {
+    return xml.elements(root2).map((el) => parseFont(el, xml));
   }
   function parseFont(elem, xml) {
     let result = {
@@ -8746,7 +12034,7 @@
           break;
         case "sig": {
           let value = xml.attr(el, "usb1");
-          /^[0-9a-f]{8}$/i.test(value || "") && (result.unicodeRange1 = parseInt(value, 16));
+          /^[0-9a-f]{8}$/i.test(value || "") && (result.unicodeRange1 = parseInt(value, 16)), ["usb0", "usb1", "usb2", "usb3"].every((key) => /^0{8}$/.test(xml.attr(el, key) || "")) && (result.unicodeRangeUnknown = !0);
           break;
         }
         case "embedRegular":
@@ -8768,14 +12056,14 @@
 
   // src/font-table/font-table.ts
   var FontTablePart = class extends Part {
-    parseXml(root) {
-      this.fonts = parseFonts(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.fonts = parseFonts(root2, this._package.xmlParser);
     }
   };
 
   // src/common/content-types.ts
-  function parseContentTypes(root, xml) {
-    return xml.elements(root).map((e) => ({
+  function parseContentTypes(root2, xml) {
+    return xml.elements(root2).map((e) => ({
       extension: xml.attr(e, "Extension"),
       partName: xml.attr(e, "PartName"),
       contentType: xml.attr(e, "ContentType")
@@ -9010,7 +12298,7 @@
       case "base64":
         return bytesToBase64(data);
       default:
-        return new Blob([toArrayBuffer(data)]);
+        return createZipBlob(toArrayBuffer(data));
     }
   }
   function toArrayBuffer(data) {
@@ -9138,233 +12426,10 @@
     constructor(pkg, path, parser) {
       super(pkg, path), this._documentParser = parser;
     }
-    parseXml(root) {
-      this.body = this._documentParser.parseDocumentFile(root);
+    parseXml(root2) {
+      this.body = this._documentParser.parseDocumentFile(root2);
     }
   };
-
-  // src/document/border.ts
-  function parseBorder(elem, xml) {
-    return {
-      type: xml.attr(elem, "val"),
-      color: xml.attr(elem, "color"),
-      size: xml.lengthAttr(elem, "sz", LengthUsage.Border),
-      offset: xml.lengthAttr(elem, "space", LengthUsage.Point),
-      frame: xml.boolAttr(elem, "frame"),
-      shadow: xml.boolAttr(elem, "shadow")
-    };
-  }
-  function parseBorders(elem, xml) {
-    var result = {};
-    for (let e of xml.elements(elem))
-      switch (e.localName) {
-        case "left":
-          result.left = parseBorder(e, xml);
-          break;
-        case "top":
-          result.top = parseBorder(e, xml);
-          break;
-        case "right":
-          result.right = parseBorder(e, xml);
-          break;
-        case "bottom":
-          result.bottom = parseBorder(e, xml);
-          break;
-      }
-    return result;
-  }
-
-  // src/document/section.ts
-  function parseSectionProperties(elem, xml = xml_parser_default) {
-    var section = {};
-    for (let e of xml.elements(elem))
-      switch (e.localName) {
-        case "pgSz":
-          section.pageSize = {
-            width: xml.lengthAttr(e, "w"),
-            height: xml.lengthAttr(e, "h"),
-            orientation: xml.attr(e, "orient")
-          };
-          break;
-        case "type":
-          section.type = xml.attr(e, "val");
-          break;
-        case "pgMar":
-          section.pageMargins = {
-            left: xml.lengthAttr(e, "left"),
-            right: xml.lengthAttr(e, "right"),
-            top: xml.lengthAttr(e, "top"),
-            bottom: xml.lengthAttr(e, "bottom"),
-            header: xml.lengthAttr(e, "header"),
-            footer: xml.lengthAttr(e, "footer"),
-            gutter: xml.lengthAttr(e, "gutter")
-          };
-          break;
-        case "cols":
-          section.columns = parseColumns(e, xml);
-          break;
-        case "headerReference":
-          (section.headerRefs ?? (section.headerRefs = [])).push(parseFooterHeaderReference(e, xml));
-          break;
-        case "footerReference":
-          (section.footerRefs ?? (section.footerRefs = [])).push(parseFooterHeaderReference(e, xml));
-          break;
-        case "titlePg":
-          section.titlePage = xml.boolAttr(e, "val", !0);
-          break;
-        case "pgBorders":
-          section.pageBorders = parseBorders(e, xml);
-          break;
-        case "pgNumType":
-          section.pageNumber = parsePageNumber(e, xml);
-          break;
-        case "docGrid":
-          section.docGrid = parseDocumentGrid(e, xml);
-          break;
-      }
-    return section;
-  }
-  function parseColumns(elem, xml) {
-    return {
-      numberOfColumns: xml.intAttr(elem, "num"),
-      space: xml.lengthAttr(elem, "space"),
-      separator: xml.boolAttr(elem, "sep"),
-      equalWidth: xml.boolAttr(elem, "equalWidth", !0),
-      columns: xml.elements(elem, "col").map((e) => ({
-        width: xml.lengthAttr(e, "w"),
-        space: xml.lengthAttr(e, "space")
-      }))
-    };
-  }
-  function parsePageNumber(elem, xml) {
-    return {
-      chapSep: xml.attr(elem, "chapSep"),
-      chapStyle: xml.attr(elem, "chapStyle"),
-      format: xml.attr(elem, "fmt"),
-      start: xml.intAttr(elem, "start")
-    };
-  }
-  function parseDocumentGrid(elem, xml) {
-    let charSpaceRaw = xml.intAttr(elem, "charSpace", null);
-    return {
-      type: xml.attr(elem, "type"),
-      linePitch: xml.lengthAttr(elem, "linePitch"),
-      charSpace: charSpaceRaw == null ? null : `${(charSpaceRaw / 4096).toFixed(4)}em`,
-      charSpaceRaw
-    };
-  }
-  function parseFooterHeaderReference(elem, xml) {
-    return {
-      id: xml.attr(elem, "id"),
-      type: xml.attr(elem, "type") || "default"
-    };
-  }
-
-  // src/document/line-spacing.ts
-  function normalizeLineRule(value) {
-    return value === "exact" ? "exactly" : value;
-  }
-  function parseLineSpacing(elem, xml) {
-    return {
-      before: xml.lengthAttr(elem, "before"),
-      after: xml.lengthAttr(elem, "after"),
-      beforeLines: xml.intAttr(elem, "beforeLines"),
-      afterLines: xml.intAttr(elem, "afterLines"),
-      beforeAutoSpacing: xml.boolAttr(elem, "beforeAutospacing"),
-      afterAutoSpacing: xml.boolAttr(elem, "afterAutospacing"),
-      line: xml.intAttr(elem, "line"),
-      lineRule: normalizeLineRule(xml.attr(elem, "lineRule"))
-    };
-  }
-
-  // src/document/run.ts
-  function parseRunProperties(elem, xml) {
-    let result = {};
-    for (let el of xml.elements(elem))
-      parseRunProperty(el, result, xml);
-    return result;
-  }
-  function parseRunProperty(elem, props, xml) {
-    return !!parseCommonProperty(elem, props, xml);
-  }
-
-  // src/document/paragraph.ts
-  function parseParagraphProperties(elem, xml) {
-    let result = {};
-    for (let el of xml.elements(elem))
-      parseParagraphProperty(el, result, xml);
-    return result;
-  }
-  function parseParagraphProperty(elem, props, xml) {
-    if (elem.namespaceURI != ns.wordml)
-      return !1;
-    if (parseCommonProperty(elem, props, xml))
-      return !0;
-    switch (elem.localName) {
-      case "tabs":
-        props.tabs = parseTabs(elem, xml);
-        break;
-      case "sectPr":
-        props.sectionProps = parseSectionProperties(elem, xml);
-        break;
-      case "numPr":
-        props.numbering = parseNumbering(elem, xml);
-        break;
-      case "spacing":
-        return props.lineSpacing = parseLineSpacing(elem, xml), !1;
-        break;
-      case "textAlignment":
-        return props.textAlignment = xml.attr(elem, "val"), !1;
-        break;
-      case "keepLines":
-        props.keepLines = xml.boolAttr(elem, "val", !0);
-        break;
-      case "keepNext":
-        props.keepNext = xml.boolAttr(elem, "val", !0);
-        break;
-      case "pageBreakBefore":
-        props.pageBreakBefore = xml.boolAttr(elem, "val", !0);
-        break;
-      case "widowControl":
-        props.widowControl = xml.boolAttr(elem, "val", !0);
-        break;
-      case "contextualSpacing":
-        props.contextualSpacing = xml.boolAttr(elem, "val", !0);
-        break;
-      case "outlineLvl":
-        props.outlineLevel = xml.intAttr(elem, "val");
-        break;
-      case "pStyle":
-        props.styleName = xml.attr(elem, "val");
-        break;
-      case "rPr":
-        props.runProps = parseRunProperties(elem, xml);
-        break;
-      default:
-        return !1;
-    }
-    return !0;
-  }
-  function parseTabs(elem, xml) {
-    return xml.elements(elem, "tab").map((e) => ({
-      position: xml.lengthAttr(e, "pos"),
-      leader: xml.attr(e, "leader"),
-      style: xml.attr(e, "val")
-    }));
-  }
-  function parseNumbering(elem, xml) {
-    var result = {};
-    for (let e of xml.elements(elem))
-      switch (e.localName) {
-        case "numId":
-          result.id = xml.attr(e, "val");
-          break;
-        case "ilvl":
-          result.level = xml.intAttr(e, "val");
-          break;
-      }
-    return result;
-  }
 
   // src/numbering/numbering.ts
   function parseNumberingPart(elem, xml) {
@@ -9510,8 +12575,8 @@
     constructor(pkg, path, parser) {
       super(pkg, path), this._documentParser = parser;
     }
-    parseXml(root) {
-      Object.assign(this, parseNumberingPart(root, this._package.xmlParser)), this.domNumberings = this._documentParser.parseNumberingFile(root);
+    parseXml(root2) {
+      Object.assign(this, parseNumberingPart(root2, this._package.xmlParser)), this.domNumberings = this._documentParser.parseNumberingFile(root2);
     }
   };
 
@@ -9520,16 +12585,8 @@
     constructor(pkg, path, parser) {
       super(pkg, path), this._documentParser = parser;
     }
-    parseXml(root) {
-      this.styles = this._documentParser.parseStylesFile(root);
-    }
-  };
-
-  // src/document/dom.ts
-  var OpenXmlElementBase = class {
-    constructor() {
-      this.children = [];
-      this.cssStyle = {};
+    parseXml(root2) {
+      this.styles = this._documentParser.parseStylesFile(root2);
     }
   };
 
@@ -9551,8 +12608,8 @@
     constructor(pkg, path, parser) {
       super(pkg, path), this._documentParser = parser;
     }
-    parseXml(root) {
-      this.rootElement = this.createRootElement(), this.rootElement.children = this._documentParser.parseBodyElements(root);
+    parseXml(root2) {
+      this.rootElement = this.createRootElement(), this.rootElement.children = this._documentParser.parseBodyElements(root2);
     }
   }, HeaderPart = class extends BaseHeaderFooterPart {
     createRootElement() {
@@ -9565,9 +12622,9 @@
   };
 
   // src/document-props/extended-props.ts
-  function parseExtendedProps(root, xmlParser) {
+  function parseExtendedProps(root2, xmlParser) {
     let result = {};
-    for (let el of xmlParser.elements(root))
+    for (let el of xmlParser.elements(root2))
       switch (el.localName) {
         case "Template":
           result.template = el.textContent;
@@ -9606,15 +12663,15 @@
 
   // src/document-props/extended-props-part.ts
   var ExtendedPropsPart = class extends Part {
-    parseXml(root) {
-      this.props = parseExtendedProps(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.props = parseExtendedProps(root2, this._package.xmlParser);
     }
   };
 
   // src/document-props/core-props.ts
-  function parseCoreProps(root, xmlParser) {
+  function parseCoreProps(root2, xmlParser) {
     let result = {};
-    for (let el of xmlParser.elements(root))
+    for (let el of xmlParser.elements(root2))
       switch (el.localName) {
         case "title":
           result.title = el.textContent;
@@ -9646,8 +12703,8 @@
 
   // src/document-props/core-props-part.ts
   var CorePropsPart = class extends Part {
-    parseXml(root) {
-      this.props = parseCoreProps(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.props = parseCoreProps(root2, this._package.xmlParser);
     }
   };
 
@@ -9725,7 +12782,9 @@
     return {
       width: xml.floatAttr(elem, "w", null),
       cap: xml.attr(elem, "cap"),
-      dash: xml.elementAttr(elem, "prstDash", "val")
+      dash: xml.elementAttr(elem, "prstDash", "val"),
+      alignment: xml.attr(elem, "algn"),
+      compound: xml.attr(elem, "cmpd")
     };
   }
 
@@ -9734,8 +12793,8 @@
     constructor(pkg, path) {
       super(pkg, path);
     }
-    parseXml(root) {
-      this.theme = parseTheme(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.theme = parseTheme(root2, this._package.xmlParser);
     }
   };
 
@@ -9762,15 +12821,15 @@
     constructor(pkg, path, parser) {
       super(pkg, path, parser);
     }
-    parseXml(root) {
-      this.notes = this._documentParser.parseNotes(root, "footnote", WmlFootnote);
+    parseXml(root2) {
+      this.notes = this._documentParser.parseNotes(root2, "footnote", WmlFootnote);
     }
   }, EndnotesPart = class extends BaseNotePart {
     constructor(pkg, path, parser) {
       super(pkg, path, parser);
     }
-    parseXml(root) {
-      this.notes = this._documentParser.parseNotes(root, "endnote", WmlEndnote);
+    parseXml(root2) {
+      this.notes = this._documentParser.parseNotes(root2, "endnote", WmlEndnote);
     }
   };
 
@@ -9840,11 +12899,12 @@
           break;
         case "compat":
           for (let c of xml.elements(el)) {
-            if (c.localName == "compatSetting" && xml.attr(c, "name") == "compatibilityMode" && xml.attr(c, "uri") == "http://schemas.microsoft.com/office/word") {
+            let name = c.localName;
+            if (name == "compatSetting" && xml.attr(c, "name") == "compatibilityMode" && xml.attr(c, "uri") == "http://schemas.microsoft.com/office/word") {
               let mode = Number(xml.attr(c, "val"));
               Number.isInteger(mode) && mode >= 11 && (result.compatibilityMode = mode);
             }
-            c.localName == "adjustLineHeightInTable" && (result.adjustLineHeightInTable = xml.boolAttr(c, "val", !0)), c.localName == "useFELayout" && (result.useFELayout = xml.boolAttr(c, "val", !0)), c.localName == "balanceSingleByteDoubleByteWidth" && (result.balanceSingleByteDoubleByteWidth = xml.boolAttr(c, "val", !0)), c.localName == "doNotUseEastAsianBreakRules" && (result.doNotUseEastAsianBreakRules = xml.boolAttr(c, "val", !0)), c.localName == "doNotWrapTextWithPunct" && (result.doNotWrapTextWithPunct = xml.boolAttr(c, "val", !0)), c.localName == "lineWrapLikeWord6" && (result.lineWrapLikeWord6 = xml.boolAttr(c, "val", !0)), c.localName == "allowSpaceOfSameStyleInTable" && (result.allowSpaceOfSameStyleInTable = xml.boolAttr(c, "val", !0)), (c.localName == "suppressTopSpacing" || c.localName == "suppressTopSpacingWP" || c.localName == "suppressSpacingAtTopOfPage") && (result.suppressTopSpacingAtPageStart = xml.boolAttr(c, "val", !0)), c.localName == "suppressBottomSpacing" && (result.suppressBottomSpacing = xml.boolAttr(c, "val", !0));
+            name == "adjustLineHeightInTable" && (result.adjustLineHeightInTable = xml.boolAttr(c, "val", !0)), name == "spaceForUL" && (result.spaceForUnderline = xml.boolAttr(c, "val", !0)), name == "useFELayout" && (result.useFELayout = xml.boolAttr(c, "val", !0)), name == "balanceSingleByteDoubleByteWidth" && (result.balanceSingleByteDoubleByteWidth = xml.boolAttr(c, "val", !0)), name == "doNotUseEastAsianBreakRules" && (result.doNotUseEastAsianBreakRules = xml.boolAttr(c, "val", !0)), name == "doNotWrapTextWithPunct" && (result.doNotWrapTextWithPunct = xml.boolAttr(c, "val", !0)), (name == "lineWrapLikeWord6" || name == "wrapTrailSpaces" || name == "doNotExpandShiftReturn" || name == "doNotUseIndentAsNumberingTabStop" || name == "noTabHangInd") && (result[name] = xml.boolAttr(c, "val", !0)), name == "allowSpaceOfSameStyleInTable" && (result.allowSpaceOfSameStyleInTable = xml.boolAttr(c, "val", !0)), name == "doNotUseHTMLParagraphAutoSpacing" && (result.doNotUseHTMLParagraphAutoSpacing = xml.boolAttr(c, "val", !0)), (name == "suppressTopSpacing" || name == "suppressTopSpacingWP" || name == "suppressSpacingAtTopOfPage") && (result.suppressTopSpacingAtPageStart = xml.boolAttr(c, "val", !0)), name == "suppressBottomSpacing" && (result.suppressBottomSpacing = xml.boolAttr(c, "val", !0));
           }
           break;
       }
@@ -9872,14 +12932,14 @@
     constructor(pkg, path) {
       super(pkg, path);
     }
-    parseXml(root) {
-      this.settings = parseSettings(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.settings = parseSettings(root2, this._package.xmlParser);
     }
   };
 
   // src/document-props/custom-props.ts
-  function parseCustomProps(root, xml) {
-    return xml.elements(root, "property").map((e) => {
+  function parseCustomProps(root2, xml) {
+    return xml.elements(root2, "property").map((e) => {
       let firstChild = e.firstChild;
       return {
         formatId: xml.attr(e, "fmtid"),
@@ -9892,8 +12952,8 @@
 
   // src/document-props/custom-props-part.ts
   var CustomPropsPart = class extends Part {
-    parseXml(root) {
-      this.props = parseCustomProps(root, this._package.xmlParser);
+    parseXml(root2) {
+      this.props = parseCustomProps(root2, this._package.xmlParser);
     }
   };
 
@@ -9902,8 +12962,8 @@
     constructor(pkg, path, parser) {
       super(pkg, path), this._documentParser = parser;
     }
-    parseXml(root) {
-      this.comments = this._documentParser.parseComments(root), this.commentMap = keyBy(this.comments, (x) => x.id);
+    parseXml(root2) {
+      this.comments = this._documentParser.parseComments(root2), this.commentMap = keyBy(this.comments, (x) => x.id);
     }
   };
 
@@ -9913,9 +12973,9 @@
       super(pkg, path);
       this.comments = [];
     }
-    parseXml(root) {
+    parseXml(root2) {
       let xml = this._package.xmlParser;
-      for (let el of xml.elements(root, "commentEx"))
+      for (let el of xml.elements(root2, "commentEx"))
         this.comments.push({
           paraId: xml.attr(el, "paraId"),
           paraIdParent: xml.attr(el, "paraIdParent"),
@@ -11627,29 +14687,6 @@
 
   // src/model/word-document.ts
   var UTIF = __toESM(require_UTIF());
-
-  // src/security/links.ts
-  function normalizeHref(value) {
-    return value?.trim().replace(/[\u0000-\u0020\u007f-\u009f]+/g, "") || void 0;
-  }
-  function sanitizeExternalResourceHref(value, policy = "block", allowInternalBlob = !1) {
-    let compact = normalizeHref(value);
-    if (compact) {
-      if (/^data:image\//i.test(compact)) return compact;
-      if (/^blob:/i.test(compact)) return allowInternalBlob ? compact : void 0;
-      if (!(policy !== "allow" || compact.startsWith("//") || compact.includes("\\")))
-        return /^https?:/i.test(compact) ? compact : void 0;
-    }
-  }
-  function sanitizeDocumentStyleText(value) {
-    return String(value ?? "").split(";").filter((entry) => /^\s*-?[a-z][a-z0-9-]*\s*:/i.test(entry) && !/(?:url|image-set|expression)\s*\(|@import|(?:java|vb)script\s*:|behavior\s*:|-moz-binding/i.test(entry)).join(";");
-  }
-  function sanitizeSvgPaint(value) {
-    let paint = String(value ?? "").trim();
-    return /^(?:none|transparent|currentcolor|#[0-9a-f]{3,8}|[a-z]{1,32}|(?:rgb|hsl)a?\([0-9%.,+\-\s]+\))$/i.test(paint) ? paint : void 0;
-  }
-
-  // src/model/word-document.ts
   var EMF_FULL_VECTOR_INPUT_LIMIT = 32 * 1024 * 1024, EMF_EMBEDDED_VECTOR_INPUT_LIMIT = 96 * 1024 * 1024, EMF_FULL_VECTOR_DATA_URL_LIMIT = 16 * 1024 * 1024, EMF_FULL_VECTOR_BLOB_URL_LIMIT = 128 * 1024 * 1024, EMF_LARGE_RASTER_PREVIEW_MIN_AREA = 128 * 1024, topLevelRels = [
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" /* OfficeDocument */, target: "word/document.xml" },
     { type: "http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" /* ExtendedProperties */, target: "docProps/app.xml" },
@@ -11657,7 +14694,7 @@
     { type: "http://schemas.openxmlformats.org/package/2006/relationships/metadata/custom-properties" /* CustomProperties */, target: "docProps/custom.xml" }
   ], WordDocument = class _WordDocument {
     constructor() {
-      this._objectUrls = /* @__PURE__ */ new Set();
+      this._objectUrls = /* @__PURE__ */ new Map();
       this._assetUrlPromises = /* @__PURE__ */ new Map();
       this._disposed = !1;
       this.parts = [];
@@ -11698,7 +14735,7 @@
     dispose() {
       if (!this._disposed) {
         this._disposed = !0;
-        for (let url of this._objectUrls)
+        for (let url of this._objectUrls.keys())
           try {
             URL.revokeObjectURL(url);
           } catch {
@@ -11890,6 +14927,12 @@
       let path = this.resolveRelationshipTarget(sourcePart, rel), normalizedPath = normalizeSnapshotPath(path), xmlText = normalizedPath ? await this._package.load(normalizedPath, "string") : null;
       return xmlText ? this._package.parseXmlDocument(xmlText) : null;
     }
+    parseDiagramDrawing(xmlDoc) {
+      if (!xmlDoc?.documentElement)
+        return null;
+      let parser = this._parser ?? (this._parser = new DocumentParser(this._options));
+      return this.themePart?.theme && parser.setTheme(this.themePart.theme), parser.parseDiagramDrawing(xmlDoc.documentElement);
+    }
     async loadRelationshipText(id, part) {
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
       if (!rel || rel.targetMode === "External")
@@ -11907,23 +14950,23 @@
       return path ? this.loadPackageAssetUrl(path) : null;
     }
     async loadDocumentImage(id, part, resourcePolicy = "block") {
-      let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
-      if (!rel)
-        return null;
-      if (rel.targetMode === "External")
-        return sanitizeExternalResourceHref(rel.target, resourcePolicy) ?? null;
-      let path = normalizeSnapshotPath(this.resolveRelationshipTarget(sourcePart, rel));
-      return path ? this.loadPackageAssetUrl(path) : null;
+      return this.loadRelationshipBlobUrl(id, part, resourcePolicy);
+    }
+    /** A hint belongs to this exact owned URL; undefined keeps the legacy path. */
+    getImageDecodeHint(source) {
+      return this._objectUrls.get(source);
     }
     async loadNumberingImage(id) {
       let path = normalizeSnapshotPath(this.getPathById(this.numberingPart, id));
       return path ? this.loadPackageAssetUrl(path) : null;
     }
     async loadFont(id, key) {
+      if (this._disposed)
+        return null;
       let path = normalizeSnapshotPath(this.getPathById(this.fontTablePart, id));
       if (!path) return null;
       let x = await this._package.load(path, "uint8array");
-      return x && this.blobToURL(new Blob([deobfuscate(x, key)]), path);
+      return this._disposed ? null : x && this.blobToURL(new Blob([deobfuscate(x, key)]), path);
     }
     async loadAltChunk(id, part) {
       let sourcePart = part ?? this.documentPart, rel = this.getRelById(sourcePart, id);
@@ -11933,16 +14976,17 @@
       return path ? this._package.load(path, "string") : null;
     }
     blobToURL(blob, path) {
-      if (!blob)
+      if (!blob || this._disposed)
         return null;
+      let header = zipBlobRasterHeader(blob);
       if (blob = this.blobWithContentType(blob, path), this._options.useBase64URL)
-        return blobToBase64(blob);
-      let url = URL.createObjectURL(blob);
-      return this._objectUrls.add(url), url;
+        return blobToBase64(blob).then((url2) => this._disposed ? null : url2);
+      let url = URL.createObjectURL(blob), type = (blob.type || "").split(";")[0].trim().toLowerCase(), decodeHint = header === void 0 ? void 0 : header === "jpeg" && (type === "image/jpeg" || type === "image/jpg") || header === "static-png" && type === "image/png";
+      return this._objectUrls.set(url, decodeHint), url;
     }
     async loadPackageAssetUrl(path) {
       let normalizedPath = normalizeSnapshotPath(path);
-      if (!normalizedPath)
+      if (!normalizedPath || this._disposed)
         return null;
       let pending = this._assetUrlPromises.get(normalizedPath);
       return pending || (pending = this.loadPackageAssetUrlOnce(normalizedPath), this._assetUrlPromises.set(normalizedPath, pending), pending.catch(() => this._assetUrlPromises.delete(normalizedPath))), pending;
@@ -11950,17 +14994,17 @@
     async loadPackageAssetUrlOnce(normalizedPath) {
       if (this.isEmfAsset(normalizedPath)) {
         let data = await this._package.load(normalizedPath, "uint8array");
-        if (!data)
+        if (!data || this._disposed)
           return null;
         let converted = this.convertEmfAsset(data, normalizedPath, "blobUrl");
         return converted || this.blobToURL(new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/x-emf" }), normalizedPath);
       }
       if (this.isTiffAsset(normalizedPath)) {
         let data = await this._package.load(normalizedPath, "uint8array");
-        if (!data)
+        if (!data || this._disposed)
           return null;
         let converted = await this.convertTiffAsset(data, normalizedPath);
-        return converted || this.blobToURL(new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/tiff" }), normalizedPath);
+        return this._disposed ? null : converted || this.blobToURL(new Blob([data], { type: this.contentTypeForPath(normalizedPath) || "image/tiff" }), normalizedPath);
       }
       return this.blobToURL(await this._package.load(normalizedPath, "blob"), normalizedPath);
     }
@@ -12018,10 +15062,10 @@
       return (isWmfBinary(data) ? convertWmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) : null) ?? convertEmfToSvgDataUrl(data, { maxRecords: 1, maxShapes: 0 }) ?? this.genericEmfPlaceholder();
     }
     svgToBlobUrl(svg) {
-      if (typeof Blob > "u" || typeof URL > "u" || typeof URL.createObjectURL != "function")
+      if (this._disposed || typeof Blob > "u" || typeof URL > "u" || typeof URL.createObjectURL != "function")
         return null;
       let url = URL.createObjectURL(new Blob([svg], { type: "image/svg+xml;charset=utf-8" }));
-      return this._objectUrls.add(url), url;
+      return this._objectUrls.set(url, !1), url;
     }
     genericEmfPlaceholder() {
       return "data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%221%22%20height%3D%221%22%20viewBox%3D%220%200%201%201%22%20data-docx-metafile%3D%22emf%22%2F%3E";
@@ -12040,7 +15084,7 @@
         if (!(width > 0 && height > 0))
           return null;
         let rgba = UTIF.toRGBA8(ifd), native = await this.encodeRgbaPngWithNativeCanvas(rgba, width, height);
-        return native || this.dataUrlFromBytes(encodeRgbaPng(rgba, width, height), "image/png");
+        return this._disposed ? null : native || this.dataUrlFromBytes(encodeRgbaPng(rgba, width, height), "image/png");
       } catch (e) {
         return this._options?.debug && console.warn(`docx-viewer: unable to convert TIFF asset ${path}`, e), null;
       }
@@ -12123,2737 +15167,189 @@
     return data;
   }
 
-  // src/document/bookmarks.ts
-  function parseBookmarkStart(elem, xml) {
-    return {
-      type: "bookmarkStart" /* BookmarkStart */,
-      id: xml.attr(elem, "id"),
-      name: xml.attr(elem, "name"),
-      colFirst: xml.intAttr(elem, "colFirst"),
-      colLast: xml.intAttr(elem, "colLast")
-    };
-  }
-  function parseBookmarkEnd(elem, xml) {
-    return {
-      type: "bookmarkEnd" /* BookmarkEnd */,
-      id: xml.attr(elem, "id")
-    };
-  }
-
-  // src/vml/vml.ts
-  var VmlElement = class extends OpenXmlElementBase {
-    constructor() {
-      super(...arguments);
-      this.type = "vmlElement" /* VmlElement */;
-      this.attrs = {};
+  // src/worker/remote-package.ts
+  var ParserPackagePort = class {
+    constructor(port) {
+      this.port = port;
+      this.onerror = null;
     }
-  }, vmlShapeTypes = /* @__PURE__ */ new WeakMap();
-  function referencedVmlShapeType(elem) {
-    let ref = xml_parser_default.attr(elem, "type"), document2 = elem.ownerDocument;
-    if (!ref?.startsWith("#") || !document2)
-      return;
-    let types = vmlShapeTypes.get(document2);
-    if (!types) {
-      types = /* @__PURE__ */ new Map();
-      for (let type of Array.from(document2.getElementsByTagNameNS("urn:schemas-microsoft-com:vml", "shapetype"))) {
-        let id = xml_parser_default.attr(type, "id");
-        id && !types.has(id) && types.set(id, type);
+    get onmessage() {
+      return this.port.onmessage;
+    }
+    set onmessage(handler) {
+      this.port.onmessage = handler;
+    }
+    get onmessageerror() {
+      return this.port.onmessageerror;
+    }
+    set onmessageerror(handler) {
+      this.port.onmessageerror = handler;
+    }
+    postMessage(message, transfer = []) {
+      this.port.postMessage(message, transfer);
+    }
+    terminate() {
+      this.port.onmessage = this.port.onmessageerror = null, this.port.close();
+    }
+  }, RemoteOpenXmlPackage = class {
+    constructor(worker, sessionId, entryNames, options, maxConcurrent, timeoutMs, initialStatus) {
+      this.worker = worker;
+      this.sessionId = sessionId;
+      this.options = options;
+      this.maxConcurrent = maxConcurrent;
+      this.timeoutMs = timeoutMs;
+      this.xmlParser = new XmlParser();
+      this.updates = /* @__PURE__ */ new Map();
+      this.pending = /* @__PURE__ */ new Map();
+      this.waiters = [];
+      this.sequence = 0;
+      this.active = 0;
+      this.requests = 0;
+      this.disposed = !1;
+      this.onMessage = (event) => {
+        let message = event.data ?? {};
+        if (message.id !== this.sessionId || !/^package-(?:result|error)$/.test(message.type))
+          return;
+        let completion = this.pending.get(message.requestId);
+        if (completion)
+          if (this.pending.delete(message.requestId), completion.timer && clearTimeout(completion.timer), message.type === "package-error") {
+            let error = new Error(message.error?.message ?? "DOCX worker package request failed");
+            error.stack = message.error?.stack, completion.reject(error);
+          } else
+            completion.resolve(message.value);
+      };
+      this.entries = new Set((entryNames ?? []).map(normalizePath3)), this.status = { ...initialStatus, remote: !0 }, worker.onmessage = this.onMessage, worker.onerror = (event) => {
+        this.fail(new Error(event.message || "DOCX worker package session failed")), worker.terminate();
+      }, worker.onmessageerror = () => {
+        this.fail(new Error("DOCX worker package response could not be decoded")), worker.terminate();
+      };
+    }
+    get(path) {
+      let value = normalizePath3(path);
+      return this.updates.has(value) || this.entries.has(value) || this.entries.has(value.replace(/\//g, "\\")) ? {} : void 0;
+    }
+    update(path, content) {
+      this.assertActive();
+      let value = normalizePath3(path);
+      this.entries.add(value), this.updates.set(value, content);
+    }
+    async save(type = "blob") {
+      return convertRemote(await this.request("save", {
+        updates: Array.from(this.updates, ([path, content]) => ({ path, content }))
+      }), type);
+    }
+    async load(path, type = "string") {
+      let value = normalizePath3(path);
+      return this.updates.has(value) ? convertZipOutput(zipContentToBytes(this.updates.get(value)), type) : this.get(value) ? convertRemote(await this.request("load", { path: value, outputType: type }), type) : null;
+    }
+    async loadRelationships(path = null) {
+      let target = "_rels/.rels";
+      if (path != null) {
+        let [folder, name] = splitPath(path);
+        target = `${folder}_rels/${name}.rels`;
       }
-      vmlShapeTypes.set(document2, types);
+      let text = await this.load(target, "string");
+      return text ? parseRelationships(root(this.parseXmlDocument(text)), this.xmlParser) : null;
     }
-    return types.get(ref.slice(1));
-  }
-  function parseVmlElement(elem, parser) {
-    var result = new VmlElement();
-    switch (elem.localName) {
-      case "group":
-        result.tagName = "g";
-        break;
-      case "rect":
-        result.tagName = "rect", Object.assign(result.attrs, { width: "100%", height: "100%" });
-        break;
-      case "oval":
-        result.tagName = "ellipse", Object.assign(result.attrs, { cx: "50%", cy: "50%", rx: "50%", ry: "50%" });
-        break;
-      case "line":
-        result.tagName = "line";
-        break;
-      case "shape":
-        result.tagName = "g";
-        break;
-      case "textbox":
-        result.tagName = "foreignObject", Object.assign(result.attrs, { width: "100%", height: "100%" });
-        break;
-      default:
-        return null;
+    async loadContentTypes() {
+      let text = await this.load("[Content_Types].xml", "string");
+      return text ? parseContentTypes(root(this.parseXmlDocument(text)), this.xmlParser) : [];
     }
-    if (elem.localName === "shape" && !xml_parser_default.attr(elem, "path")) {
-      let type = referencedVmlShapeType(elem);
-      type && xml_parser_default.attr(type, "spt") === "32" && (result.tagName = "line", result.attrs.stroke = "#000000", result.attrs.fill = "none");
+    parseXmlDocument(text) {
+      return parseXmlString(text, this.options.trimXmlDeclaration);
     }
-    for (let at of xml_parser_default.attrs(elem))
-      switch (at.localName) {
-        case "coordorigin":
-          result.attrs["data-vml-coordorigin"] = at.value;
-          break;
-        case "coordsize":
-          result.attrs["data-vml-coordsize"] = at.value;
-          break;
-        case "inset":
-          result.attrs["data-vml-inset"] = at.value;
-          break;
-        case "style":
-          result.cssStyleText = sanitizeDocumentStyleText(at.value);
-          break;
-        case "fillcolor":
-          let fill = sanitizeSvgPaint(at.value);
-          fill && (result.attrs.fill = fill);
-          break;
-        case "strokecolor":
-          let stroke = sanitizeSvgPaint(at.value);
-          stroke && (result.attrs.stroke = stroke);
-          break;
-        case "strokeweight":
-          let strokeWidth = convertLength(at.value, LengthUsage.Point);
-          strokeWidth && (result.attrs["stroke-width"] = strokeWidth);
-          break;
-        case "filled":
-          (at.value == "f" || at.value == "false") && (result.attrs.fill = "none");
-          break;
-        case "stroked":
-          (at.value == "f" || at.value == "false") && (result.attrs.stroke = "none");
-          break;
-        case "path":
-          result.tagName = "path", result.attrs.d = convertPath(at.value);
-          break;
-        case "from":
-          let [x1, y1] = parsePoint(at.value);
-          Object.assign(result.attrs, { x1, y1 });
-          break;
-        case "to":
-          let [x2, y2] = parsePoint(at.value);
-          Object.assign(result.attrs, { x2, y2 });
-          break;
+    async getStreamStatus() {
+      return this.disposed || (this.status = { ...await this.request("status", {}), remote: !0 }), {
+        ...this.status,
+        remote: !0,
+        activeRequests: this.active,
+        queuedRequests: this.waiters.length,
+        requestCount: this.requests,
+        disposed: this.disposed || this.status.disposed
+      };
+    }
+    dispose() {
+      if (this.disposed)
+        return;
+      let worker = this.worker;
+      try {
+        worker.postMessage({ type: "dispose", id: this.sessionId });
+      } finally {
+        this.fail(new Error("DOCX worker package session has been disposed")), worker.terminate();
       }
-    for (let el of xml_parser_default.elements(elem))
-      switch (el.localName) {
-        case "stroke":
-          Object.assign(result.attrs, parseStroke(el));
-          break;
-        case "fill":
-          Object.assign(result.attrs, parseFill(el));
-          break;
-        case "imagedata":
-          result.tagName = "image", Object.assign(result.attrs, vmlImageAttrs(el)), result.imageHref = {
-            id: xml_parser_default.attr(el, "id") ?? xml_parser_default.attr(el, "relid") ?? xml_parser_default.attr(el, "pict"),
-            title: xml_parser_default.attr(el, "title")
-          };
-          break;
-        case "txbxContent":
-          result.children.push(...parser.parseBodyElements(el));
-          break;
-        default:
-          let child = parseVmlElement(el, parser);
-          child && result.children.push(child);
-          break;
+    }
+    async request(operation, payload) {
+      await this.acquire();
+      try {
+        this.assertActive();
+        let requestId = ++this.sequence;
+        return this.requests++, await new Promise((resolve, reject) => {
+          let completion = { resolve, reject };
+          this.timeoutMs > 0 && (completion.timer = setTimeout(() => {
+            if (!this.pending.has(requestId))
+              return;
+            let error = new Error(`DOCX worker package request timed out after ${this.timeoutMs}ms`);
+            this.fail(error), this.worker.terminate();
+          }, this.timeoutMs)), this.pending.set(requestId, completion);
+          try {
+            this.worker.postMessage({ type: "package", id: this.sessionId, requestId, operation, ...payload });
+          } catch (error) {
+            this.pending.delete(requestId), completion.timer && clearTimeout(completion.timer), reject(error);
+          }
+        });
+      } finally {
+        this.release();
       }
-    return result;
-  }
-  function vmlImageAttrs(el) {
-    let cropLeft = parseVmlFraction(xml_parser_default.attr(el, "cropleft")), cropTop = parseVmlFraction(xml_parser_default.attr(el, "croptop")), cropRight = parseVmlFraction(xml_parser_default.attr(el, "cropright")), cropBottom = parseVmlFraction(xml_parser_default.attr(el, "cropbottom")), cropWidth = Math.max(1e-4, 1 - cropLeft - cropRight), cropHeight = Math.max(1e-4, 1 - cropTop - cropBottom), attrs = {
-      x: percent(-cropLeft / cropWidth),
-      y: percent(-cropTop / cropHeight),
-      width: percent(1 / cropWidth),
-      height: percent(1 / cropHeight)
-    };
-    (cropLeft || cropTop || cropRight || cropBottom) && (attrs.preserveAspectRatio = "none");
-    let gain = parseVmlNumber(xml_parser_default.attr(el, "gain")), blackLevel = parseVmlNumber(xml_parser_default.attr(el, "blacklevel"));
-    return Number.isFinite(gain) && (attrs["data-vml-gain"] = String(gain)), Number.isFinite(blackLevel) && (attrs["data-vml-blacklevel"] = String(blackLevel)), attrs;
-  }
-  function parseVmlNumber(value) {
-    if (value == null)
-      return Number.NaN;
-    let raw = String(value).trim();
-    return raw ? /^-?\d+(?:\.\d+)?f$/i.test(raw) ? parseFloat(raw.slice(0, -1)) / 65536 : raw.endsWith("%") ? parseFloat(raw) / 100 : Number(raw) : Number.NaN;
-  }
-  function parseVmlFraction(value) {
-    if (!value)
-      return 0;
-    let raw = String(value).trim();
-    if (!raw)
-      return 0;
-    let result;
-    return /^-?\d+(\.\d+)?f$/i.test(raw) ? result = parseFloat(raw.slice(0, -1)) / 65536 : raw.endsWith("%") ? result = parseFloat(raw) / 100 : result = parseFloat(raw), Number.isFinite(result) ? Math.max(0, Math.min(0.9999, result)) : 0;
-  }
-  function percent(value) {
-    return `${Math.round(value * 1e5) / 1e3}%`;
-  }
-  function parseStroke(el) {
-    let result = {}, color = xml_parser_default.attr(el, "color"), weight = xml_parser_default.attr(el, "weight"), on = xml_parser_default.attr(el, "on");
-    if (on == "f" || on == "false")
-      result.stroke = "none";
-    else if (color) {
-      let safeColor = sanitizeSvgPaint(color);
-      safeColor && (result.stroke = safeColor);
     }
-    if (weight) {
-      let safeWeight = convertLength(weight, LengthUsage.Point);
-      safeWeight && (result["stroke-width"] = safeWeight);
-    } else
-      result["stroke-width"] = "1px";
-    return result;
-  }
-  function parseFill(el) {
-    let result = {}, color = xml_parser_default.attr(el, "color") ?? xml_parser_default.attr(el, "color2"), on = xml_parser_default.attr(el, "on"), opacity = xml_parser_default.attr(el, "opacity");
-    if (on == "f" || on == "false")
-      result.fill = "none";
-    else if (color) {
-      let safeColor = sanitizeSvgPaint(color);
-      safeColor && (result.fill = safeColor);
+    acquire() {
+      return this.assertActive(), this.active < Math.max(1, Math.floor(this.maxConcurrent) || 1) ? (this.active++, Promise.resolve()) : new Promise((resolve, reject) => this.waiters.push({ resolve: () => {
+        this.active++, resolve();
+      }, reject }));
     }
-    if (opacity) {
-      let normalizedOpacity = opacity.endsWith("%") ? parseFloat(opacity) / 100 : Number(opacity);
-      Number.isFinite(normalizedOpacity) && (result["fill-opacity"] = String(Math.max(0, Math.min(1, normalizedOpacity))));
+    release() {
+      this.active = Math.max(0, this.active - 1), this.disposed || this.waiters.shift()?.resolve();
     }
-    return result;
-  }
-  function parsePoint(val) {
-    return val.split(",");
-  }
-  function convertPath(path) {
-    return path.replace(/([mlxe])|([-\d]+)|([,])/g, (m) => /[-\d]/.test(m) ? convertLength(m, LengthUsage.VmlEmu) : /[ml,]/.test(m) ? m : "");
-  }
-
-  // src/comments/elements.ts
-  var WmlComment = class extends OpenXmlElementBase {
-    constructor() {
-      super(...arguments);
-      this.type = "comment" /* Comment */;
+    fail(error) {
+      if (!this.disposed) {
+        this.disposed = !0, this.waiters.splice(0).forEach((waiter) => waiter.reject(error));
+        for (let completion of this.pending.values())
+          completion.timer && clearTimeout(completion.timer), completion.reject(error);
+        this.pending.clear(), this.worker.onmessage = this.worker.onerror = this.worker.onmessageerror = null;
+      }
     }
-  }, WmlCommentReference = class extends OpenXmlElementBase {
-    constructor(id) {
-      super();
-      this.id = id;
-      this.type = "commentReference" /* CommentReference */;
-    }
-  }, WmlCommentRangeStart = class extends OpenXmlElementBase {
-    constructor(id) {
-      super();
-      this.id = id;
-      this.type = "commentRangeStart" /* CommentRangeStart */;
-    }
-  }, WmlCommentRangeEnd = class extends OpenXmlElementBase {
-    constructor(id) {
-      super();
-      this.id = id;
-      this.type = "commentRangeEnd" /* CommentRangeEnd */;
+    assertActive() {
+      if (this.disposed)
+        throw new Error("DOCX worker package session has been disposed");
     }
   };
-
-  // src/parser/style-values.ts
-  var autos = {
-    shd: "inherit",
-    color: "black",
-    borderColor: "black",
-    highlight: "transparent"
-  }, supportedNamespaceURIs = [
-    ns.wordprocessingShape,
-    ns.wordprocessingCanvas,
-    ns.wordprocessingGroup,
-    ns.drawingml,
-    ns.picture
-  ], mmlTagMap = {
-    oMath: "mmlMath" /* MmlMath */,
-    oMathPara: "mmlMathParagraph" /* MmlMathParagraph */,
-    f: "mmlFraction" /* MmlFraction */,
-    func: "mmlFunction" /* MmlFunction */,
-    fName: "mmlFunctionName" /* MmlFunctionName */,
-    num: "mmlNumerator" /* MmlNumerator */,
-    den: "mmlDenominator" /* MmlDenominator */,
-    rad: "mmlRadical" /* MmlRadical */,
-    deg: "mmlDegree" /* MmlDegree */,
-    e: "mmlBase" /* MmlBase */,
-    sSup: "mmlSuperscript" /* MmlSuperscript */,
-    sSub: "mmlSubscript" /* MmlSubscript */,
-    sPre: "mmlPreSubSuper" /* MmlPreSubSuper */,
-    sup: "mmlSuperArgument" /* MmlSuperArgument */,
-    sub: "mmlSubArgument" /* MmlSubArgument */,
-    d: "mmlDelimiter" /* MmlDelimiter */,
-    nary: "mmlNary" /* MmlNary */,
-    eqArr: "mmlEquationArray" /* MmlEquationArray */,
-    lim: "mmlLimit" /* MmlLimit */,
-    limLow: "mmlLimitLower" /* MmlLimitLower */,
-    limUpp: "mmlLimitUpper" /* MmlLimitUpper */,
-    sSubSup: "mmlSubSuperscript" /* MmlSubSuperscript */,
-    phant: "mmlPhantom" /* MmlPhantom */,
-    borderBox: "mmlBorderBox" /* MmlBorderBox */,
-    acc: "mmlAccent" /* MmlAccent */,
-    m: "mmlMatrix" /* MmlMatrix */,
-    mr: "mmlMatrixRow" /* MmlMatrixRow */,
-    box: "mmlBox" /* MmlBox */,
-    bar: "mmlBar" /* MmlBar */,
-    groupChr: "mmlGroupChar" /* MmlGroupChar */
-  }, knownColors = ["black", "blue", "cyan", "darkBlue", "darkCyan", "darkGray", "darkGreen", "darkMagenta", "darkRed", "darkYellow", "green", "lightGray", "magenta", "none", "red", "white", "yellow"], xmlUtil = class {
-    static colorAttr(node, attrName, defValue = null, autoColor = "black") {
-      var v = xml_parser_default.attr(node, attrName);
-      if (v)
-        return v == "auto" ? autoColor : knownColors.includes(v) ? v : `#${v}`;
-      var themeColor = xml_parser_default.attr(node, "themeColor");
-      return themeColor ? `var(--docx-${themeColor}-color)` : defValue;
-    }
-  }, values = class _values {
-    static themeValue(c, attr) {
-      var val = xml_parser_default.attr(c, attr);
-      return val ? `var(--docx-${val}-font)` : null;
-    }
-    static valueOfSize(c, attr) {
-      var type = LengthUsage.Dxa;
-      switch (xml_parser_default.attr(c, "type")) {
-        case "dxa":
-          break;
-        case "pct":
-          type = LengthUsage.Percent;
-          break;
-        case "auto":
-          return "auto";
-      }
-      return xml_parser_default.lengthAttr(c, attr, type);
-    }
-    static valueOfMargin(c) {
-      return xml_parser_default.lengthAttr(c, "w");
-    }
-    static valueOfBorder(c) {
-      var type = _values.parseBorderType(xml_parser_default.attr(c, "val"));
-      if (type == "none")
-        return "none";
-      var color = xmlUtil.colorAttr(c, "color", autos.borderColor, autos.borderColor), size = xml_parser_default.lengthAttr(c, "sz", LengthUsage.Border) ?? "1pt";
-      return `${size} ${type} ${color == "auto" ? autos.borderColor : color}`;
-    }
-    static parseBorderType(type) {
-      switch (type) {
-        case "single":
-          return "solid";
-        case "dashDotStroked":
-          return "solid";
-        case "dashed":
-          return "dashed";
-        case "dashSmallGap":
-          return "dashed";
-        case "dotDash":
-          return "dotted";
-        case "dotDotDash":
-          return "dotted";
-        case "dotted":
-          return "dotted";
-        case "double":
-          return "double";
-        case "doubleWave":
-          return "double";
-        case "inset":
-          return "inset";
-        case "nil":
-          return "none";
-        case "none":
-          return "none";
-        case "outset":
-          return "outset";
-        case "thick":
-          return "solid";
-        case "thickThinLargeGap":
-          return "solid";
-        case "thickThinMediumGap":
-          return "solid";
-        case "thickThinSmallGap":
-          return "solid";
-        case "thinThickLargeGap":
-          return "solid";
-        case "thinThickMediumGap":
-          return "solid";
-        case "thinThickSmallGap":
-          return "solid";
-        case "thinThickThinLargeGap":
-          return "solid";
-        case "thinThickThinMediumGap":
-          return "solid";
-        case "thinThickThinSmallGap":
-          return "solid";
-        case "threeDEmboss":
-          return "solid";
-        case "threeDEngrave":
-          return "solid";
-        case "triple":
-          return "double";
-        case "wave":
-          return "solid";
-      }
-      return "solid";
-    }
-    static valueOfTblLayout(c) {
-      var type = xml_parser_default.attr(c, "type") ?? xml_parser_default.attr(c, "val");
-      return type == "fixed" ? "fixed" : "auto";
-    }
-    static tableConditionalFormatOfCnfStyle(c) {
-      let val = xml_parser_default.attr(c, "val") ?? "", attrFlag = (names, fallback) => {
-        let name = names.find((n) => xml_parser_default.attr(c, n) != null);
-        return name ? xml_parser_default.boolAttr(c, name, !1) : fallback;
-      }, flags = [
-        ["firstRow", "first-row", ["firstRow"]],
-        ["lastRow", "last-row", ["lastRow"]],
-        ["firstColumn", "first-col", ["firstColumn", "firstCol"]],
-        ["lastColumn", "last-col", ["lastColumn", "lastCol"]],
-        ["oddVBand", "odd-col", ["oddVBand"]],
-        ["evenVBand", "even-col", ["evenVBand"]],
-        ["oddHBand", "odd-row", ["oddHBand"]],
-        ["evenHBand", "even-row", ["evenHBand"]],
-        ["firstRowLastColumn", "ne-cell", ["firstRowLastColumn"]],
-        ["firstRowFirstColumn", "nw-cell", ["firstRowFirstColumn"]],
-        ["lastRowLastColumn", "se-cell", ["lastRowLastColumn"]],
-        ["lastRowFirstColumn", "sw-cell", ["lastRowFirstColumn"]]
-      ], result = {};
-      return flags.forEach(([key, , names], i) => {
-        attrFlag(names, val[i] == "1") && (result[key] = !0);
-      }), result;
-    }
-    static classNameOfCnfStyle(c) {
-      let format = _values.tableConditionalFormatOfCnfStyle(c);
-      return [
-        ["firstRow", "first-row"],
-        ["lastRow", "last-row"],
-        ["firstColumn", "first-col"],
-        ["lastColumn", "last-col"],
-        ["oddVBand", "odd-col"],
-        ["evenVBand", "even-col"],
-        ["oddHBand", "odd-row"],
-        ["evenHBand", "even-row"],
-        ["firstRowLastColumn", "ne-cell"],
-        ["firstRowFirstColumn", "nw-cell"],
-        ["lastRowLastColumn", "se-cell"],
-        ["lastRowFirstColumn", "sw-cell"]
-      ].filter(([key]) => format[key]).map(([, className]) => className).join(" ");
-    }
-    static valueOfJc(c) {
-      var type = xml_parser_default.attr(c, "val");
-      switch (type) {
-        case "start":
-        case "left":
-          return "left";
-        case "center":
-          return "center";
-        case "end":
-        case "right":
-          return "right";
-        case "both":
-          return "justify";
-      }
-      return type;
-    }
-    static valueOfVertAlign(c, asTagName = !1) {
-      var type = xml_parser_default.attr(c, "val");
-      switch (type) {
-        case "subscript":
-          return "sub";
-        case "superscript":
-          return asTagName ? "sup" : "super";
-      }
-      return asTagName ? null : type;
-    }
-    static valueOfEmphasisMark(c) {
-      var type = xml_parser_default.attr(c, "val");
-      switch (type) {
-        case "none":
-          return "none";
-        case "comma":
-          return '"﹐"';
-        case "circle":
-          return "circle";
-        default:
-          return "dot";
-      }
-    }
-    static valueOfTextAlignment(c) {
-      var type = xml_parser_default.attr(c, "val");
-      switch (type) {
-        case "auto":
-        case "baseline":
-          return "baseline";
-        case "top":
-          return "top";
-        case "center":
-          return "middle";
-        case "bottom":
-          return "bottom";
-      }
-      return type;
-    }
-    static addSize(a, b) {
-      return a == null ? b : b == null ? a : `calc(${a} + ${b})`;
-    }
-    static classNameOftblLook(c) {
-      let look = _values.tableLookOfTblLook(c), className = "";
-      return look.firstRow && (className += " first-row"), look.lastRow && (className += " last-row"), look.firstColumn && (className += " first-col"), look.lastColumn && (className += " last-col"), look.horizontalBanding || (className += " no-hband"), look.verticalBanding || (className += " no-vband"), className.trim();
-    }
-    static tableLookOfTblLook(c) {
-      let hasVal = xml_parser_default.attr(c, "val") != null, val = xml_parser_default.hexAttr(c, "val", 0), enabled = (attr, mask, defaultValue) => xml_parser_default.attr(c, attr) != null ? xml_parser_default.boolAttr(c, attr, defaultValue) : hasVal ? !!(val & mask) : defaultValue;
-      return {
-        firstRow: enabled("firstRow", 32, !1),
-        lastRow: enabled("lastRow", 64, !1),
-        firstColumn: enabled("firstColumn", 128, !1),
-        lastColumn: enabled("lastColumn", 256, !1),
-        horizontalBanding: !enabled("noHBand", 512, !1),
-        verticalBanding: !enabled("noVBand", 1024, !1)
-      };
-    }
-  };
-
-  // src/parser/document-parser.ts
-  var namedShadingColors = {
-    black: "#000000",
-    blue: "#0000ff",
-    cyan: "#00ffff",
-    darkBlue: "#000080",
-    darkCyan: "#008080",
-    darkGray: "#808080",
-    darkGreen: "#008000",
-    darkMagenta: "#800080",
-    darkRed: "#800000",
-    darkYellow: "#808000",
-    green: "#008000",
-    lightGray: "#c0c0c0",
-    magenta: "#ff00ff",
-    red: "#ff0000",
-    white: "#ffffff",
-    yellow: "#ffff00"
-  }, defaultDmlThemeLineStyles = [
-    { width: 9525, cap: "flat", dash: "solid" },
-    { width: 25400, cap: "flat", dash: "solid" },
-    { width: 38100, cap: "flat", dash: "solid" }
-  ];
-  function normalizeShadingHexColor(value) {
-    if (!value)
-      return null;
-    let named = namedShadingColors[value];
-    if (named)
-      return named;
-    let hex = String(value).replace(/^#/, "");
-    return /^[0-9a-f]{6}$/i.test(hex) ? `#${hex.toLowerCase()}` : null;
+  function normalizePath3(path) {
+    return path?.startsWith("/") ? path.substring(1) : path;
   }
-  function mixShadingChannel(background, foreground, opacity) {
-    return Math.max(0, Math.min(255, Math.floor(background * (1 - opacity) + foreground * opacity)));
+  function root(document2) {
+    return document2.firstElementChild ?? document2.documentElement;
   }
-  function mixShadingColors(background, foreground, opacity) {
-    let bg = normalizeShadingHexColor(background), fg = normalizeShadingHexColor(foreground);
-    if (!bg || !fg)
-      return null;
-    let rb = parseInt(bg.slice(1, 3), 16), gb = parseInt(bg.slice(3, 5), 16), bb = parseInt(bg.slice(5, 7), 16), rf = parseInt(fg.slice(1, 3), 16), gf = parseInt(fg.slice(3, 5), 16), bf = parseInt(fg.slice(5, 7), 16), r = mixShadingChannel(rb, rf, opacity).toString(16).padStart(2, "0"), g = mixShadingChannel(gb, gf, opacity).toString(16).padStart(2, "0"), b = mixShadingChannel(bb, bf, opacity).toString(16).padStart(2, "0");
-    return `#${r}${g}${b}`;
+  function convertRemote(value, type) {
+    return value instanceof ArrayBuffer ? convertZipOutput(new Uint8Array(value), type) : value;
   }
-  function resolveShadingBackground(c) {
-    let val = xml_parser_default.attr(c, "val") || "clear";
-    if (val === "nil")
-      return null;
-    let fillAttr = xml_parser_default.attr(c, "fill"), colorAttr = xml_parser_default.attr(c, "color"), background = fillAttr && fillAttr !== "auto" ? xmlUtil.colorAttr(c, "fill", null, autos.shd) : "white", foreground = colorAttr && colorAttr !== "auto" ? xmlUtil.colorAttr(c, "color", null, autos.color) : autos.color;
-    if (/^pct/i.test(val)) {
-      let pct = Math.max(0, Math.min(100, parseFloat(val.replace(/[^0-9.]/g, "")) || 0)) / 100;
-      return mixShadingColors(background, foreground, pct) || xmlUtil.colorAttr(c, "fill", null, autos.shd);
-    }
-    return val === "solid" ? foreground || xmlUtil.colorAttr(c, "fill", null, autos.shd) : xmlUtil.colorAttr(c, "fill", null, autos.shd);
-  }
-  var DocumentParser = class {
-    constructor(options) {
-      this.options = {
-        ignoreWidth: !1,
-        debug: !1,
-        hideWebHiddenContent: !1,
-        ...options
-      };
-    }
-    setTheme(theme) {
-      this.theme = theme;
-    }
-    parseNotes(xmlDoc, elemName, elemClass) {
-      var result = [];
-      for (let el of xml_parser_default.elements(xmlDoc, elemName)) {
-        let node = new elemClass();
-        node.id = xml_parser_default.attr(el, "id"), node.noteType = xml_parser_default.attr(el, "type"), node.children = this.parseBodyElements(el), result.push(node);
-      }
-      return result;
-    }
-    parseComments(xmlDoc) {
-      var result = [];
-      for (let el of xml_parser_default.elements(xmlDoc, "comment")) {
-        let item = new WmlComment();
-        item.id = xml_parser_default.attr(el, "id"), item.author = xml_parser_default.attr(el, "author"), item.initials = xml_parser_default.attr(el, "initials"), item.date = xml_parser_default.attr(el, "date"), item.children = this.parseBodyElements(el), result.push(item);
-      }
-      return result;
-    }
-    parseDocumentFile(xmlDoc) {
-      var xbody = xml_parser_default.element(xmlDoc, "body"), background = xml_parser_default.element(xmlDoc, "background"), sectPr = xml_parser_default.element(xbody, "sectPr");
-      return {
-        type: "document" /* Document */,
-        children: this.parseBodyElements(xbody, { trackBodySource: !0 }),
-        props: sectPr ? parseSectionProperties(sectPr, xml_parser_default) : {},
-        cssStyle: background ? this.parseBackground(background) : {}
-      };
-    }
-    parseBackground(elem) {
-      var result = {}, color = xmlUtil.colorAttr(elem, "color");
-      return color && (result["background-color"] = color), result;
-    }
-    parseBodyElements(element, context = {}) {
-      var children = [];
-      let bodyIndex = 0, paragraphIndex = 0, tableIndex = 0, sourceBase = () => context.trackBodySource ? { bodyIndex } : void 0;
-      for (let elem of xml_parser_default.elements(element))
-        switch (elem.localName) {
-          case "p": {
-            let source = sourceBase();
-            children.push(this.parseParagraph(elem, source ? { ...source, paragraphIndex: paragraphIndex++ } : void 0)), context.trackBodySource && bodyIndex++;
-            break;
-          }
-          case "altChunk":
-            children.push(this.parseAltChunk(elem)), context.trackBodySource && bodyIndex++;
-            break;
-          case "tbl": {
-            let source = sourceBase();
-            children.push(this.parseTable(elem, source ? { ...source, tableIndex: tableIndex++ } : void 0)), context.trackBodySource && bodyIndex++;
-            break;
-          }
-          case "sdt":
-            children.push(...this.parseSdt(elem, (e) => this.parseBodyElements(e))), context.trackBodySource && bodyIndex++;
-            break;
-        }
-      return children;
-    }
-    parseStylesFile(xstyles) {
-      var result = [];
-      for (let n of xml_parser_default.elements(xstyles))
-        switch (n.localName) {
-          case "style":
-            result.push(this.parseStyle(n));
-            break;
-          case "docDefaults":
-            result.push(this.parseDefaultStyles(n));
-            break;
-        }
-      return result;
-    }
-    parseDefaultStyles(node) {
-      var result = {
-        id: null,
-        name: null,
-        target: null,
-        basedOn: null,
-        styles: [],
-        hasParagraphDefaults: !1
-      };
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "rPrDefault":
-            var rPr = xml_parser_default.element(c, "rPr");
-            rPr && (result.styles.push({
-              target: "span",
-              values: this.parseDefaultProperties(rPr, {})
-            }), result.runProps = parseRunProperties(rPr, xml_parser_default));
-            break;
-          case "pPrDefault":
-            result.hasParagraphDefaults = !0;
-            var pPr = xml_parser_default.element(c, "pPr");
-            pPr && (result.styles.push({
-              target: "p",
-              values: this.parseDefaultProperties(pPr, {})
-            }), result.paragraphProps = parseParagraphProperties(pPr, xml_parser_default));
-            break;
-        }
-      return result;
-    }
-    parseStyle(node) {
-      var result = {
-        id: xml_parser_default.attr(node, "styleId"),
-        isDefault: xml_parser_default.boolAttr(node, "default"),
-        name: null,
-        target: null,
-        basedOn: null,
-        styles: [],
-        linked: null,
-        hasParagraphProperties: !1
-      };
-      switch (xml_parser_default.attr(node, "type")) {
-        case "paragraph":
-          result.target = "p";
-          break;
-        case "table":
-          result.target = "table";
-          break;
-        case "character":
-          result.target = "span";
-          break;
-      }
-      for (let n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "basedOn":
-            result.basedOn = xml_parser_default.attr(n, "val");
-            break;
-          case "name":
-            result.name = xml_parser_default.attr(n, "val");
-            break;
-          case "link":
-            result.linked = xml_parser_default.attr(n, "val");
-            break;
-          case "next":
-            result.next = xml_parser_default.attr(n, "val");
-            break;
-          case "aliases":
-            result.aliases = xml_parser_default.attr(n, "val").split(",");
-            break;
-          case "pPr":
-            result.hasParagraphProperties = !0, result.styles.push({
-              target: "p",
-              values: this.parseDefaultProperties(n, {})
-            }), result.paragraphProps = parseParagraphProperties(n, xml_parser_default);
-            break;
-          case "rPr":
-            result.styles.push({
-              target: "span",
-              values: this.parseDefaultProperties(n, {})
-            }), result.runProps = parseRunProperties(n, xml_parser_default);
-            break;
-          case "tblPr":
-            result.tableProps = {
-              ...result.tableProps ?? {},
-              ...this.parseTableStyleProperties(n)
-            }, this.appendTableStyleDefaultProperties(result, n);
-            break;
-          case "tcPr":
-            result.styles.push({
-              target: "td",
-              //TODO: maybe move to processor
-              values: this.parseDefaultProperties(n, {})
-            });
-            break;
-          case "tblStylePr":
-            for (let s of this.parseTableStyle(n))
-              result.styles.push(s);
-            break;
-          case "rsid":
-          case "qFormat":
-          case "hidden":
-          case "semiHidden":
-          case "unhideWhenUsed":
-          case "autoRedefine":
-          case "uiPriority":
-            break;
-          default:
-            this.options.debug && console.warn(`DOCX: Unknown style element: ${n.localName}`);
-        }
-      return result;
-    }
-    parseTableStyleProperties(node) {
-      let result = {};
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "tblStyleColBandSize": {
-            let value = xml_parser_default.intAttr(c, "val");
-            value != null && (result.colBandSize = value);
-            break;
-          }
-          case "tblStyleRowBandSize": {
-            let value = xml_parser_default.intAttr(c, "val");
-            value != null && (result.rowBandSize = value);
-            break;
-          }
-        }
-      return result;
-    }
-    appendTableStyleDefaultProperties(style, node) {
-      let tableValues = {}, cellValues = {};
-      this.parseDefaultProperties(node, tableValues, cellValues), Object.keys(tableValues).length && style.styles.push({
-        target: "table",
-        values: tableValues
-      }), Object.keys(cellValues).length && style.styles.push({
-        target: "td",
-        values: cellValues
-      });
-    }
-    parseTableStyle(node) {
-      let result = [], cellProperties;
-      var type = xml_parser_default.attr(node, "type"), selector = "", modificator = "";
-      switch (type) {
-        case "firstRow":
-          modificator = ".first-row", selector = "tr.first-row td";
-          break;
-        case "lastRow":
-          modificator = ".last-row", selector = "tr.last-row td";
-          break;
-        case "firstCol":
-          modificator = ".first-col", selector = "td.first-col";
-          break;
-        case "lastCol":
-          modificator = ".last-col", selector = "td.last-col";
-          break;
-        case "band1Vert":
-          modificator = ":not(.no-vband)", selector = "td.odd-col";
-          break;
-        case "band2Vert":
-          modificator = ":not(.no-vband)", selector = "td.even-col";
-          break;
-        case "band1Horz":
-          modificator = ":not(.no-hband)", selector = "tr.odd-row";
-          break;
-        case "band2Horz":
-          modificator = ":not(.no-hband)", selector = "tr.even-row";
-          break;
-        case "neCell":
-          modificator = ".ne-cell", selector = "td.ne-cell";
-          break;
-        case "nwCell":
-          modificator = ".nw-cell", selector = "td.nw-cell";
-          break;
-        case "seCell":
-          modificator = ".se-cell", selector = "td.se-cell";
-          break;
-        case "swCell":
-          modificator = ".sw-cell", selector = "td.sw-cell";
-          break;
-        default:
-          return [];
-      }
-      for (let n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "pPr":
-            result.push({
-              target: `${selector} p`,
-              mod: modificator,
-              values: this.parseDefaultProperties(n, {})
-            });
-            break;
-          case "rPr":
-            result.push({
-              target: `${selector} span`,
-              mod: modificator,
-              values: this.parseDefaultProperties(n, {})
-            });
-            break;
-          case "tblPr":
-          case "tcPr":
-            cellProperties || (cellProperties = { target: selector, mod: modificator, values: {} }, result.push(cellProperties)), this.parseDefaultProperties(n, cellProperties.values);
-            break;
-        }
-      return result;
-    }
-    parseNumberingFile(node) {
-      let result = [], bullets = [], abstractLevels = {}, abstractNodes = [], numberNodes = [];
-      for (let n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "numPicBullet":
-            bullets.push(this.parseNumberingPicBullet(n));
-            break;
-          case "abstractNum":
-            abstractNodes.push(n);
-            break;
-          case "num":
-            numberNodes.push(n);
-            break;
-        }
-      for (let n of abstractNodes)
-        abstractLevels[xml_parser_default.attr(n, "abstractNumId")] = this.parseAbstractNumbering(n, bullets);
-      for (let n of numberNodes) {
-        let numId = xml_parser_default.attr(n, "numId"), abstractNumId = xml_parser_default.elementAttr(n, "abstractNumId", "val"), levels = (abstractLevels[abstractNumId] ?? []).map((x) => this.cloneNumberingLevel(x, numId));
-        for (let override of xml_parser_default.elements(n, "lvlOverride")) {
-          let level = xml_parser_default.intAttr(override, "ilvl"), levelNode = xml_parser_default.element(override, "lvl"), startOverride = xml_parser_default.element(override, "startOverride"), target = levels.find((x) => x.level == level);
-          if (levelNode) {
-            target = {
-              ...this.parseNumberingLevel(numId, levelNode, bullets),
-              start: target?.start ?? 1,
-              restart: target?.restart
-            };
-            let index = levels.findIndex((x) => x.level == level);
-            index >= 0 ? levels[index] = target : levels.push(target);
-          }
-          startOverride && target && (target.start = target.startOverride = xml_parser_default.intAttr(startOverride, "val", target.start));
-        }
-        for (let level of levels)
-          level.abstractId = abstractNumId;
-        result.push(...levels);
-      }
-      return result;
-    }
-    cloneNumberingLevel(level, id) {
-      return {
-        ...level,
-        id,
-        pStyle: { ...level.pStyle },
-        rStyle: { ...level.rStyle },
-        tabs: level.tabs ? [...level.tabs] : void 0,
-        bullet: level.bullet ? { ...level.bullet } : null
-      };
-    }
-    parseNumberingPicBullet(elem) {
-      let id = xml_parser_default.intAttr(elem, "numPicBulletId"), pict = xml_parser_default.element(elem, "pict"), shape = pict && xml_parser_default.element(pict, "shape"), imagedata = shape && xml_parser_default.element(shape, "imagedata");
-      if (imagedata)
-        return {
-          id,
-          src: xml_parser_default.attr(imagedata, "id"),
-          style: xml_parser_default.attr(shape, "style")
-        };
-      let drawing = xml_parser_default.element(elem, "drawing"), blip = drawing ? this.findDescendant(drawing, "blip") : null;
-      if (blip) {
-        let extent = drawing ? this.findDescendant(drawing, "extent") : null, style = [];
-        if (extent) {
-          let width = xml_parser_default.lengthAttr(extent, "cx", LengthUsage.Emu), height = xml_parser_default.lengthAttr(extent, "cy", LengthUsage.Emu);
-          width && style.push(`width:${width};`), height && style.push(`height:${height};`);
-        }
-        return {
-          id,
-          src: xml_parser_default.attr(blip, "embed") ?? xml_parser_default.attr(blip, "link"),
-          style: style.join("") || void 0
-        };
-      }
-      return null;
-    }
-    parseAbstractNumbering(node, bullets) {
-      var result = [], id = xml_parser_default.attr(node, "abstractNumId");
-      for (let n of xml_parser_default.elements(node))
-        n.localName === "lvl" && result.push(this.parseNumberingLevel(id, n, bullets));
-      return result;
-    }
-    parseNumberingLevel(id, node, bullets) {
-      var result = {
-        id,
-        level: xml_parser_default.intAttr(node, "ilvl"),
-        start: 1,
-        pStyleName: void 0,
-        pStyle: {},
-        rStyle: {},
-        suff: "tab"
-      };
-      for (let n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "start":
-            result.start = xml_parser_default.intAttr(n, "val");
-            break;
-          case "pPr":
-            this.parseDefaultProperties(n, result.pStyle), result.tabs = parseParagraphProperties(n, xml_parser_default).tabs ?? result.tabs;
-            break;
-          case "rPr":
-            this.parseDefaultProperties(n, result.rStyle);
-            break;
-          case "lvlPicBulletId":
-            var bulletId = xml_parser_default.intAttr(n, "val");
-            result.bullet = bullets.find((x) => x?.id == bulletId);
-            break;
-          case "lvlText":
-            result.levelText = xml_parser_default.attr(n, "val");
-            break;
-          case "pStyle":
-            result.pStyleName = xml_parser_default.attr(n, "val");
-            break;
-          case "numFmt":
-            result.format = xml_parser_default.attr(n, "val");
-            break;
-          case "lvlRestart":
-            result.restart = xml_parser_default.intAttr(n, "val");
-            break;
-          case "suff":
-            result.suff = xml_parser_default.attr(n, "val");
-            break;
-        }
-      return result;
-    }
-    parseSdt(node, parser) {
-      let sdtContent = xml_parser_default.element(node, "sdtContent");
-      return sdtContent ? parser(sdtContent) : [];
-    }
-    parseInserted(node, parentParser) {
-      return {
-        type: "inserted" /* Inserted */,
-        children: parentParser(node)?.children ?? []
-      };
-    }
-    parseDeleted(node, parentParser) {
-      return {
-        type: "deleted" /* Deleted */,
-        children: parentParser(node)?.children ?? []
-      };
-    }
-    parseAltChunk(node) {
-      return { type: "altChunk" /* AltChunk */, children: [], id: xml_parser_default.attr(node, "id") };
-    }
-    parseParagraph(node, source) {
-      var result = { type: "paragraph" /* Paragraph */, children: [], ...source ? { source } : {} };
-      for (let el of xml_parser_default.elements(node))
-        switch (el.localName) {
-          case "pPr":
-            this.parseParagraphProperties(el, result);
-            break;
-          case "r":
-            result.children.push(this.parseRun(el, result));
-            break;
-          case "fldSimple":
-            result.children.push(this.parseSimpleField(el, result));
-            break;
-          case "hyperlink":
-            result.children.push(this.parseHyperlink(el, result));
-            break;
-          case "smartTag":
-            result.children.push(this.parseSmartTag(el, result));
-            break;
-          case "bookmarkStart":
-            result.children.push(parseBookmarkStart(el, xml_parser_default));
-            break;
-          case "bookmarkEnd":
-            result.children.push(parseBookmarkEnd(el, xml_parser_default));
-            break;
-          case "commentRangeStart":
-            result.children.push(new WmlCommentRangeStart(xml_parser_default.attr(el, "id")));
-            break;
-          case "commentRangeEnd":
-            result.children.push(new WmlCommentRangeEnd(xml_parser_default.attr(el, "id")));
-            break;
-          case "oMath":
-          case "oMathPara": {
-            let math = this.parseMathElement(el);
-            math && result.children.push(math);
-            break;
-          }
-          case "sdt":
-            result.children.push(...this.parseSdt(el, (e) => this.parseParagraph(e).children));
-            break;
-          case "ins":
-            result.children.push(this.parseInserted(el, (e) => this.parseParagraph(e)));
-            break;
-          case "del":
-            result.children.push(this.parseDeleted(el, (e) => this.parseParagraph(e)));
-            break;
-        }
-      return source && this.assignParagraphImageLocators(result, source), result;
-    }
-    /**
-     * 为段落内的真实图片生成与后端 Open XML 解析一致的稳定对象键。
-     * 这里只记录文档结构位置，不参与排版，也不会引入文本匹配开销。
-     */
-    assignParagraphImageLocators(paragraph, source) {
-      let sourceKey = this.sourceKeyFromOpenXmlSource(source);
-      if (!sourceKey)
-        return;
-      let objectIndex = 0, visit = (element) => {
-        if (element.type === "drawing" /* Drawing */ || element.type === "vmlPicture" /* VmlPicture */) {
-          let resourceKey = this.findImageResourceKey(element);
-          resourceKey && (element.props = {
-            ...element.props ?? {},
-            objectLocator: {
-              objectKey: `${sourceKey}:image:${objectIndex++}`,
-              resourceKey,
-              objectKind: "image"
-            }
-          });
-          return;
-        }
-        for (let child of element.children ?? [])
-          visit(child);
-      };
-      for (let child of paragraph.children ?? [])
-        visit(child);
-    }
-    findImageResourceKey(element) {
-      let candidate = element;
-      if (element.type === "image" /* Image */ && candidate.src)
-        return String(candidate.src);
-      if (candidate.imageHref?.id)
-        return String(candidate.imageHref.id);
-      for (let child of element.children ?? []) {
-        let resourceKey = this.findImageResourceKey(child);
-        if (resourceKey)
-          return resourceKey;
-      }
-      return "";
-    }
-    sourceKeyFromOpenXmlSource(source) {
-      if (source.paragraphIndex != null)
-        return `docx:body:${source.bodyIndex}:p:${source.paragraphIndex}`;
-      if (source.tableIndex != null && source.cellParagraphIndex != null) {
-        let nested = source.nestedTableIndex == null ? "" : `:nt:${source.nestedTableIndex}`;
-        return `docx:body:${source.bodyIndex}:tbl:${source.tableIndex}${nested}:r:${source.rowIndex}:c:${source.cellIndex}:p:${source.cellParagraphIndex}`;
-      }
-      return "";
-    }
-    parseParagraphProperties(elem, paragraph) {
-      this.parseDefaultProperties(elem, paragraph.cssStyle = {}, null, (c) => {
-        if (c.localName == "rPr") {
-          xml_parser_default.element(c, "del") && (paragraph.props = { ...paragraph.props ?? {}, deletedParagraphMark: !0 });
-          let markStyle = {};
-          return this.parseDefaultProperties(c, markStyle), paragraph.props = { ...paragraph.props ?? {}, paragraphMarkCssStyle: markStyle }, parseParagraphProperty(c, paragraph, xml_parser_default), !0;
-        }
-        if (parseParagraphProperty(c, paragraph, xml_parser_default))
-          return !0;
-        switch (c.localName) {
-          case "pStyle":
-            paragraph.styleName = xml_parser_default.attr(c, "val");
-            break;
-          case "cnfStyle":
-            paragraph.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), paragraph.className = values.classNameOfCnfStyle(c);
-            break;
-          case "framePr":
-            this.parseFrame(c, paragraph);
-            break;
-          default:
-            return !1;
-        }
-        return !0;
-      });
-    }
-    parseFrame(node, paragraph) {
-      let dropCap = xml_parser_default.attr(node, "dropCap");
-      paragraph.frame = {
-        width: xml_parser_default.lengthAttr(node, "w"),
-        height: xml_parser_default.lengthAttr(node, "h"),
-        x: xml_parser_default.lengthAttr(node, "x", LengthUsage.SignedDxa),
-        y: xml_parser_default.lengthAttr(node, "y", LengthUsage.SignedDxa),
-        hSpace: xml_parser_default.lengthAttr(node, "hSpace"),
-        vSpace: xml_parser_default.lengthAttr(node, "vSpace"),
-        horizontalAnchor: xml_parser_default.attr(node, "hAnchor"),
-        verticalAnchor: xml_parser_default.attr(node, "vAnchor"),
-        horizontalAlign: xml_parser_default.attr(node, "xAlign"),
-        verticalAlign: xml_parser_default.attr(node, "yAlign"),
-        wrap: xml_parser_default.attr(node, "wrap"),
-        heightRule: xml_parser_default.attr(node, "hRule"),
-        dropCap,
-        lines: xml_parser_default.intAttr(node, "lines")
-      }, dropCap == "drop" && (paragraph.cssStyle.float = "left");
-    }
-    parseHyperlink(node, parent) {
-      var result = { type: "hyperlink" /* Hyperlink */, parent, children: [] };
-      result.anchor = xml_parser_default.attr(node, "anchor"), result.id = xml_parser_default.attr(node, "id");
-      for (let c of xml_parser_default.elements(node))
-        c.localName === "r" && result.children.push(this.parseRun(c, result));
-      return result;
-    }
-    parseSmartTag(node, parent) {
-      var result = { type: "smartTag" /* SmartTag */, parent, children: [] }, uri = xml_parser_default.attr(node, "uri"), element = xml_parser_default.attr(node, "element");
-      uri && (result.uri = uri), element && (result.element = element);
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "r":
-            result.children.push(this.parseRun(c, result));
-            break;
-          case "smartTag":
-            result.children.push(this.parseSmartTag(c, result));
-            break;
-        }
-      return result;
-    }
-    parseSimpleField(node, parent) {
-      let result = {
-        type: "simpleField" /* SimpleField */,
-        parent,
-        children: [],
-        instruction: xml_parser_default.attr(node, "instr"),
-        lock: xml_parser_default.boolAttr(node, "lock", !1),
-        dirty: xml_parser_default.boolAttr(node, "dirty", !1)
-      };
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "r":
-            result.children.push(this.parseRun(c, result));
-            break;
-          case "hyperlink":
-            result.children.push(this.parseHyperlink(c, result));
-            break;
-          case "smartTag":
-            result.children.push(this.parseSmartTag(c, result));
-            break;
-          case "bookmarkStart":
-            result.children.push(parseBookmarkStart(c, xml_parser_default));
-            break;
-          case "bookmarkEnd":
-            result.children.push(parseBookmarkEnd(c, xml_parser_default));
-            break;
-          case "commentRangeStart":
-            result.children.push(new WmlCommentRangeStart(xml_parser_default.attr(c, "id")));
-            break;
-          case "commentRangeEnd":
-            result.children.push(new WmlCommentRangeEnd(xml_parser_default.attr(c, "id")));
-            break;
-          case "sdt":
-            result.children.push(...this.parseSdt(c, (e) => this.parseParagraph(e).children));
-            break;
-          case "ins":
-            result.children.push(this.parseInserted(c, (e) => this.parseParagraph(e)));
-            break;
-          case "del":
-            result.children.push(this.parseDeleted(c, (e) => this.parseParagraph(e)));
-            break;
-        }
-      return result;
-    }
-    parseRun(node, parent) {
-      var result = { type: "run" /* Run */, parent, children: [] };
-      for (let c of xml_parser_default.elements(node))
-        if (c = this.checkAlternateContent(c), !!c)
-          switch (c.localName) {
-            case "t":
-              result.children.push({
-                type: "text" /* Text */,
-                text: c.textContent
-              });
-              break;
-            case "delText":
-              result.children.push({
-                type: "deletedText" /* DeletedText */,
-                text: c.textContent
-              });
-              break;
-            case "commentReference":
-              result.children.push(new WmlCommentReference(xml_parser_default.attr(c, "id")));
-              break;
-            case "fldSimple":
-              result.children.push(this.parseSimpleField(c, result));
-              break;
-            case "instrText":
-              result.fieldRun = !0, result.children.push({
-                type: "instruction" /* Instruction */,
-                text: c.textContent
-              });
-              break;
-            case "fldChar":
-              result.fieldRun = !0, result.children.push({
-                type: "complexField" /* ComplexField */,
-                charType: xml_parser_default.attr(c, "fldCharType"),
-                lock: xml_parser_default.boolAttr(c, "lock", !1),
-                dirty: xml_parser_default.boolAttr(c, "dirty", !1)
-              });
-              break;
-            case "noBreakHyphen":
-              result.children.push({ type: "noBreakHyphen" /* NoBreakHyphen */ });
-              break;
-            case "softHyphen":
-              result.children.push({ type: "softHyphen" /* SoftHyphen */ });
-              break;
-            case "cr":
-              result.children.push({
-                type: "break" /* Break */,
-                break: "line"
-              });
-              break;
-            case "ptab":
-              result.children.push({
-                type: "positionalTab" /* PositionalTab */,
-                alignment: xml_parser_default.attr(c, "alignment") || "left",
-                relativeTo: xml_parser_default.attr(c, "relativeTo") || "margin",
-                leader: xml_parser_default.attr(c, "leader") || "none"
-              });
-              break;
-            case "br":
-              result.children.push({
-                type: "break" /* Break */,
-                break: xml_parser_default.attr(c, "type") || "textWrapping"
-              });
-              break;
-            case "lastRenderedPageBreak":
-              result.children.push({
-                type: "break" /* Break */,
-                break: "lastRenderedPageBreak"
-              });
-              break;
-            case "sym":
-              result.children.push({
-                type: "symbol" /* Symbol */,
-                font: encloseFontFamily(xml_parser_default.attr(c, "font")),
-                char: xml_parser_default.hexAttr(c, "char")
-              });
-              break;
-            case "tab":
-              result.children.push({ type: "tab" /* Tab */ });
-              break;
-            case "footnoteReference":
-              result.children.push({
-                type: "footnoteReference" /* FootnoteReference */,
-                id: xml_parser_default.attr(c, "id"),
-                customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
-              });
-              break;
-            case "endnoteReference":
-              result.children.push({
-                type: "endnoteReference" /* EndnoteReference */,
-                id: xml_parser_default.attr(c, "id"),
-                customMarkFollows: xml_parser_default.boolAttr(c, "customMarkFollows")
-              });
-              break;
-            case "drawing":
-              let d = this.parseDrawing(c, this.findAncestorParagraph(parent));
-              d && result.children.push(d);
-              break;
-            case "pict":
-              result.children.push(this.parseVmlPicture(c));
-              break;
-            case "object":
-              result.children.push(this.parseVmlPicture(c));
-              break;
-            case "ruby":
-              result.children.push(this.parseRuby(c));
-              break;
-            case "rPr":
-              this.parseRunProperties(c, result);
-              break;
-          }
-      return result;
-    }
-    parseRuby(elem) {
-      let result = { type: "ruby" /* Ruby */, children: [] };
-      for (let child of xml_parser_default.elements(elem))
-        switch (child.localName) {
-          case "rubyPr":
-            for (let prop of xml_parser_default.elements(child))
-              prop.localName === "rubyAlign" && (result.align = xml_parser_default.attr(prop, "val"));
-            break;
-          case "rt":
-            result.children.push(this.parseRubyContent(child, "rubyText" /* RubyText */));
-            break;
-          case "rubyBase":
-            result.children.push(this.parseRubyContent(child, "rubyBase" /* RubyBase */));
-            break;
-        }
-      return result;
-    }
-    parseRubyContent(elem, type) {
-      let result = { type, children: [] };
-      for (let child of xml_parser_default.elements(elem))
-        if (child.localName == "r")
-          result.children.push(this.parseRun(child, result));
-        else if (type == "rubyText" /* RubyText */ && child.localName == "rPr") {
-          let hps = xml_parser_default.element(child, "hps"), hpsVal = hps ? xml_parser_default.intAttr(hps, "val", null) : null;
-          hpsVal != null && (result.cssStyle = { ...result.cssStyle ?? {}, fontSize: `${hpsVal / 2}pt` });
-        }
-      return result;
-    }
-    parseMathElement(elem) {
-      let propsTag = `${elem.localName}Pr`, result = { type: mmlTagMap[elem.localName], children: [] }, hiddenRevision = !1, appendChild = (el) => {
-        if (mmlTagMap[el.localName]) {
-          let child = this.parseMathElement(el);
-          child ? (child.parent = result, result.children.push(child)) : hiddenRevision = !0;
-        } else if (el.localName == "r") {
-          var run = this.parseRun(el, result);
-          run.type = "mmlRun" /* MmlRun */, result.children.push(run);
-        } else if (el.localName == propsTag)
-          result.props = this.parseMathProperies(el);
-        else if (el.localName == "ins")
-          for (let child of xml_parser_default.elements(el))
-            appendChild(child);
-        else if (el.localName == "del")
-          if (this.options.renderChanges)
-            for (let child of xml_parser_default.elements(el))
-              appendChild(child);
-          else
-            hiddenRevision = !0;
-      };
-      for (let el of xml_parser_default.elements(elem))
-        appendChild(el);
-      return hiddenRevision && !this.hasVisibleMathContent(result) ? null : result;
-    }
-    hasVisibleMathContent(elem) {
-      for (let child of elem.children ?? []) {
-        switch (child.type) {
-          case "text" /* Text */:
-            if (child.text?.length)
-              return !0;
-            break;
-          case "deletedText" /* DeletedText */:
-            if (this.options.renderChanges && child.text?.length)
-              return !0;
-            break;
-          case "symbol" /* Symbol */:
-          case "tab" /* Tab */:
-          case "positionalTab" /* PositionalTab */:
-          case "noBreakHyphen" /* NoBreakHyphen */:
-          case "break" /* Break */:
-            return !0;
-        }
-        if (this.hasVisibleMathContent(child))
-          return !0;
-      }
-      return !1;
-    }
-    parseMathProperies(elem) {
-      let result = {};
-      for (let el of xml_parser_default.elements(elem))
-        switch (el.localName) {
-          case "chr":
-            result.char = xml_parser_default.attr(el, "val");
-            break;
-          case "type":
-            result.type = xml_parser_default.attr(el, "val");
-            break;
-          case "jc":
-            result.justification = xml_parser_default.attr(el, "val");
-            break;
-          case "vertJc":
-            result.verticalJustification = xml_parser_default.attr(el, "val");
-            break;
-          case "pos":
-            result.position = xml_parser_default.attr(el, "val");
-            break;
-          case "degHide":
-            result.hideDegree = xml_parser_default.boolAttr(el, "val");
-            break;
-          case "subHide":
-            result.hideSubscript = xml_parser_default.boolAttr(el, "val");
-            break;
-          case "supHide":
-            result.hideSuperscript = xml_parser_default.boolAttr(el, "val");
-            break;
-          case "begChr":
-            result.beginChar = xml_parser_default.attr(el, "val");
-            break;
-          case "endChr":
-            result.endChar = xml_parser_default.attr(el, "val");
-            break;
-          case "limLoc":
-            result.limitLocation = xml_parser_default.attr(el, "val");
-            break;
-          case "grow":
-            result.grow = xml_parser_default.boolAttr(el, "val");
-            break;
-          case "sepChr":
-            result.separatorChar = xml_parser_default.attr(el, "val");
-            break;
-        }
-      return result;
-    }
-    parseRunProperties(elem, run) {
-      this.parseDefaultProperties(elem, run.cssStyle = {}, null, (c) => {
-        switch (c.localName) {
-          case "rStyle":
-            run.styleName = xml_parser_default.attr(c, "val");
-            break;
-          case "vertAlign":
-            run.verticalAlign = values.valueOfVertAlign(c, !0);
-            break;
-          default:
-            return !1;
-        }
-        return !0;
-      });
-    }
-    parseVmlPicture(elem) {
-      let result = { type: "vmlPicture" /* VmlPicture */, children: [] };
-      for (let el of xml_parser_default.elements(elem)) {
-        let child = parseVmlElement(el, this);
-        child && result.children.push(child);
-      }
-      return result;
-    }
-    checkAlternateContent(elem) {
-      if (elem.localName != "AlternateContent")
-        return elem;
-      for (let choice of xml_parser_default.elements(elem).filter((x) => x.localName == "Choice")) {
-        let requires = (xml_parser_default.attr(choice, "Requires") ?? "").split(/\s+/).filter(Boolean);
-        if (requires.length > 0 && requires.every((prefix) => supportedNamespaceURIs.includes(elem.lookupNamespaceURI(prefix)))) {
-          let selected = xml_parser_default.elements(choice)[0];
-          if (selected)
-            return selected;
-        }
-      }
-      let fallback = xml_parser_default.element(elem, "Fallback");
-      return fallback ? xml_parser_default.elements(fallback)[0] : null;
-    }
-    findAncestorParagraph(elem) {
-      let current = elem;
-      for (; current; ) {
-        if (current.type === "paragraph" /* Paragraph */)
-          return current;
-        current = current.parent;
-      }
-      return null;
-    }
-    parseDrawing(node, inheritedParagraph) {
-      for (var n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "inline":
-          case "anchor":
-            return this.parseDrawingWrapper(n, inheritedParagraph);
-        }
-    }
-    parseDrawingWrapper(node, inheritedParagraph) {
-      var _a;
-      var result = { type: "drawing" /* Drawing */, children: [], cssStyle: {}, props: {} }, isAnchor = node.localName == "anchor";
-      let drawingMeta = {
-        wrapper: isAnchor ? "wp-anchor" : "wp-inline",
-        hasPositiveEffectExtent: !1,
-        effectExtentEmu: { l: 0, t: 0, r: 0, b: 0 },
-        extentEmu: { cx: 0, cy: 0 },
-        relativeHeight: null
-      };
-      result.props.drawingMeta = drawingMeta;
-      let addMargin = (prop, value) => {
-        value && (result.cssStyle[prop] = values.addSize(result.cssStyle[prop], value));
-      };
-      addMargin("margin-left", xml_parser_default.lengthAttr(node, "distL", LengthUsage.Emu)), addMargin("margin-top", xml_parser_default.lengthAttr(node, "distT", LengthUsage.Emu)), addMargin("margin-right", xml_parser_default.lengthAttr(node, "distR", LengthUsage.Emu)), addMargin("margin-bottom", xml_parser_default.lengthAttr(node, "distB", LengthUsage.Emu));
-      let wrapType = null, wrapText = null, wrapPolygon = null, simplePos = xml_parser_default.boolAttr(node, "simplePos", !1), behindDoc = xml_parser_default.boolAttr(node, "behindDoc", !1), relativeHeight = xml_parser_default.intAttr(node, "relativeHeight", null);
-      relativeHeight != null && (result.cssStyle["z-index"] = `${Math.max(1, Math.round(relativeHeight / 1e3))}`), drawingMeta.relativeHeight = relativeHeight, behindDoc && (result.cssStyle["z-index"] = "0");
-      let posX = { relative: "page", align: "left", offset: null }, posY = { relative: "page", align: "top", offset: null };
-      for (var n of xml_parser_default.elements(node))
-        switch (n.localName) {
-          case "simplePos":
-            simplePos && (posX.offset = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), posY.offset = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu));
-            break;
-          case "extent":
-            drawingMeta.extentEmu = {
-              cx: xml_parser_default.intAttr(n, "cx", 0) ?? 0,
-              cy: xml_parser_default.intAttr(n, "cy", 0) ?? 0
-            }, result.cssStyle.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), result.cssStyle.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
-            break;
-          case "effectExtent":
-            drawingMeta.effectExtentEmu = {
-              l: xml_parser_default.intAttr(n, "l", 0) ?? 0,
-              t: xml_parser_default.intAttr(n, "t", 0) ?? 0,
-              r: xml_parser_default.intAttr(n, "r", 0) ?? 0,
-              b: xml_parser_default.intAttr(n, "b", 0) ?? 0
-            }, drawingMeta.hasPositiveEffectExtent = Object.values(drawingMeta.effectExtentEmu).some((v) => v > 0), addMargin("margin-left", xml_parser_default.lengthAttr(n, "l", LengthUsage.Emu)), addMargin("margin-top", xml_parser_default.lengthAttr(n, "t", LengthUsage.Emu)), addMargin("margin-right", xml_parser_default.lengthAttr(n, "r", LengthUsage.Emu)), addMargin("margin-bottom", xml_parser_default.lengthAttr(n, "b", LengthUsage.Emu));
-            break;
-          case "docPr":
-            result.props.title = xml_parser_default.attr(n, "title") ?? xml_parser_default.attr(n, "name"), result.props.alt = xml_parser_default.attr(n, "descr") ?? result.props.title;
-            break;
-          case "positionH":
-          case "positionV":
-            if (!simplePos) {
-              let pos = n.localName == "positionH" ? posX : posY;
-              var alignNode = xml_parser_default.element(n, "align"), offsetNode = xml_parser_default.element(n, "posOffset");
-              pos.relative = xml_parser_default.attr(n, "relativeFrom") ?? pos.relative, alignNode && (pos.align = alignNode.textContent, offsetNode || (pos.offset = null)), offsetNode && (pos.offset = convertLength(offsetNode.textContent, LengthUsage.Emu));
-            }
-            break;
-          case "wrapTopAndBottom":
-            wrapType = "wrapTopAndBottom";
-            break;
-          case "wrapNone":
-            wrapType = "wrapNone";
-            break;
-          case "wrapSquare":
-            wrapType = "wrapSquare", wrapText = xml_parser_default.attr(n, "wrapText");
-            break;
-          case "wrapTight":
-            wrapType = "wrapTight", wrapText = xml_parser_default.attr(n, "wrapText"), wrapPolygon = this.parseWrapPolygon(n);
-            break;
-          case "wrapThrough":
-            wrapType = "wrapThrough", wrapText = xml_parser_default.attr(n, "wrapText"), wrapPolygon = this.parseWrapPolygon(n);
-            break;
-          case "graphic":
-            var g = this.parseGraphic(n);
-            g && (this.applyDrawingTextContext(g, inheritedParagraph), (g.type == "image" /* Image */ || g.type == "shape" /* Shape */ || g.type == "chart" /* Chart */ || g.type == "smartArt" /* SmartArt */ || g.type == "ink" /* Ink */) && (g.alt ?? (g.alt = result.props.alt), g.title ?? (g.title = result.props.title)), result.children.push(g));
-            break;
-        }
-      result.props.anchorPosition = {
-        horizontal: { ...posX },
-        vertical: { ...posY },
-        wrapType,
-        behindDoc,
-        layoutInCell: xml_parser_default.boolAttr(node, "layoutInCell", !0),
-        simplePos
-      };
-      let applyHorizontalAlignment = () => {
-        switch (posX.align) {
-          case "center":
-            result.cssStyle["margin-left"] = "auto", result.cssStyle["margin-right"] = "auto";
-            break;
-          case "right":
-            result.cssStyle["margin-left"] = "auto";
-            break;
-        }
-      };
-      return wrapType == "wrapTopAndBottom" ? (result.cssStyle.display = "block", result.cssStyle.clear = "both", applyHorizontalAlignment()) : wrapType == "wrapNone" ? (result.cssStyle.display = "block", result.cssStyle.position = isAnchor ? "absolute" : "relative", posX.offset && (result.cssStyle.left = posX.offset), posY.offset && (result.cssStyle.top = posY.offset)) : wrapType == "wrapSquare" || wrapType == "wrapTight" || wrapType == "wrapThrough" ? (wrapPolygon && (result.cssStyle["shape-outside"] = wrapPolygon, (_a = result.cssStyle)["clip-path"] ?? (_a["clip-path"] = wrapPolygon)), wrapText == "left" ? result.cssStyle.float = "right" : wrapText == "right" ? result.cssStyle.float = "left" : posX.align == "left" || posX.align == "right" ? result.cssStyle.float = posX.align : (result.cssStyle.display = "block", applyHorizontalAlignment())) : isAnchor && (posX.align == "left" || posX.align == "right") ? result.cssStyle.float = posX.align : result.cssStyle["vertical-align"] = "text-bottom", result;
-    }
-    parseWrapPolygon(elem) {
-      let polygon = xml_parser_default.element(elem, "wrapPolygon");
-      if (!polygon)
-        return null;
-      let points = [], addPoint = (pt) => {
-        let x = xml_parser_default.lengthAttr(pt, "x", LengthUsage.Emu), y = xml_parser_default.lengthAttr(pt, "y", LengthUsage.Emu);
-        x && y && points.push(`${x} ${y}`);
-      };
-      for (let n of xml_parser_default.elements(polygon))
-        (n.localName == "start" || n.localName == "lineTo") && addPoint(n);
-      return points.length >= 3 ? `polygon(${points.join(", ")})` : null;
-    }
-    parseGraphic(elem) {
-      var graphicData = xml_parser_default.element(elem, "graphicData");
-      if (!graphicData)
-        return null;
-      for (let n of xml_parser_default.elements(graphicData))
-        switch (n.localName) {
-          case "pic":
-            return this.parsePicture(n);
-          case "wpc":
-          case "wgp":
-          case "grpSp":
-            return this.parseDrawingContainer(n);
-          case "wsp":
-          case "sp":
-          case "cxnSp":
-            return this.parseDmlPositionedShape(n) ?? this.parseWordprocessingShape(n);
-          case "chart":
-            return this.parseChartReference(n);
-          case "relIds":
-            return this.parseSmartArtReference(n);
-          case "diagram":
-            return this.parseSmartArtReference(n);
-          case "contentPart":
-          case "ink":
-            return this.parseInkReference(n);
-        }
-      let contentPart = this.findDescendant(graphicData, "contentPart");
-      return contentPart ? this.parseInkReference(contentPart) : null;
-    }
-    parseDrawingContainer(elem, parentTransform) {
-      let result = {
-        type: "shape" /* Shape */,
-        children: [],
-        cssStyle: {
-          display: "inline-block",
-          position: "relative",
-          width: "100%",
-          height: "100%",
-          overflow: "visible",
-          "box-sizing": "border-box"
-        },
-        props: { dmlContainer: !0 }
-      }, transform = this.parseDmlGroupTransform(elem, parentTransform);
-      for (let child of xml_parser_default.elements(elem))
-        switch (child.localName) {
-          case "pic":
-            let image = this.parseDmlPositionedPicture(child, transform);
-            image && result.children.push(image);
-            break;
-          case "wsp":
-          case "sp":
-          case "cxnSp":
-            let shape = this.parseDmlPositionedShape(child, transform);
-            shape && result.children.push(shape);
-            break;
-          case "grpSp":
-          case "wgp":
-            let group = this.parseDrawingContainer(child, transform);
-            group && result.children.push(group);
-            break;
-        }
-      return result;
-    }
-    applyDrawingTextContext(elem, inheritedParagraph) {
-      if (!elem || !inheritedParagraph?.cssStyle)
-        return;
-      let inheritedAlign = inheritedParagraph.cssStyle["text-align"];
-      if (!inheritedAlign)
-        return;
-      let visit = (node) => {
-        if (!node)
-          return;
-        let props = node?.props ?? {};
-        if (props.dmlShape || props.dmlSvg) {
-          for (let child of node.children ?? [])
-            if (child.type === "paragraph" /* Paragraph */) {
-              let css = child.cssStyle ?? {};
-              !css["text-align"] && !css.textAlign && (child.cssStyle = { ...css, "text-align": inheritedAlign });
-            }
-        }
-        for (let child of node.children ?? [])
-          visit(child);
-      };
-      visit(elem);
-    }
-    parseDmlPositionedPicture(elem, transform) {
-      let image = this.parsePicture(elem), spPr = xml_parser_default.element(elem, "spPr");
-      if (!spPr)
-        return image;
-      let bounds = this.parseDmlShapeBounds(spPr, transform);
-      return image.cssStyle.position = "absolute", image.cssStyle.left = this.pt(bounds.left), image.cssStyle.top = this.pt(bounds.top), image.cssStyle.width = this.pt(bounds.width), image.cssStyle.height = this.pt(bounds.height), image.props = {
-        ...image.props ?? {},
-        dmlPicture: !0,
-        ...this.parseDmlShapeTransform(spPr)
-      }, image;
-    }
-    parseDmlGroupTransform(elem, parentTransform) {
-      let groupProps = xml_parser_default.element(elem, "grpSpPr"), xfrm = groupProps ? xml_parser_default.element(groupProps, "xfrm") : xml_parser_default.element(elem, "xfrm"), off = xfrm ? xml_parser_default.element(xfrm, "off") : null, ext = xfrm ? xml_parser_default.element(xfrm, "ext") : null, chOff = xfrm ? xml_parser_default.element(xfrm, "chOff") : null, chExt = xfrm ? xml_parser_default.element(xfrm, "chExt") : null, extCx = ext ? xml_parser_default.floatAttr(ext, "cx", null) : null, extCy = ext ? xml_parser_default.floatAttr(ext, "cy", null) : null, chExtCx = chExt ? xml_parser_default.floatAttr(chExt, "cx", null) : null, chExtCy = chExt ? xml_parser_default.floatAttr(chExt, "cy", null) : null, local = {
-        offsetX: chOff ? xml_parser_default.floatAttr(chOff, "x", 0) : 0,
-        offsetY: chOff ? xml_parser_default.floatAttr(chOff, "y", 0) : 0,
-        left: off ? xml_parser_default.floatAttr(off, "x", 0) : 0,
-        top: off ? xml_parser_default.floatAttr(off, "y", 0) : 0,
-        scaleX: extCx && chExtCx ? extCx / chExtCx : 1,
-        scaleY: extCy && chExtCy ? extCy / chExtCy : 1
-      };
-      return parentTransform ? {
-        offsetX: local.offsetX,
-        offsetY: local.offsetY,
-        left: parentTransform.left + (local.left - parentTransform.offsetX) * parentTransform.scaleX,
-        top: parentTransform.top + (local.top - parentTransform.offsetY) * parentTransform.scaleY,
-        scaleX: parentTransform.scaleX * local.scaleX,
-        scaleY: parentTransform.scaleY * local.scaleY
-      } : local;
-    }
-    parseDmlPositionedShape(elem, transform) {
-      let spPr = xml_parser_default.element(elem, "spPr");
-      if (!spPr)
-        return null;
-      let bounds = this.parseDmlShapeBounds(spPr, transform), textChildren = [], bodyPr = null;
-      for (let n of xml_parser_default.elements(elem))
-        switch (n.localName) {
-          case "txbx":
-          case "textBox":
-            for (let txbxContent of xml_parser_default.elements(n, "txbxContent"))
-              textChildren.push(...this.parseBodyElements(txbxContent));
-            break;
-          case "bodyPr":
-            bodyPr = n;
-            break;
-        }
-      bodyPr ?? (bodyPr = xml_parser_default.element(elem, "bodyPr"));
-      let cssStyle = {
-        position: "absolute",
-        left: this.pt(bounds.left),
-        top: this.pt(bounds.top),
-        width: this.pt(bounds.width),
-        height: this.pt(bounds.height),
-        "box-sizing": "border-box",
-        overflow: "hidden"
-      }, cNvPr = xml_parser_default.element(elem, "cNvPr"), geom = xml_parser_default.element(spPr, "custGeom"), prstGeom = xml_parser_default.element(spPr, "prstGeom"), geometryAdjustments = this.parseDmlPresetGeometryAdjustments(prstGeom), transformProps = this.parseDmlShapeTransform(spPr), explicitFillStyle = this.parseDmlFillStyle(spPr), fillStyle = (explicitFillStyle.explicit ? null : this.parseDmlShapeStyleFill(elem)) ?? explicitFillStyle, explicitLine = xml_parser_default.element(spPr, "ln"), lineStyle = explicitLine ? this.parseDmlLineStyle(explicitLine) : this.parseDmlShapeStyleLine(elem) ?? this.parseDmlLineStyle(null);
-      textChildren.length && (cssStyle.display = "flex", cssStyle["flex-direction"] = "column", cssStyle["justify-content"] = this.dmlVerticalAlign(bodyPr), cssStyle["align-items"] = "stretch"), this.applyDmlTextInsets(bodyPr, cssStyle);
-      let textAutoFitProps = this.parseDmlTextAutoFit(bodyPr);
-      if (geom) {
-        let path = this.parseDmlCustomGeometry(geom);
-        return {
-          type: "shape" /* Shape */,
-          children: textChildren,
-          cssStyle: { ...cssStyle, overflow: "visible" },
-          props: {
-            dmlSvg: !0,
-            viewBox: path?.viewBox ?? "0 0 1 1",
-            pathD: path?.d ?? "",
-            geometryAdjustments,
-            fill: fillStyle.fill ?? "none",
-            stroke: lineStyle.stroke ?? "none",
-            strokeWidth: lineStyle.strokeWidth ?? "0",
-            strokeLinecap: lineStyle.strokeLinecap,
-            strokeDasharray: lineStyle.strokeDasharray,
-            markerStart: lineStyle.markerStart,
-            markerEnd: lineStyle.markerEnd,
-            ...transformProps,
-            textWrap: bodyPr ? xml_parser_default.attr(bodyPr, "wrap") : null,
-            ...textAutoFitProps
-          },
-          title: cNvPr ? xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name") : null,
-          alt: cNvPr ? xml_parser_default.attr(cNvPr, "descr") : null
-        };
-      }
-      return fillStyle.backgroundColor && (cssStyle["background-color"] = fillStyle.backgroundColor), fillStyle.backgroundImage && (cssStyle["background-image"] = fillStyle.backgroundImage), lineStyle.stroke && lineStyle.stroke != "none" ? cssStyle.border = `${lineStyle.strokeWidth || "0.75pt"} ${lineStyle.borderType || "solid"} ${lineStyle.stroke}` : cssStyle.border = "none", {
-        type: "shape" /* Shape */,
-        children: textChildren,
-        cssStyle,
-        props: {
-          dmlShape: !0,
-          presetGeometry: prstGeom ? xml_parser_default.attr(prstGeom, "prst") : null,
-          geometryAdjustments,
-          fill: fillStyle.fill ?? "none",
-          stroke: lineStyle.stroke ?? "none",
-          strokeWidth: lineStyle.strokeWidth ?? "0",
-          strokeLinecap: lineStyle.strokeLinecap,
-          strokeDasharray: lineStyle.strokeDasharray,
-          markerStart: lineStyle.markerStart,
-          markerEnd: lineStyle.markerEnd,
-          ...transformProps,
-          textWrap: bodyPr ? xml_parser_default.attr(bodyPr, "wrap") : null,
-          ...textAutoFitProps
-        },
-        title: cNvPr ? xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name") : null,
-        alt: cNvPr ? xml_parser_default.attr(cNvPr, "descr") : null
-      };
-    }
-    parseDmlShapeBounds(spPr, transform) {
-      let xfrm = xml_parser_default.element(spPr, "xfrm"), off = xfrm ? xml_parser_default.element(xfrm, "off") : null, ext = xfrm ? xml_parser_default.element(xfrm, "ext") : null, scaleX = transform?.scaleX ?? 1, scaleY = transform?.scaleY ?? 1, baseX = transform?.offsetX ?? 0, baseY = transform?.offsetY ?? 0, parentLeft = transform?.left ?? 0, parentTop = transform?.top ?? 0, x = off ? xml_parser_default.floatAttr(off, "x", 0) : 0, y = off ? xml_parser_default.floatAttr(off, "y", 0) : 0, cx = ext ? xml_parser_default.floatAttr(ext, "cx", 0) : 0, cy = ext ? xml_parser_default.floatAttr(ext, "cy", 0) : 0;
-      return {
-        left: this.emuToPt(parentLeft + (x - baseX) * scaleX),
-        top: this.emuToPt(parentTop + (y - baseY) * scaleY),
-        width: Math.max(0, this.emuToPt(cx * scaleX)),
-        height: Math.max(0, this.emuToPt(cy * scaleY))
-      };
-    }
-    parseDmlPresetGeometryAdjustments(prstGeom) {
-      let result = {};
-      if (!prstGeom)
-        return result;
-      let avLst = xml_parser_default.element(prstGeom, "avLst");
-      if (!avLst)
-        return result;
-      for (let gd of xml_parser_default.elements(avLst, "gd")) {
-        let name = xml_parser_default.attr(gd, "name"), match = String(xml_parser_default.attr(gd, "fmla") ?? "").trim().match(/^val\s+(-?\d+(?:\.\d+)?)$/i);
-        name && match && (result[name] = parseFloat(match[1]));
-      }
-      return result;
-    }
-    parseDmlShapeTransform(spPr) {
-      let xfrm = xml_parser_default.element(spPr, "xfrm");
-      if (!xfrm)
-        return {};
-      let rot = xml_parser_default.floatAttr(xfrm, "rot", 0), props = {};
-      return rot && (props.rotation = rot / 6e4), xml_parser_default.boolAttr(xfrm, "flipH", !1) && (props.flipH = !0), xml_parser_default.boolAttr(xfrm, "flipV", !1) && (props.flipV = !0), props;
-    }
-    parseDmlFillStyle(spPr) {
-      if (xml_parser_default.element(spPr, "noFill"))
-        return { fill: "none", backgroundColor: "transparent", explicit: !0 };
-      let solidFill = xml_parser_default.element(spPr, "solidFill");
-      if (solidFill) {
-        let color = this.parseDmlColor(solidFill) ?? "transparent";
-        return { fill: color, backgroundColor: color, explicit: !0 };
-      }
-      let pattFill = xml_parser_default.element(spPr, "pattFill");
-      if (pattFill) {
-        let fg = this.parseDmlColor(xml_parser_default.element(pattFill, "fgClr")) ?? "currentColor", bg = this.parseDmlColor(xml_parser_default.element(pattFill, "bgClr")) ?? "transparent", prst = xml_parser_default.attr(pattFill, "prst"), angle = prst && prst.toLowerCase().includes("horz") ? "0deg" : "90deg";
-        return {
-          fill: bg,
-          backgroundColor: bg,
-          backgroundImage: `repeating-linear-gradient(${angle}, ${fg} 0, ${fg} 0.75pt, ${bg} 0.75pt, ${bg} 3pt)`,
-          explicit: !0
-        };
-      }
-      return { fill: "none", backgroundColor: "transparent", explicit: !1 };
-    }
-    parseDmlShapeStyleFill(shape) {
-      let style = xml_parser_default.element(shape, "style"), fillRef = style ? xml_parser_default.element(style, "fillRef") : null, color = this.parseDmlColor(fillRef);
-      return color ? {
-        fill: color,
-        backgroundColor: color,
-        explicit: !1
-      } : null;
-    }
-    parseDmlShapeStyleLine(shape) {
-      let style = xml_parser_default.element(shape, "style"), lineRef = style ? xml_parser_default.element(style, "lnRef") : null;
-      if (!lineRef)
-        return null;
-      let themeLine = this.resolveDmlThemeLineStyle(xml_parser_default.intAttr(lineRef, "idx", null)), dash = themeLine?.dash, strokeDasharray = dash && dash != "solid" ? dash == "dot" ? "1 2" : "4 3" : null;
-      return {
-        stroke: this.parseDmlColor(lineRef) ?? "black",
-        strokeWidth: themeLine?.width ? this.pt(this.emuToPt(themeLine.width)) : "0.75pt",
-        borderType: strokeDasharray ? "dashed" : "solid",
-        strokeDasharray,
-        strokeLinecap: this.parseDmlLineCap(themeLine?.cap)
-      };
-    }
-    resolveDmlThemeLineStyle(idx) {
-      return idx == null || idx <= 0 ? null : this.theme?.formatScheme?.lineStyles?.[idx - 1] ?? defaultDmlThemeLineStyles[idx - 1] ?? null;
-    }
-    parseDmlLineStyle(line) {
-      if (!line || xml_parser_default.element(line, "noFill"))
-        return { stroke: "none", strokeWidth: "0", borderType: "none" };
-      let stroke = this.parseDmlColor(xml_parser_default.element(line, "solidFill")) ?? "black", width = xml_parser_default.attr(line, "w") ? this.pt(this.emuToPt(xml_parser_default.floatAttr(line, "w", 0))) : "0.75pt", dash = xml_parser_default.elementAttr(line, "prstDash", "val"), strokeLinecap = this.parseDmlLineCap(xml_parser_default.attr(line, "cap")), strokeDasharray = null, borderType = "solid";
-      dash && dash != "solid" && (borderType = "dashed", strokeDasharray = dash == "dot" ? "1 2" : "4 3");
-      let markerStart = this.parseDmlLineEndMarker(xml_parser_default.element(line, "tailEnd")), markerEnd = this.parseDmlLineEndMarker(xml_parser_default.element(line, "headEnd"));
-      return { stroke, strokeWidth: width, borderType, strokeDasharray, markerStart, markerEnd, strokeLinecap };
-    }
-    parseDmlLineCap(value) {
-      switch (String(value ?? "").toLowerCase()) {
-        case "flat":
-          return "butt";
-        case "rnd":
-          return "round";
-        case "sq":
-          return "square";
-        default:
-          return null;
-      }
-    }
-    parseDmlLineEndMarker(elem) {
-      let type = elem ? xml_parser_default.attr(elem, "type") : null;
-      return type && type != "none" ? type : null;
-    }
-    parseDmlCustomGeometry(geom) {
-      let pathList = xml_parser_default.element(geom, "pathLst"), paths = pathList ? xml_parser_default.elements(pathList, "path") : [], d = "", viewWidth = 1, viewHeight = 1;
-      for (let path of paths) {
-        let width = xml_parser_default.floatAttr(path, "w", viewWidth), height = xml_parser_default.floatAttr(path, "h", viewHeight);
-        viewWidth = Math.max(viewWidth, width || 1), viewHeight = Math.max(viewHeight, height || 1), d += this.parseDmlPathData(path, width || 1, height || 1);
-      }
-      return { d: d.trim(), viewBox: `0 0 ${viewWidth} ${viewHeight}` };
-    }
-    parseDmlPathData(path, width, height) {
-      let parts = [], point = (el) => {
-        let pt = xml_parser_default.element(el, "pt");
-        return pt ? `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}` : "0 0";
-      };
-      for (let child of xml_parser_default.elements(path))
-        switch (child.localName) {
-          case "moveTo":
-            parts.push(`M ${point(child)}`);
-            break;
-          case "lnTo":
-            parts.push(`L ${point(child)}`);
-            break;
-          case "cubicBezTo":
-            let cubic = xml_parser_default.elements(child, "pt").map((pt) => `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}`);
-            cubic.length == 3 && parts.push(`C ${cubic.join(" ")}`);
-            break;
-          case "quadBezTo":
-            let quad = xml_parser_default.elements(child, "pt").map((pt) => `${this.dmlCoord(xml_parser_default.attr(pt, "x"), width, height)} ${this.dmlCoord(xml_parser_default.attr(pt, "y"), width, height)}`);
-            quad.length == 2 && parts.push(`Q ${quad.join(" ")}`);
-            break;
-          case "close":
-            parts.push("Z");
-            break;
-        }
-      return parts.join(" ") + " ";
-    }
-    dmlCoord(value, width, height) {
-      if (value == "w" || value == "r")
-        return width;
-      if (value == "h" || value == "b")
-        return height;
-      if (value == "l" || value == "t")
-        return 0;
-      let parsed = parseFloat(value);
-      return Number.isFinite(parsed) ? parsed : 0;
-    }
-    dmlVerticalAlign(bodyPr) {
-      switch (bodyPr ? xml_parser_default.attr(bodyPr, "anchor") : null) {
-        case "ctr":
-          return "center";
-        case "b":
-          return "flex-end";
-        default:
-          return "flex-start";
-      }
-    }
-    parseDmlTextAutoFit(bodyPr) {
-      if (!bodyPr)
-        return {};
-      if (xml_parser_default.element(bodyPr, "noAutofit"))
-        return { textAutoFit: "none" };
-      let norm = xml_parser_default.element(bodyPr, "normAutofit");
-      if (norm) {
-        let fontScale = this.parseDmlPercentage(xml_parser_default.attr(norm, "fontScale"), 1), lineSpaceReduction = this.parseDmlPercentage(xml_parser_default.attr(norm, "lnSpcReduction"), 0);
-        return {
-          textAutoFit: "normal",
-          textAutoFitFontScale: fontScale,
-          textAutoFitLineSpaceReduction: lineSpaceReduction
-        };
-      }
-      return xml_parser_default.element(bodyPr, "spAutoFit") ? { textAutoFit: "shape" } : {};
-    }
-    parseDmlPercentage(value, fallback) {
-      if (value == null || value === "")
-        return fallback;
-      let raw = String(value).trim();
-      if (!raw)
-        return fallback;
-      let parsed = parseFloat(raw);
-      if (!Number.isFinite(parsed))
-        return fallback;
-      let result = raw.endsWith("%") ? parsed / 100 : parsed / 1e5;
-      return Number.isFinite(result) ? result : fallback;
-    }
-    applyDmlTextInsets(bodyPr, cssStyle) {
-      if (!bodyPr)
-        return;
-      let map = { lIns: "padding-left", tIns: "padding-top", rIns: "padding-right", bIns: "padding-bottom" };
-      for (let [attr, prop] of Object.entries(map)) {
-        let value = xml_parser_default.attr(bodyPr, attr);
-        value != null && (cssStyle[prop] = this.pt(this.emuToPt(parseFloat(value))));
-      }
-    }
-    emuToPt(value) {
-      return (Number.isFinite(value) ? value : 0) / 12700;
-    }
-    pt(value) {
-      return `${Math.round(value * 100) / 100}pt`;
-    }
-    parseChartReference(elem) {
-      return {
-        type: "chart" /* Chart */,
-        id: xml_parser_default.attr(elem, "id"),
-        cssStyle: {
-          width: "100%",
-          height: "100%"
-        }
-      };
-    }
-    parseSmartArtReference(elem) {
-      let relIds = elem.localName == "relIds" ? elem : this.findDescendant(elem, "relIds");
-      return {
-        type: "smartArt" /* SmartArt */,
-        dataId: relIds ? xml_parser_default.attr(relIds, "dm") : xml_parser_default.attr(elem, "dm"),
-        layoutId: relIds ? xml_parser_default.attr(relIds, "lo") : xml_parser_default.attr(elem, "lo"),
-        styleId: relIds ? xml_parser_default.attr(relIds, "qs") : xml_parser_default.attr(elem, "qs"),
-        colorId: relIds ? xml_parser_default.attr(relIds, "cs") : xml_parser_default.attr(elem, "cs"),
-        cssStyle: {
-          width: "100%",
-          height: "100%"
-        }
-      };
-    }
-    parseInkReference(elem) {
-      return {
-        type: "ink" /* Ink */,
-        id: xml_parser_default.attr(elem, "id"),
-        cssStyle: {
-          width: "100%",
-          height: "100%"
-        }
-      };
-    }
-    parseGraphicPlaceholder(label) {
-      return {
-        type: "shape" /* Shape */,
-        children: [{ type: "text" /* Text */, text: `[${label}]` }],
-        cssStyle: {
-          display: "inline-flex",
-          "align-items": "center",
-          "justify-content": "center",
-          border: "1px solid #999",
-          "background-color": "#f8f8f8",
-          color: "#555",
-          "min-width": "2in",
-          "min-height": "1in"
-        }
-      };
-    }
-    parseWordprocessingShape(elem) {
-      let result = {
-        type: "shape" /* Shape */,
-        children: [],
-        cssStyle: {
-          display: "inline-block",
-          position: "relative",
-          "box-sizing": "border-box",
-          overflow: "hidden"
-        }
-      }, cNvPr = this.findDescendant(elem, "cNvPr");
-      cNvPr && (result.title = xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name"), result.alt = xml_parser_default.attr(cNvPr, "descr") ?? result.title);
-      for (let n of xml_parser_default.elements(elem))
-        switch (n.localName) {
-          case "spPr":
-            this.parseDmlShapeProperties(n, result.cssStyle, elem);
-            break;
-          case "txbx":
-          case "textBox":
-            for (let txbxContent of xml_parser_default.elements(n, "txbxContent"))
-              result.children.push(...this.parseBodyElements(txbxContent));
-            break;
-        }
-      return result;
-    }
-    parseDmlShapeProperties(elem, style, owner) {
-      let xfrm = xml_parser_default.element(elem, "xfrm");
-      if (xfrm)
-        for (let n of xml_parser_default.elements(xfrm))
-          switch (n.localName) {
-            case "ext":
-              style.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), style.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
-              break;
-            case "off":
-              style.left = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), style.top = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu);
-              break;
-          }
-      let explicitFillStyle = this.parseDmlFillStyle(elem), fillStyle = (!explicitFillStyle.explicit && owner ? this.parseDmlShapeStyleFill(owner) : null) ?? explicitFillStyle, line = xml_parser_default.element(elem, "ln"), lineStyle = line ? this.parseDmlLineStyle(line) : owner ? this.parseDmlShapeStyleLine(owner) : null;
-      fillStyle.backgroundColor && (style["background-color"] = fillStyle.backgroundColor), fillStyle.backgroundImage && (style["background-image"] = fillStyle.backgroundImage), lineStyle?.stroke && lineStyle.stroke != "none" && (style.border = `${lineStyle.strokeWidth || "0.75pt"} ${lineStyle.borderType || "solid"} ${lineStyle.stroke}`);
-    }
-    parseDmlColor(elem) {
-      if (!elem)
-        return null;
-      let srgbClr = xml_parser_default.element(elem, "srgbClr"), schemeClr = xml_parser_default.element(elem, "schemeClr"), prstClr = xml_parser_default.element(elem, "prstClr"), sysClr = xml_parser_default.element(elem, "sysClr");
-      if (srgbClr)
-        return this.applyDmlColorTransforms(srgbClr, `#${xml_parser_default.attr(srgbClr, "val")}`);
-      if (schemeClr) {
-        let scheme = this.resolveDmlSchemeColor(xml_parser_default.attr(schemeClr, "val")), fallback = this.dmlSchemeColorFallback(scheme);
-        return this.applyDmlColorTransforms(schemeClr, `var(--docx-${scheme}-color${fallback ? `, ${fallback}` : ""})`);
-      }
-      return sysClr ? this.applyDmlColorTransforms(sysClr, `#${xml_parser_default.attr(sysClr, "lastClr") ?? xml_parser_default.attr(sysClr, "val")}`) : prstClr ? this.applyDmlColorTransforms(prstClr, xml_parser_default.attr(prstClr, "val")) : null;
-    }
-    resolveDmlSchemeColor(value) {
-      switch (value) {
-        case "bg1":
-          return "lt1";
-        case "tx1":
-          return "dk1";
-        case "bg2":
-          return "lt2";
-        case "tx2":
-          return "dk2";
-        default:
-          return value;
-      }
-    }
-    dmlSchemeColorFallback(value) {
-      switch (value) {
-        case "dk1":
-          return "#000000";
-        case "lt1":
-          return "#FFFFFF";
-        case "dk2":
-          return "#44546A";
-        case "lt2":
-          return "#E7E6E6";
-        case "accent1":
-          return "#4472C4";
-        case "accent2":
-          return "#ED7D31";
-        case "accent3":
-          return "#A5A5A5";
-        case "accent4":
-          return "#FFC000";
-        case "accent5":
-          return "#5B9BD5";
-        case "accent6":
-          return "#70AD47";
-        case "hlink":
-          return "#0563C1";
-        case "folHlink":
-          return "#954F72";
-        default:
-          return null;
-      }
-    }
-    applyDmlColorTransforms(elem, color) {
-      let shade = xml_parser_default.elementAttr(elem, "shade", "val"), tint = xml_parser_default.elementAttr(elem, "tint", "val"), lumMod = xml_parser_default.elementAttr(elem, "lumMod", "val"), lumOff = xml_parser_default.elementAttr(elem, "lumOff", "val");
-      if (shade != null) {
-        let percent2 = Math.max(0, Math.min(100, parseFloat(shade) / 1e3));
-        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, black)`);
-      }
-      if (tint != null) {
-        let percent2 = Math.max(0, Math.min(100, parseFloat(tint) / 1e3));
-        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, white)`);
-      }
-      if (lumMod != null) {
-        let percent2 = Math.max(0, Math.min(100, parseFloat(lumMod) / 1e3));
-        Number.isFinite(percent2) && percent2 < 100 && (color = `color-mix(in srgb, ${color} ${percent2}%, black)`);
-      }
-      if (lumOff != null) {
-        let percent2 = Math.max(0, Math.min(100, parseFloat(lumOff) / 1e3));
-        Number.isFinite(percent2) && percent2 > 0 && (color = `color-mix(in srgb, ${color} ${100 - percent2}%, white)`);
-      }
-      return color;
-    }
-    findDescendant(elem, localName) {
-      for (let child of xml_parser_default.elements(elem)) {
-        if (child.localName == localName)
-          return child;
-        let nested = this.findDescendant(child, localName);
-        if (nested)
-          return nested;
-      }
-      return null;
-    }
-    parsePicture(elem) {
-      var result = { type: "image" /* Image */, src: "", cssStyle: {} }, blipFill = xml_parser_default.element(elem, "blipFill"), blip = blipFill ? xml_parser_default.element(blipFill, "blip") : null, srcRect = blipFill ? xml_parser_default.element(blipFill, "srcRect") : null, spPr = xml_parser_default.element(elem, "spPr"), prstGeom = spPr ? xml_parser_default.element(spPr, "prstGeom") : null;
-      result.src = blip ? xml_parser_default.attr(blip, "embed") ?? xml_parser_default.attr(blip, "link") : "", result.props = {
-        ...result.props ?? {},
-        presetGeometry: prstGeom ? xml_parser_default.attr(prstGeom, "prst") : null,
-        geometryAdjustments: this.parseDmlPresetGeometryAdjustments(prstGeom)
-      };
-      let cNvPr = this.findDescendant(elem, "cNvPr");
-      cNvPr && (result.title = xml_parser_default.attr(cNvPr, "title") ?? xml_parser_default.attr(cNvPr, "name"), result.alt = xml_parser_default.attr(cNvPr, "descr") ?? result.title), srcRect && (result.srcRect = [
-        xml_parser_default.intAttr(srcRect, "l", 0) / 1e5,
-        xml_parser_default.intAttr(srcRect, "t", 0) / 1e5,
-        xml_parser_default.intAttr(srcRect, "r", 0) / 1e5,
-        xml_parser_default.intAttr(srcRect, "b", 0) / 1e5
-      ]);
-      var xfrm = spPr ? xml_parser_default.element(spPr, "xfrm") : null, transforms = [];
-      if (result.cssStyle.display = "block", result.cssStyle.position = "relative", result.cssStyle["object-fit"] = "contain", xfrm) {
-        result.rotation = xml_parser_default.intAttr(xfrm, "rot", 0) / 6e4, xml_parser_default.boolAttr(xfrm, "flipH", !1) && transforms.push("scaleX(-1)"), xml_parser_default.boolAttr(xfrm, "flipV", !1) && transforms.push("scaleY(-1)");
-        for (var n of xml_parser_default.elements(xfrm))
-          switch (n.localName) {
-            case "ext":
-              result.cssStyle.width = xml_parser_default.lengthAttr(n, "cx", LengthUsage.Emu), result.cssStyle.height = xml_parser_default.lengthAttr(n, "cy", LengthUsage.Emu);
-              break;
-            case "off":
-              result.cssStyle.left = xml_parser_default.lengthAttr(n, "x", LengthUsage.Emu), result.cssStyle.top = xml_parser_default.lengthAttr(n, "y", LengthUsage.Emu);
-              break;
-          }
-      }
-      return transforms.length > 0 && (result.cssStyle.transform = transforms.join(" ")), result.cssStyle.width || (result.cssStyle.width = "100%"), result.cssStyle.height || (result.cssStyle.height = "100%"), result;
-    }
-    parseTable(node, source) {
-      var result = { type: "table" /* Table */, children: [], ...source ? { source } : {} };
-      let rowIndex = 0;
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "tr":
-            result.children.push(this.parseTableRow(c, source ? { ...source, rowIndex: rowIndex++ } : void 0));
-            break;
-          case "tblGrid":
-            result.columns = this.parseTableColumns(c);
-            break;
-          case "tblPr":
-            this.parseTableProperties(c, result);
-            break;
-        }
-      return result;
-    }
-    parseTableColumns(node) {
-      var result = [];
-      for (let n of xml_parser_default.elements(node))
-        n.localName === "gridCol" && result.push({ width: xml_parser_default.lengthAttr(n, "w") });
-      return result;
-    }
-    parseTableProperties(elem, table) {
-      switch (table.cssStyle = {}, table.cellStyle = {}, this.parseDefaultProperties(elem, table.cssStyle, table.cellStyle, (c) => {
-        switch (c.localName) {
-          case "tblStyle":
-            table.styleName = xml_parser_default.attr(c, "val");
-            break;
-          case "tblLook":
-            table.look = values.tableLookOfTblLook(c), table.className = values.classNameOftblLook(c);
-            break;
-          case "tblpPr":
-            this.parseTablePosition(c, table);
-            break;
-          case "tblStyleColBandSize":
-            table.colBandSize = xml_parser_default.intAttr(c, "val");
-            break;
-          case "tblStyleRowBandSize":
-            table.rowBandSize = xml_parser_default.intAttr(c, "val");
-            break;
-          case "hidden":
-            table.cssStyle.display = "none";
-            break;
-          default:
-            return !1;
-        }
-        return !0;
-      }), table.cssStyle["text-align"]) {
-        case "center":
-          delete table.cssStyle["text-align"], table.cssStyle["margin-left"] = "auto", table.cssStyle["margin-right"] = "auto";
-          break;
-        case "right":
-          delete table.cssStyle["text-align"], table.cssStyle["margin-left"] = "auto";
-          break;
-      }
-    }
-    parseTablePosition(node, table) {
-      var topFromText = xml_parser_default.lengthAttr(node, "topFromText"), bottomFromText = xml_parser_default.lengthAttr(node, "bottomFromText"), rightFromText = xml_parser_default.lengthAttr(node, "rightFromText"), leftFromText = xml_parser_default.lengthAttr(node, "leftFromText"), tblpX = xml_parser_default.lengthAttr(node, "tblpX"), tblpY = xml_parser_default.lengthAttr(node, "tblpY"), tblpXSpec = xml_parser_default.attr(node, "tblpXSpec"), tblpYSpec = xml_parser_default.attr(node, "tblpYSpec"), horzAnchor = xml_parser_default.attr(node, "horzAnchor"), vertAnchor = xml_parser_default.attr(node, "vertAnchor");
-      table.cssStyle.float = "left", table.cssStyle["--docx-table-positioned"] = "1", topFromText != null && (table.cssStyle["--docx-tblp-top-from-text"] = topFromText), bottomFromText != null && (table.cssStyle["--docx-tblp-bottom-from-text"] = bottomFromText), leftFromText != null && (table.cssStyle["--docx-tblp-left-from-text"] = leftFromText), rightFromText != null && (table.cssStyle["--docx-tblp-right-from-text"] = rightFromText), tblpX != null && (table.cssStyle["--docx-tblp-x"] = tblpX), tblpY != null && (table.cssStyle["--docx-tblp-y"] = tblpY), tblpXSpec && (table.cssStyle["--docx-tblp-x-spec"] = tblpXSpec), tblpYSpec && (table.cssStyle["--docx-tblp-y-spec"] = tblpYSpec), horzAnchor && (table.cssStyle["--docx-tblp-horz-anchor"] = horzAnchor), vertAnchor && (table.cssStyle["--docx-tblp-vert-anchor"] = vertAnchor), table.cssStyle["margin-bottom"] = values.addSize(table.cssStyle["margin-bottom"], bottomFromText), table.cssStyle["margin-left"] = values.addSize(table.cssStyle["margin-left"], leftFromText), table.cssStyle["margin-right"] = values.addSize(table.cssStyle["margin-right"], rightFromText), table.cssStyle["margin-top"] = values.addSize(table.cssStyle["margin-top"], topFromText);
-    }
-    parseTableRow(node, source) {
-      var result = { type: "row" /* Row */, children: [], ...source ? { source } : {} };
-      let cellIndex = 0;
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "tc":
-            result.children.push(this.parseTableCell(c, source ? { ...source, cellIndex: cellIndex++ } : void 0));
-            break;
-          case "trPr":
-          case "tblPrEx":
-            this.parseTableRowProperties(c, result);
-            break;
-        }
-      return result;
-    }
-    parseTableRowProperties(elem, row) {
-      let rowStyle = {};
-      row.cssStyle = this.parseDefaultProperties(elem, rowStyle, null, (c) => {
-        switch (c.localName) {
-          case "cnfStyle":
-            row.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), row.className = values.classNameOfCnfStyle(c);
-            break;
-          case "tblHeader":
-            row.isHeader = xml_parser_default.boolAttr(c, "val", !0);
-            break;
-          case "gridBefore":
-            row.gridBefore = xml_parser_default.intAttr(c, "val");
-            break;
-          case "gridAfter":
-            row.gridAfter = xml_parser_default.intAttr(c, "val");
-            break;
-          case "cantSplit":
-            xml_parser_default.boolAttr(c, "val", !0) && (rowStyle["break-inside"] = "avoid");
-            break;
-          default:
-            return !1;
-        }
-        return !0;
-      });
-    }
-    parseTableCell(node, source) {
-      var result = { type: "cell" /* Cell */, children: [], ...source ? { source } : {} };
-      let nestedTableIndex = 0, cellParagraphIndex = 0;
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "tbl":
-            result.children.push(this.parseTable(c, source ? { ...source, nestedTableIndex: nestedTableIndex++ } : void 0));
-            break;
-          case "p":
-            result.children.push(this.parseParagraph(c, source ? { ...source, cellParagraphIndex: cellParagraphIndex++ } : void 0));
-            break;
-          case "tcPr":
-            this.parseTableCellProperties(c, result);
-            break;
-        }
-      return result;
-    }
-    parseTableCellProperties(elem, cell) {
-      cell.cssStyle = this.parseDefaultProperties(elem, {}, null, (c) => {
-        switch (c.localName) {
-          case "gridSpan":
-            cell.span = xml_parser_default.intAttr(c, "val", null);
-            break;
-          case "vMerge":
-            cell.verticalMerge = xml_parser_default.attr(c, "val") ?? "continue";
-            break;
-          case "hideMark":
-            cell.hideMark = xml_parser_default.boolAttr(c, "val", !0);
-            break;
-          case "cnfStyle":
-            cell.conditionalStyle = values.tableConditionalFormatOfCnfStyle(c), cell.className = values.classNameOfCnfStyle(c);
-            break;
-          default:
-            return !1;
-        }
-        return !0;
-      }), this.parseTableCellVerticalText(elem, cell);
-    }
-    parseTableCellVerticalText(elem, cell) {
-      let directionMap = {
-        btLr: {
-          writingMode: "vertical-rl",
-          transform: "rotate(180deg)"
-        },
-        lrTb: {
-          writingMode: "vertical-lr",
-          transform: "none"
-        },
-        tbRl: {
-          writingMode: "vertical-rl",
-          transform: "none"
-        }
-      };
-      for (let c of xml_parser_default.elements(elem))
-        if (c.localName === "textDirection") {
-          let direction = xml_parser_default.attr(c, "val"), style = directionMap[direction] || { writingMode: "horizontal-tb" };
-          cell.cssStyle["writing-mode"] = style.writingMode, cell.cssStyle.transform = style.transform;
-        }
-    }
-    parseDefaultProperties(elem, style = null, childStyle = null, handler = null) {
-      style = style || {};
-      for (let c of xml_parser_default.elements(elem))
-        if (!handler?.(c))
-          switch (c.localName) {
-            case "jc":
-              style["--docx-jc"] = xml_parser_default.attr(c, "val"), style["text-align"] = values.valueOfJc(c);
-              break;
-            case "textAlignment":
-              style["vertical-align"] = values.valueOfTextAlignment(c);
-              break;
-            case "color":
-              style.color = xmlUtil.colorAttr(c, "val", null, autos.color);
-              break;
-            case "sz":
-              style["font-size"] = style["min-height"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.FontSize);
-              break;
-            case "szCs":
-              style["--docx-cs-font-size"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.FontSize);
-              break;
-            case "shd": {
-              let shading = resolveShadingBackground(c);
-              shading && (style["background-color"] = shading);
-              break;
-            }
-            case "highlight":
-              style["background-color"] = xml_parser_default.attr(c, "val") === "none" ? "transparent" : xmlUtil.colorAttr(c, "val", null, autos.highlight);
-              break;
-            case "vertAlign":
-              style["vertical-align"] = values.valueOfVertAlign(c);
-              break;
-            case "position":
-              style["vertical-align"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.SignedHalfPoint);
-              break;
-            case "scale":
-            case "w":
-              style["font-stretch"] = `${xml_parser_default.intAttr(c, "val", 100)}%`;
-              break;
-            case "tcW":
-              if (this.options.ignoreWidth)
-                break;
-            case "tblW":
-              style.width = values.valueOfSize(c, "w");
-              break;
-            case "trHeight":
-              this.parseTrHeight(c, style);
-              break;
-            case "strike":
-              style["text-decoration"] = xml_parser_default.boolAttr(c, "val", !0) ? "line-through" : "none";
-              break;
-            case "dstrike":
-              xml_parser_default.boolAttr(c, "val", !0) ? (style["text-decoration-line"] = "line-through", style["text-decoration-style"] = "double") : style["text-decoration"] = "none";
-              break;
-            case "b":
-              style["font-weight"] = xml_parser_default.boolAttr(c, "val", !0) ? "bold" : "normal";
-              break;
-            case "i":
-              style["font-style"] = xml_parser_default.boolAttr(c, "val", !0) ? "italic" : "normal";
-              break;
-            case "bCs":
-              style["--docx-bidi-font-weight"] = xml_parser_default.boolAttr(c, "val", !0) ? "bold" : "normal", style.direction == "rtl" && (style["font-weight"] = style["--docx-bidi-font-weight"]);
-              break;
-            case "iCs":
-              style["--docx-bidi-font-style"] = xml_parser_default.boolAttr(c, "val", !0) ? "italic" : "normal", style.direction == "rtl" && (style["font-style"] = style["--docx-bidi-font-style"]);
-              break;
-            case "caps":
-              style["text-transform"] = xml_parser_default.boolAttr(c, "val", !0) ? "uppercase" : "none";
-              break;
-            case "smallCaps":
-              style["font-variant"] = xml_parser_default.boolAttr(c, "val", !0) ? "small-caps" : "none";
-              break;
-            case "rtl":
-              xml_parser_default.boolAttr(c, "val", !0) && (style.direction = "rtl", style["unicode-bidi"] = "embed", style["--docx-bidi-font-weight"] && (style["font-weight"] = style["--docx-bidi-font-weight"]), style["--docx-bidi-font-style"] && (style["font-style"] = style["--docx-bidi-font-style"]));
-              break;
-            case "outline":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["-webkit-text-stroke"] = "0.5px currentColor");
-              break;
-            case "shadow":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "1px 1px 0 currentColor");
-              break;
-            case "emboss":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "-1px -1px 0 rgba(255,255,255,.75), 1px 1px 0 rgba(0,0,0,.35)");
-              break;
-            case "imprint":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["text-shadow"] = "1px 1px 0 rgba(255,255,255,.75), -1px -1px 0 rgba(0,0,0,.35)");
-              break;
-            case "em":
-              style["text-emphasis-style"] = values.valueOfEmphasisMark(c);
-              break;
-            case "u":
-              this.parseUnderline(c, style);
-              break;
-            case "ind":
-            case "tblInd":
-              this.parseIndentation(c, style);
-              break;
-            case "rFonts":
-              this.parseFont(c, style);
-              break;
-            case "tblBorders":
-              childStyle ? this.parseTableBorderProperties(c, style) : this.parseBorderProperties(c, style);
-              break;
-            case "tblCellSpacing":
-              style["border-spacing"] = values.valueOfMargin(c), style["border-collapse"] = "separate";
-              break;
-            case "pBdr":
-              this.parseBorderProperties(c, style);
-              break;
-            case "bdr":
-              style.border = values.valueOfBorder(c), style["--docx-border-space"] = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point);
-              break;
-            case "tcBorders":
-              this.parseBorderProperties(c, style);
-              break;
-            case "vanish":
-              xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
-              break;
-            case "kern":
-              style["font-kerning"] = xml_parser_default.intAttr(c, "val", 0) > 0 ? "normal" : "none";
-              break;
-            case "noWrap":
-              style["white-space"] = xml_parser_default.boolAttr(c, "val", !0) ? "nowrap" : "normal";
-              break;
-            case "snapToGrid":
-              style["--docx-snap-to-grid"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
-              break;
-            case "autoSpaceDE":
-              style["--docx-auto-space-de"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
-              break;
-            case "autoSpaceDN":
-              style["--docx-auto-space-dn"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
-              break;
-            case "contextualSpacing":
-              style["--docx-contextual-spacing"] = xml_parser_default.boolAttr(c, "val", !0) ? "1" : "0";
-              break;
-            case "fitText":
-              this.parseFitText(c, style);
-              break;
-            case "eastAsianLayout":
-              this.parseEastAsianLayout(c, style);
-              break;
-            case "tblCellMar": {
-              let target = childStyle || style;
-              this.parseMarginProperties(c, target), this.markMarginProperties(c, target, "--docx-table-cell-margin");
-              break;
-            }
-            case "tcMar": {
-              let target = childStyle || style;
-              this.parseMarginProperties(c, target), this.markMarginProperties(c, target, "--docx-tc-margin");
-              break;
-            }
-            case "tblLayout":
-              style["table-layout"] = values.valueOfTblLayout(c);
-              break;
-            case "vAlign":
-              style["vertical-align"] = values.valueOfTextAlignment(c);
-              break;
-            case "spacing":
-              elem.localName == "pPr" ? this.parseSpacing(c, style) : elem.localName == "rPr" && (style["letter-spacing"] = xml_parser_default.lengthAttr(c, "val", LengthUsage.SignedDxa));
-              break;
-            case "wordWrap":
-              xml_parser_default.boolAttr(c, "val", !0) || (style["overflow-wrap"] = "break-word");
-              break;
-            case "suppressAutoHyphens":
-              style.hyphens = xml_parser_default.boolAttr(c, "val", !0) ? "none" : "auto";
-              break;
-            case "lang":
-              style.$lang = xml_parser_default.attr(c, "val"), style.$eastAsiaLang = xml_parser_default.attr(c, "eastAsia");
-              break;
-            case "bidi":
-              xml_parser_default.boolAttr(c, "val", !0) && (style.direction = "rtl");
-              break;
-            case "pageBreakBefore":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["break-before"] = "page");
-              break;
-            case "keepLines":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["break-inside"] = "avoid");
-              break;
-            case "keepNext":
-              xml_parser_default.boolAttr(c, "val", !0) && (style["break-after"] = "avoid");
-              break;
-            case "widowControl":
-              xml_parser_default.boolAttr(c, "val", !0) && (style.orphans = "2", style.widows = "2");
-              break;
-            case "webHidden":
-              this.options.hideWebHiddenContent && xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
-              break;
-            case "specVanish":
-              xml_parser_default.boolAttr(c, "val", !0) && (style.display = "none");
-              break;
-            case "tabs":
-            //ignore - tabs is parsed by other parser
-            case "outlineLvl": {
-              let outlineLevel = xml_parser_default.intAttr(c, "val");
-              outlineLevel != null && (style["--docx-outline-level"] = `${outlineLevel}`);
-              break;
-            }
-            case "tblStyleColBandSize":
-            //TODO
-            case "tblStyleRowBandSize":
-            //TODO
-            case "suppressLineNumbers":
-            //TODO - maybe ignore
-            case "noProof":
-              break;
-            default:
-              this.options.debug && console.warn(`DOCX: Unknown document element: ${elem.localName}.${c.localName}`);
-              break;
-          }
-      return style;
-    }
-    parseFitText(node, style) {
-      let width = xml_parser_default.lengthAttr(node, "val");
-      width && (style.display = "inline-block", style.width = width, style["text-align"] = "justify", style["text-align-last"] = "justify");
-    }
-    parseEastAsianLayout(node, style) {
-      xml_parser_default.boolAttr(node, "combine", !1) && (style["text-combine-upright"] = "all"), xml_parser_default.boolAttr(node, "vert", !1) && (style["writing-mode"] = "vertical-rl"), xml_parser_default.boolAttr(node, "vertCompress", !1) && (style["font-stretch"] = "condensed");
-    }
-    parseUnderline(node, style) {
-      var val = xml_parser_default.attr(node, "val");
-      if (val != null) {
-        switch (val) {
-          case "dash":
-          case "dashDotDotHeavy":
-          case "dashDotHeavy":
-          case "dashedHeavy":
-          case "dashLong":
-          case "dashLongHeavy":
-          case "dotDash":
-          case "dotDotDash":
-            style["text-decoration"] = "underline dashed";
-            break;
-          case "dotted":
-          case "dottedHeavy":
-            style["text-decoration"] = "underline dotted";
-            break;
-          case "double":
-            style["text-decoration"] = "underline double";
-            break;
-          case "single":
-          case "thick":
-            style["text-decoration"] = "underline";
-            break;
-          case "wave":
-          case "wavyDouble":
-          case "wavyHeavy":
-            style["text-decoration"] = "underline wavy";
-            break;
-          case "words":
-            style["text-decoration"] = "underline";
-            break;
-          case "none":
-            style["text-decoration"] = "none";
-            break;
-        }
-        var col = xmlUtil.colorAttr(node, "color");
-        col && (style["text-decoration-color"] = col);
-      }
-    }
-    parseFont(node, style) {
-      var ascii = xml_parser_default.attr(node, "ascii"), hAnsi = xml_parser_default.attr(node, "hAnsi"), eastAsia = xml_parser_default.attr(node, "eastAsia"), cs = xml_parser_default.attr(node, "cs"), hint = xml_parser_default.attr(node, "hint"), asciiTheme = values.themeValue(node, "asciiTheme"), hAnsiTheme = values.themeValue(node, "hAnsiTheme"), eastAsiaTheme = values.themeValue(node, "eastAsiaTheme");
-      let csThemeAttr = xml_parser_default.attr(node, "cstheme") ?? xml_parser_default.attr(node, "csTheme");
-      var csTheme = csThemeAttr ? `var(--docx-${csThemeAttr}-font)` : null;
-      csTheme && /HAnsi$/i.test(csThemeAttr) ? (asciiTheme ?? (asciiTheme = csTheme), hAnsiTheme ?? (hAnsiTheme = csTheme)) : csTheme && /EastAsia$/i.test(csThemeAttr) && (eastAsiaTheme ?? (eastAsiaTheme = csTheme));
-      let explicitSlots = [
-        ascii || asciiTheme ? "ascii" : "",
-        hAnsi || hAnsiTheme ? "hAnsi" : "",
-        eastAsia || eastAsiaTheme ? "eastAsia" : "",
-        cs || csTheme ? "cs" : ""
-      ].filter((x) => x);
-      explicitSlots.length && (style["--docx-rfonts-explicit-slots"] = explicitSlots.join(",")), hint && (style["--docx-font-hint"] = hint);
-      var fonts = [ascii, hAnsi, asciiTheme, hAnsiTheme, eastAsia, eastAsiaTheme, cs, csTheme].filter((x) => x).flatMap((x) => this.wordCompatibleFontStack(x));
-      let setFontSlot = (name, value) => {
-        if (!value)
-          return;
-        let stack = this.wordCompatibleFontStack(value);
-        stack.length && (style[name] = stack.join(", "));
-      };
-      setFontSlot("--docx-ascii-font-family", ascii || asciiTheme), setFontSlot("--docx-hansi-font-family", hAnsi || hAnsiTheme || ascii || asciiTheme), setFontSlot("--docx-eastasia-font-family", eastAsia || eastAsiaTheme), setFontSlot("--docx-cs-font-family", cs || csTheme);
-      let hasEastAsiaSlot = !!(eastAsia || eastAsiaTheme);
-      if (fonts.length > 0 && hasEastAsiaSlot) {
-        let currentFonts = (style["font-family"] ?? "").split(",").map((x) => x.trim()).filter((x) => x);
-        style["font-family"] = [.../* @__PURE__ */ new Set([...currentFonts, ...fonts])].join(", ");
-      }
-    }
-    wordCompatibleFontStack(fontFamily) {
-      let raw = `${fontFamily ?? ""}`.trim();
-      if (!raw)
-        return [];
-      if (/^var\(/i.test(raw))
-        return [raw];
-      let normalized = raw.replace(/^['"]|['"]$/g, "").toLowerCase(), baseCompact = normalized.replace(/[－—–]/g, "-").replace(/\s+/g, "").replace(/(?:[_-]?(?:gb2312|gbk|gb18030|gb0))$/i, ""), emit = (items) => items.map((x) => /^(serif|sans-serif|monospace)$/i.test(x) ? x : encloseFontFamily(x)), emitUnique = (items) => emit([...new Set(items.filter(Boolean))]), founderSong = /^fz(?:xiao|da)?biaosong|^fzshusong|^fzsongyi|^fzcusong|^fangzheng(?:xiao|da)?biaosong|^fangzhengshusong|方正(?:小标宋|大标宋|书宋|宋一|粗宋)/.test(baseCompact), cesiFangSong = /^cesi.*仿宋|^cesifangsong/.test(baseCompact);
-      return normalized == "microsoft yahei" || normalized == "微软雅黑" || normalized == "ms yahei" ? emit(["Microsoft YaHei", "微软雅黑", "Microsoft YaHei UI", "Noto Sans CJK SC", "Noto Sans SC", "SimHei", "sans-serif"]) : normalized == "times new roman" || normalized == "timesnewroman" ? emit(["Times New Roman", "Tinos", "Liberation Serif", "Nimbus Roman", "Noto Serif", "serif"]) : normalized == "nsimsun" || normalized == "新宋体" ? emit(["NSimSun", "新宋体", "SimSun", "宋体", "Songti SC", "serif"]) : normalized == "simsun" || normalized == "宋体" ? emit(["SimSun", "宋体", "Songti SC", "Noto Serif CJK SC", "AR PL SungtiL GB", "serif"]) : /^(songti sc|songtisc|stsongti-sc|stsongtisc|宋体-简|宋體-簡)$/i.test(normalized) ? emit(["Songti SC", "STSong", "SimSun", "宋体", "serif"]) : /^fzhei|^fangzhenghei|方正黑体/.test(baseCompact) ? emitUnique([raw, "FZHei-B01S", "FZHei-B01", "SimHei", "黑体", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]) : normalized == "simhei" || normalized == "黑体" ? emit(["SimHei", "黑体", "Noto Sans CJK SC", "Noto Sans SC", "Microsoft YaHei", "sans-serif"]) : /^fzkai|^fangzhengkai|方正楷体/.test(baseCompact) ? emitUnique([raw, "FZKai-Z03S", "FZKai-Z03", "STKaiti", "华文楷体", "Kaiti SC", "KaiTi", "楷体", "serif"]) : /^(stkaiti|kaiti|kaiti[-_]?sc|kaiti[-_]?tc|楷[体體]|楷[体體][-－]?简|楷[体體][-－]?繁|华文楷体|華文楷體)/.test(baseCompact) ? emitUnique([raw, "STKaiti", "华文楷体", "Kaiti SC", "KaiTi", "楷体", "serif"]) : /^fzfangsong|^fangzhengfangsong|方正仿宋/.test(baseCompact) ? emitUnique([raw, "FZFangSong-Z02S", "FZFangSong-Z02", "FangSong", "仿宋", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : cesiFangSong ? emitUnique([raw, "CESI仿宋-GB2312", "CESI仿宋", "FangSong", "仿宋", "FangSong_GB2312", "仿宋_GB2312", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : baseCompact == "fangsong" || baseCompact == "仿宋" || baseCompact == "stfangsong" || baseCompact == "华文仿宋" || baseCompact == "華文仿宋" ? emitUnique([raw, "FangSong", "仿宋", "FangSong_GB2312", "仿宋_GB2312", "STFangsong", "华文仿宋", "Songti SC", "serif"]) : /^fzxiaobiaosong|^fangzhengxiaobiaosong|方正小标宋/.test(baseCompact) ? emitUnique([raw, "FZXiaoBiaoSong-B05S", "方正小标宋简体", "FZXiaoBiaoSong-B05", "方正小标宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : /^fzdabiaosong|^fangzhengdabiaosong|方正大标宋/.test(baseCompact) ? emitUnique([raw, "FZDaBiaoSong-B06S", "方正大标宋简体", "FZDaBiaoSong-B06", "方正大标宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : founderSong ? emitUnique([raw, "FZShuSong-Z01S", "FZShuSong-Z01", "方正书宋简体", "方正书宋_GBK", "SimSun", "宋体", "Songti SC", "STSong", "Noto Serif CJK SC", "serif"]) : normalized == "arial" ? emit(["Arial", "Arimo", "Liberation Sans", "Noto Sans", "sans-serif"]) : [encloseFontFamily(raw)];
-    }
-    parseIndentation(node, style) {
-      var firstLine = xml_parser_default.lengthAttr(node, "firstLine"), hanging = xml_parser_default.lengthAttr(node, "hanging"), left = xml_parser_default.lengthAttr(node, "left"), start = xml_parser_default.lengthAttr(node, "start"), tableIndent = node.localName == "tblInd" ? values.valueOfMargin(node) : null, right = xml_parser_default.lengthAttr(node, "right"), end = xml_parser_default.lengthAttr(node, "end");
-      firstLine && (style["text-indent"] = firstLine, style["--docx-text-indent"] = firstLine), hanging && (style["text-indent"] = `-${hanging}`, style["--docx-text-indent"] = `-${hanging}`, style["--docx-hanging-indent"] = hanging), (left || start || tableIndent) && (style["margin-inline-start"] = left || start || tableIndent, style["--docx-margin-inline-start"] = left || start || tableIndent), (right || end) && (style["margin-inline-end"] = right || end, style["--docx-margin-inline-end"] = right || end);
-    }
-    parseSpacing(node, style) {
-      var before = xml_parser_default.lengthAttr(node, "before"), after = xml_parser_default.lengthAttr(node, "after"), beforeLines = xml_parser_default.intAttr(node, "beforeLines", null), afterLines = xml_parser_default.intAttr(node, "afterLines", null), beforeAuto = xml_parser_default.boolAttr(node, "beforeAutospacing", !1), afterAuto = xml_parser_default.boolAttr(node, "afterAutospacing", !1), line = xml_parser_default.intAttr(node, "line", null), lineRule = xml_parser_default.attr(node, "lineRule");
-      if (beforeAuto ? style["margin-top"] = "auto" : beforeLines != null ? style["margin-top"] = `${(beforeLines / 100).toFixed(2)}em` : before && (style["margin-top"] = before), afterAuto ? style["margin-bottom"] = "auto" : afterLines != null ? style["margin-bottom"] = `${(afterLines / 100).toFixed(2)}em` : after && (style["margin-bottom"] = after), line !== null)
-        switch (lineRule ?? "auto") {
-          case "auto":
-            style["line-height"] = `${(line / 240).toFixed(2)}`;
-            break;
-          case "atLeast":
-            style["line-height"] = `max(1em, ${(line / 20).toFixed(2)}pt)`, style["min-height"] = `${(line / 20).toFixed(2)}pt`;
-            break;
-          case "exact":
-          case "exactly":
-            style["line-height"] = style["min-height"] = `${(line / 20).toFixed(2)}pt`;
-            break;
-          default:
-            style["line-height"] = `${(line / 240).toFixed(2)}`;
-            break;
-        }
-    }
-    parseMarginProperties(node, output) {
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "left":
-          case "start":
-            output["padding-left"] = values.valueOfMargin(c);
-            break;
-          case "right":
-          case "end":
-            output["padding-right"] = values.valueOfMargin(c);
-            break;
-          case "top":
-            output["padding-top"] = values.valueOfMargin(c);
-            break;
-          case "bottom":
-            output["padding-bottom"] = values.valueOfMargin(c);
-            break;
-        }
-    }
-    markMarginProperties(node, output, prefix) {
-      output[prefix] = "1";
-      for (let c of xml_parser_default.elements(node))
-        switch (c.localName) {
-          case "left":
-          case "start":
-            output[`${prefix}-left`] = "1";
-            break;
-          case "right":
-          case "end":
-            output[`${prefix}-right`] = "1";
-            break;
-          case "top":
-            output[`${prefix}-top`] = "1";
-            break;
-          case "bottom":
-            output[`${prefix}-bottom`] = "1";
-            break;
-        }
-    }
-    parseTrHeight(node, output) {
-      let rule = xml_parser_default.attr(node, "hRule") ?? "atLeast";
-      switch (output["--docx-tr-height-rule"] = rule == "exact" ? "exact" : rule == "auto" ? "auto" : "atLeast", rule) {
-        case "exact":
-          output.height = xml_parser_default.lengthAttr(node, "val");
-          break;
-        case "auto":
-          break;
-        default:
-          output.height = xml_parser_default.lengthAttr(node, "val");
-          break;
-      }
-    }
-    parseBorderProperties(node, output) {
-      for (let c of xml_parser_default.elements(node)) {
-        let border = values.valueOfBorder(c), space = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point), setBorder = (side2) => {
-          output[`${side2 === "between" || side2 === "bar" ? "--docx-" : ""}border-${side2}`] = border, space && (output[`--docx-border-${side2}-space`] = space);
-        }, side = c.localName === "start" ? "left" : c.localName === "end" ? "right" : c.localName;
-        if (["left", "right", "top", "bottom", "between", "bar"].includes(side)) {
-          setBorder(side);
-          continue;
-        }
-        switch (c.localName) {
-          case "insideH":
-            output["border-top"] ?? (output["border-top"] = border), output["border-bottom"] ?? (output["border-bottom"] = border), space && (output["--docx-border-top-space"] ?? (output["--docx-border-top-space"] = space), output["--docx-border-bottom-space"] ?? (output["--docx-border-bottom-space"] = space));
-            break;
-          case "insideV":
-            output["border-left"] ?? (output["border-left"] = border), output["border-right"] ?? (output["border-right"] = border), space && (output["--docx-border-left-space"] ?? (output["--docx-border-left-space"] = space), output["--docx-border-right-space"] ?? (output["--docx-border-right-space"] = space));
-            break;
-        }
-      }
-    }
-    parseTableBorderProperties(node, output) {
-      for (let c of xml_parser_default.elements(node)) {
-        let border = values.valueOfBorder(c), space = xml_parser_default.lengthAttr(c, "space", LengthUsage.Point), setBorder = (name) => {
-          output[`--docx-table-border-${name}`] = border, space && (output[`--docx-table-border-${name}-space`] = space);
-        };
-        switch (c.localName) {
-          case "start":
-          case "left":
-            setBorder("left");
-            break;
-          case "end":
-          case "right":
-            setBorder("right");
-            break;
-          case "top":
-            setBorder("top");
-            break;
-          case "bottom":
-            setBorder("bottom");
-            break;
-          case "insideH":
-            setBorder("inside-h");
-            break;
-          case "insideV":
-            setBorder("inside-v");
-            break;
-        }
-      }
-    }
-  };
 
   // src/worker/docx-viewer-worker.ts
-  var import_xmldom = __toESM(require_lib()), ctx = self, packages = /* @__PURE__ */ new Map();
+  var import_xmldom = __toESM(require_lib()), ctx = self, packages = /* @__PURE__ */ new Map(), parserIsolation = /* @__PURE__ */ new Map(), activeParsers = /* @__PURE__ */ new Map(), ISOLATED_XML_PART_BYTES = 2 * 1024 * 1024, ParserStartupError = class extends Error {
+  };
   typeof globalThis.DOMParser > "u" && (globalThis.DOMParser = import_xmldom.DOMParser);
   typeof globalThis.XMLSerializer > "u" && (globalThis.XMLSerializer = import_xmldom.XMLSerializer);
-  function post(id, type, payload = {}, transfer = []) {
-    ctx.postMessage({ id, type, ...payload }, transfer);
+  function post(id, type, payload = {}, transfer = [], target = ctx) {
+    target.postMessage({ id, type, ...payload }, transfer);
   }
   ctx.onmessage = async (ev) => {
     let msg = ev.data;
     if (!msg)
       return;
     if (msg.type === "dispose") {
-      packages.get(msg.id)?.dispose(), packages.delete(msg.id);
+      activeParsers.get(msg.id)?.(new Error("DOCX parse session has been disposed")), packages.get(msg.id)?.dispose(), packages.delete(msg.id), parserIsolation.delete(msg.id);
+      return;
+    }
+    if (msg.type === "parse-model") {
+      await parseConnectedModel(msg);
       return;
     }
     if (msg.type === "package") {
@@ -14865,31 +15361,103 @@
     let id = msg.id, sourcePackage = null;
     try {
       let options = { ...msg.options, useWorker: !1, h: void 0, progress: void 0 };
-      post(id, "progress", { current: 0, total: 3, message: "Loading package relationships" }), sourcePackage = await OpenXmlPackage.load(msg.data, options);
-      let document2 = await WordDocument.loadPackage(sourcePackage, new DocumentParser(options), options);
-      post(id, "progress", { current: 2, total: 3, message: "Serializing parsed document model" });
-      let snapshot = document2.createSnapshot();
-      packages.set(id, sourcePackage), post(id, "progress", { current: 3, total: 3, message: "Document model ready" }), post(id, "parsed", {
-        snapshot,
+      post(id, "progress", { current: 0, total: 3, message: "Loading package relationships" }), sourcePackage = await OpenXmlPackage.load(msg.data, options), packages.set(id, sourcePackage);
+      let snapshot;
+      if (typeof Worker < "u" && typeof MessageChannel < "u" && sourcePackage.listEntries().some((path) => /\.(?:xml|rels)$/i.test(path) && sourcePackage.get(path)?.metadata.uncompressedSize >= ISOLATED_XML_PART_BYTES))
+        try {
+          snapshot = await parseIsolatedModel(id, sourcePackage, options, msg.modelPort), parserIsolation.set(id, "ephemeral");
+        } catch (error) {
+          if (!(error instanceof ParserStartupError)) throw error;
+          snapshot = await parsePackageModel(sourcePackage, options), parserIsolation.set(id, "inline");
+        }
+      else
+        snapshot = await parsePackageModel(sourcePackage, options), parserIsolation.set(id, "inline");
+      post(id, "progress", { current: 2, total: 3, message: "Serializing parsed document model" }), post(id, "progress", { current: 3, total: 3, message: "Document model ready" }), post(id, "parsed", {
+        ...snapshot ? { snapshot } : { directModel: !0 },
         packageEntries: sourcePackage.listEntries(),
-        packageStatus: sourcePackage.getStreamStatus()
+        packageStatus: { ...sourcePackage.getStreamStatus(), parserIsolation: parserIsolation.get(id) }
       });
     } catch (error) {
-      packages.delete(id), sourcePackage?.dispose(), post(id, "error", {
+      packages.delete(id), parserIsolation.delete(id), sourcePackage?.dispose(), post(id, "error", {
         error: {
           message: error?.message ?? `${error}`,
           stack: error?.stack
         }
       });
+    } finally {
+      msg.modelPort?.close();
     }
   };
-  async function handlePackageMessage(msg) {
+  async function parsePackageModel(sourcePackage, options) {
+    return (await WordDocument.loadPackage(sourcePackage, new DocumentParser(options), options)).createSnapshot();
+  }
+  async function parseConnectedModel(msg) {
+    let sourcePackage = new RemoteOpenXmlPackage(
+      new ParserPackagePort(msg.port),
+      msg.id,
+      msg.packageEntries,
+      msg.options,
+      msg.options.workerPackageMaxConcurrent ?? 12,
+      msg.options.workerPackageRequestTimeout ?? 6e4,
+      msg.packageStatus
+    );
+    try {
+      post(msg.id, "parser-ready");
+      let snapshot = await parsePackageModel(sourcePackage, msg.options);
+      msg.modelPort ? (post(msg.id, "model-snapshot", { snapshot }, [], msg.modelPort), post(msg.id, "model-delivered")) : post(msg.id, "model-snapshot", { snapshot });
+    } catch (error) {
+      post(msg.id, "model-error", { error: { message: error?.message ?? `${error}`, stack: error?.stack } });
+    } finally {
+      sourcePackage.dispose(), msg.modelPort?.close();
+    }
+  }
+  function parseIsolatedModel(id, sourcePackage, options, modelPort) {
+    return new Promise((resolve, reject) => {
+      let parser, channel, ready = !1, settled = !1, finish = (error, snapshot) => {
+        settled || (settled = !0, activeParsers.delete(id), parser && (parser.onmessage = parser.onerror = parser.onmessageerror = null, parser.terminate()), channel && (channel.port1.onmessage = null, channel.port1.close(), channel.port2.close()), error ? reject(error) : resolve(snapshot));
+      };
+      activeParsers.set(id, (reason) => finish(reason));
+      try {
+        channel = new MessageChannel(), parser = new Worker(ctx.location.href), channel.port1.onmessage = (event) => {
+          let request = event.data;
+          request?.type === "package" && request.id === id && !settled && handlePackageMessage(request, channel.port1);
+        }, parser.onerror = (event) => {
+          event.preventDefault(), finish(ready ? new Error(event.message || "DOCX model parser failed") : new ParserStartupError(event.message || "DOCX model parser could not start"));
+        }, parser.onmessageerror = () => finish(new Error("DOCX model parser response could not be decoded")), parser.onmessage = (event) => {
+          let message = event.data ?? {};
+          if (!(message.id !== id || settled)) {
+            if (message.type === "parser-ready")
+              ready = !0, post(id, "progress", { current: 1, total: 3, message: "Parsing large XML in temporary worker" });
+            else if (message.type === "model-snapshot")
+              finish(void 0, message.snapshot);
+            else if (message.type === "model-delivered" && modelPort)
+              finish();
+            else if (message.type === "model-error") {
+              let error = new Error(message.error?.message ?? "DOCX model parse failed");
+              error.stack = message.error?.stack, finish(error);
+            }
+          }
+        }, parser.postMessage({
+          type: "parse-model",
+          id,
+          options,
+          port: channel.port2,
+          packageEntries: sourcePackage.listEntries(),
+          packageStatus: sourcePackage.getStreamStatus(),
+          modelPort
+        }, modelPort ? [channel.port2, modelPort] : [channel.port2]);
+      } catch (error) {
+        finish(new ParserStartupError(error?.message ?? `${error}`));
+      }
+    });
+  }
+  async function handlePackageMessage(msg, target = ctx) {
     let sourcePackage = packages.get(msg.id);
     if (!sourcePackage) {
       post(msg.id, "package-error", {
         requestId: msg.requestId,
         error: { message: "DOCX worker package session is not available" }
-      });
+      }, [], target);
       return;
     }
     try {
@@ -14897,23 +15465,23 @@
         case "status":
           post(msg.id, "package-result", {
             requestId: msg.requestId,
-            value: sourcePackage.getStreamStatus()
-          });
+            value: { ...sourcePackage.getStreamStatus(), parserIsolation: parserIsolation.get(msg.id) }
+          }, [], target);
           return;
         case "save": {
           for (let update of msg.updates ?? [])
             sourcePackage.update(update.path, update.content);
           let bytes = await sourcePackage.save("uint8array");
-          postBinaryResult(msg, bytes);
+          postBinaryResult(msg, bytes, target);
           return;
         }
         case "load": {
           if (isBinaryOutput(msg.outputType)) {
             let bytes = await sourcePackage.load(msg.path, "uint8array");
-            bytes == null ? post(msg.id, "package-result", { requestId: msg.requestId, value: null }) : postBinaryResult(msg, bytes);
+            bytes == null ? post(msg.id, "package-result", { requestId: msg.requestId, value: null }, [], target) : postBinaryResult(msg, bytes, target);
           } else {
             let value = await sourcePackage.load(msg.path, msg.outputType ?? "string");
-            post(msg.id, "package-result", { requestId: msg.requestId, value });
+            post(msg.id, "package-result", { requestId: msg.requestId, value }, [], target);
           }
           return;
         }
@@ -14925,12 +15493,12 @@
           message: error?.message ?? `${error}`,
           stack: error?.stack
         }
-      });
+      }, [], target);
     }
   }
-  function postBinaryResult(msg, bytes) {
+  function postBinaryResult(msg, bytes, target) {
     let value = bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength);
-    post(msg.id, "package-result", { requestId: msg.requestId, value }, [value]);
+    post(msg.id, "package-result", { requestId: msg.requestId, value }, [value], target);
   }
   function isBinaryOutput(type) {
     return type === "blob" || type === "array" || type === "uint8array" || type === "arraybuffer" || type === "nodebuffer";
